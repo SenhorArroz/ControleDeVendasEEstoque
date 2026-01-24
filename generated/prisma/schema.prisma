@@ -1,0 +1,263 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? // @db.Text
+  access_token             String? // @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? // @db.Text
+  session_state            String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token_expires_in Int?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  bio           String?
+  phone         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  clients       Client[]
+  products      Product[]
+  categories    Category[]
+  fornecedores  Fornecedor[]
+  purchases     Purchase[]
+  despesas      Despesas[]
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+
+  name    String
+  phone   String?
+  address String?
+  status  String  @default("ATIVO")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  purchases Purchase[]
+
+  @@index([userId])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String
+  color String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  products Product[]
+
+  @@unique([name, userId])
+  @@index([userId])
+}
+
+model Fornecedor {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  name        String
+  cnpj        String?
+  description String?
+  email       String?
+  phone       String?
+
+  // endereco (diacho)
+  logradouro  String?
+  numero      String?
+  complemento String?
+  bairro      String?
+  cidade      String?
+  estado      String?
+  cep         String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stockEntries StockEntry[]
+  products     Product[]
+
+  @@index([userId])
+}
+
+model Product {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  name          String
+  description   String?
+  sku           String?
+  precoVenda    Decimal
+  precoCompra   Decimal
+  stock         Int      @default(0)
+  lifetimeStock Int      @default(0)
+  imageUrl      String?
+  unidadeMedida String?  @default("un") // un, kg, g, ml, l
+  peso          Decimal? // peso em gramas
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fornecedorId String
+  fornecedor   Fornecedor @relation(fields: [fornecedorId], references: [id], onDelete: Cascade)
+
+  purchaseItems PurchaseItem[]
+  categories    Category[]
+  codeBarras    codigoDeBarras[]
+  stockEntries  StockEntry[]
+
+  @@index([userId])
+}
+
+model StockEntry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  quantity  Int // Quantos chegaram?
+  costPrice Decimal // Quanto pagou NESTA entrada específica?
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // Opcional: Vincular qual fornecedor entregou este lote específico
+  fornecedorId String?
+  fornecedor   Fornecedor? @relation(fields: [fornecedorId], references: [id])
+
+  @@index([productId])
+}
+
+model codigoDeBarras {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  code      String  @unique
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model SoldBarcodeLog {
+  id     String   @id @default(cuid())
+  soldAt DateTime @default(now())
+
+  barcode     String // O código (EAN, Serial, etc)
+  productName String // Snapshot do nome caso o produto seja apagado
+
+  purchaseId String
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([barcode])
+}
+
+model Despesas {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  value       Decimal
+  date        DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Purchase {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  date            DateTime @default(now())
+  status          String   @default("COMPLETED") // PENDING, COMPLETED, CANCELED
+  total           Decimal
+  metodoPagamento String   @default("DINHEIRO")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientId        String
+  client          Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  items           PurchaseItem[]
+  soldBarcodeLogs SoldBarcodeLog[] // Relação com o log de códigos
+
+  @@index([userId])
+  @@index([clientId])
+}
+
+model PurchaseItem {
+  id String @id @default(cuid())
+
+  quantity  Int
+  unitPrice Decimal
+
+  purchaseId      String
+  purchase        Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  recordedBarcode String?
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([purchaseId])
+  @@index([productId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

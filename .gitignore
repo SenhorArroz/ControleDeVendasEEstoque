@@ -1,0 +1,58 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# database (Mantemos o sqlite caso tenha sobrado arquivo local antigo)
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
+db.sqlite
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# Electron (Arquivos de build da versão Desktop antiga - Importante ignorar)
+dist_electron/
+dist/
+release/
+
+# Uploads Locais (Caso tenha sobrado alguma pasta de imagens locais)
+public/uploads/
+public/img/uploads/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+# do not commit any .env files to git, except for the .env.example file.
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# idea files & Editors
+.idea
+.vscode/
+*.swp
+*.swo

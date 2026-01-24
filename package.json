@@ -1,0 +1,106 @@
+{
+  "name": "gerenciador-mercado",
+  "version": "0.1.0",
+  "description": "Gerenciador Financeiro",
+  "author": "Seu Nome",
+  "main": "main.cjs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "check": "biome check .",
+    "check:unsafe": "biome check --write --unsafe .",
+    "check:write": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma migrate dev",
+    "db:migrate": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"wait-on tcp:3000 && electron .\"",
+    "electron:build": "npm run build && node prepare-build.cjs && electron-builder"
+  },
+  "build": {
+    "appId": "com.seunome.financeiro",
+    "productName": "Cash Flow",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "main.cjs",
+      "package.json",
+      "public/**/*",
+      "standalone_app/**/*"
+    ],
+    "asarUnpack": [
+      "standalone_app/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "prisma/dev.db",
+        "to": "dev.db"
+      },
+      "prisma/schema.prisma",
+      "node_modules/.prisma/**/*",
+      "node_modules/@prisma/client/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "verifyUpdateCodeSignature": false,
+      "signAndEditExecutable": false
+    }
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.2",
+    "@prisma/client": "^6.6.0",
+    "@t3-oss/env-nextjs": "^0.12.0",
+    "@tanstack/react-query": "^5.69.0",
+    "@trpc/client": "^11.0.0",
+    "@trpc/react-query": "^11.0.0",
+    "@trpc/server": "^11.0.0",
+    "@uploadthing/react": "^7.3.3",
+    "bcryptjs": "^3.0.3",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.562.0",
+    "next": "^15.2.3",
+    "next-auth": "5.0.0-beta.25",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "recharts": "^3.6.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.33.5",
+    "sonner": "^2.0.7",
+    "superjson": "^2.2.1",
+    "tcp-port-used": "^1.0.2",
+    "uploadthing": "^7.7.4",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.5",
+    "@tailwindcss/postcss": "^4.0.15",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.10",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/tcp-port-used": "^1.0.4",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "daisyui": "^5.5.14",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.4.0",
+    "postcss": "^8.5.3",
+    "prisma": "^6.6.0",
+    "tailwindcss": "^4.0.15",
+    "typescript": "^5.8.2",
+    "wait-on": "^9.0.3"
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.40.0"
+  },
+  "packageManager": "npm@11.6.2"
+}
