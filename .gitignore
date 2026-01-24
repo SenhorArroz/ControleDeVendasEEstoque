@@ -10,6 +10,7 @@
 
 # database (Mantemos o sqlite caso tenha sobrado arquivo local antigo)
 ./generated/
+generated/
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
 db.sqlite
