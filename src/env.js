@@ -24,6 +24,8 @@ export const env = createEnv({
     
     // Este continua OBRIGATÓRIO (é o que a v7 usa)
     UPLOADTHING_TOKEN: z.string(),
+    RESEND_API_KEY: z.string(),
+    NEXTAUTH_URL: z.string(),
   },
 
   /**
@@ -47,6 +49,8 @@ export const env = createEnv({
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
     UPLOADTHING_KEY: process.env.UPLOADTHING_KEY,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
