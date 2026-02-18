@@ -5,22 +5,27 @@ import { z } from "zod";
 export const fornecedorRouter = createTRPCRouter({
   getEvery: protectedProcedure
     .query(async ({ ctx }) => {
-      return ctx.db.fornecedor.findMany();
+      return ctx.db.fornecedor.findMany({
+        where: {userId: ctx.session.user.id}
+      });
     }),
   getAll: protectedProcedure
-    .input(z.object({ searchTerm: z.string().optional() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.fornecedor.findMany({
-        where: input.searchTerm ? {
+  .input(z.object({ searchTerm: z.string().optional() }))
+  .query(async ({ ctx, input }) => {
+    return ctx.db.fornecedor.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        ...(input.searchTerm ? {
           OR: [
             { name: { contains: input.searchTerm, mode: "insensitive" } },
             { cnpj: { contains: input.searchTerm } },
             { email: { contains: input.searchTerm, mode: "insensitive" } },
           ]
-        } : {},
-        include: { _count: { select: { products: true } } } // Contar produtos do fornecedor
-      });
-    }),
+        } : {})
+      },
+      include: { _count: { select: { products: true } } }
+    });
+  }),
     getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

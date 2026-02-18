@@ -172,7 +172,7 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 							<li>
 								<button
 									onClick={() =>
-										router.push(`/dashboard/clientes/${client.id}`)
+										router.push(`clientes/${client.id}`)
 									}
 								>
 									<ChevronRight className="w-4 h-4" /> Ver Detalhes

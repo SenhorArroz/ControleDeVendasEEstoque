@@ -20,48 +20,42 @@ export const productRouter = createTRPCRouter({
 		});
 	}),
 	getAll: protectedProcedure
-		.input(
-			z.object({
-				searchTerm: z.string().optional(),
-				categoryId: z.string().optional(),
-			}),
-		)
-		.query(async ({ ctx, input }) => {
-			return ctx.db.product.findMany({
-				where: {
-					AND: [
-						input.categoryId
-							? { categories: { some: { id: input.categoryId } } }
-							: {},
+    .input(
+        z.object({
+            searchTerm: z.string().optional(),
+            categoryId: z.string().optional(),
+        }),
+    )
+    .query(async ({ ctx, input }) => {
+        return ctx.db.product.findMany({
+            where: {
+                userId: ctx.session.user.id,
 
-						input.searchTerm
-							? {
-									OR: [
-										{
-											name: { contains: input.searchTerm, mode: "insensitive" },
-										},
-										{
-											sku: { contains: input.searchTerm, mode: "insensitive" },
-										},
-										{
-											codeBarras: {
-												some: {
-													code: { contains: input.searchTerm },
-												},
-											},
-										},
-									],
-								}
-							: {},
-					],
-				},
-				include: {
-					codeBarras: true,
-					categories: true,
-				},
-				take: 50,
-			});
-		}),
+                ...(input.categoryId ? {
+                    categories: { some: { id: input.categoryId } }
+                } : {}),
+
+                ...(input.searchTerm ? {
+                    OR: [
+                        { name: { contains: input.searchTerm, mode: "insensitive" } },
+                        { sku: { contains: input.searchTerm, mode: "insensitive" } },
+                        {
+                            codeBarras: {
+                                some: {
+                                    code: { contains: input.searchTerm },
+                                },
+                            },
+                        },
+                    ],
+                } : {})
+            },
+            include: {
+                codeBarras: true,
+                categories: true,
+            },
+            take: 50,
+        });
+    }),
 
 	create: protectedProcedure
 		.input(
@@ -70,7 +64,7 @@ export const productRouter = createTRPCRouter({
 				description: z.string().optional(),
 				sku: z.string().optional(),
 				precoVenda: z.number(),
-				precoCompra: z.number(),
+				precoCompra: z.number().optional(),
 				stock: z.number(),
 				unidadeMedida: z.string().optional(),
 				peso: z.number().optional(),

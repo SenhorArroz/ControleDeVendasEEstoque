@@ -232,7 +232,7 @@ export default function SuppliersClient() {
                       <td className="text-right">
                         <div className="join">
                             <Link 
-                                href={`/dashboard/suppliers/${supplier.id}`}
+                                href={`/fornecedores/${supplier.id}`}
                                 className="btn btn-sm btn-ghost join-item tooltip"
                                 data-tip="Detalhes"
                             >

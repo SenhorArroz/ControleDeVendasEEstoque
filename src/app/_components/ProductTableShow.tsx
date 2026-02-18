@@ -39,12 +39,6 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 			onClick={handleRowClick}
 			className="hover:bg-base-200/30 transition-colors group cursor-pointer"
 		>
-			<th className="no-row-click">
-				<label>
-					<input type="checkbox" className="checkbox checkbox-xs" />
-				</label>
-			</th>
-
 			{/* Produto (Imagem + Nome + SKU) */}
 			<td>
 				<div className="flex items-center gap-4">
@@ -140,11 +134,6 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 							<button onClick={() => onEdit(product)}>
 								<Pencil className="w-4 h-4" /> Editar Produto
 							</button>
-						</li>
-						<li>
-							<a>
-								<Tag className="w-4 h-4" /> Categorias
-							</a>
 						</li>
 						<div className="divider my-0"></div>
 						<li>

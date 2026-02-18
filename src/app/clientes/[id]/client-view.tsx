@@ -138,7 +138,7 @@ export default function ClientView({ client }: ClientViewProps) {
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 					<div className="flex items-center gap-4">
 						<Link
-							href="/dashboard/clientes"
+							href="/clientes"
 							className="btn btn-circle btn-ghost hover:bg-base-300"
 						>
 							<ArrowLeft className="w-6 h-6" />
