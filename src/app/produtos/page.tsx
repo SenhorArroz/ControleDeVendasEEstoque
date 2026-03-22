@@ -254,7 +254,7 @@ export default function ProductsPage() {
       {/* --- MODAL --- */}
       {isModalOpen && (
         <dialog className="modal modal-bottom sm:modal-middle modal-open bg-base-300/50 backdrop-blur-sm">
-          <div className="modal-box w-11/12 max-w-5xl p-0 overflow-hidden">
+          <div className="modal-box w-11/12 max-w-5xl p-0 overflow-auto">
             
             <div className="bg-base-200 px-6 py-4 flex justify-between items-center border-b border-base-300">
                 <h3 className="font-bold text-lg">{editingId ? "Editar Produto" : "Novo Produto"}</h3>
