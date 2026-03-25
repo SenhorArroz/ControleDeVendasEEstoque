@@ -224,6 +224,7 @@ model Purchase {
   status          String   @default("COMPLETED") // PENDING, COMPLETED, CANCELED
   total           Decimal
   metodoPagamento String   @default("DINHEIRO")
+  desconto        Decimal  @default(0)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

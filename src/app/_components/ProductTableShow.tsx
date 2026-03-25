@@ -9,7 +9,7 @@ import {
 	Barcode,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Product } from "@/types/product"; // Importe a interface acima
+import { api } from "~/trpc/react";
 
 interface Props {
 	product: Product;
@@ -19,6 +19,7 @@ interface Props {
 
 export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 	const router = useRouter();
+	const { data: Product } = api.produto.getByID.useQuery({ id: product.id });
 
 	// Formata moeda
 	const formatMoney = (val: number) =>
@@ -72,6 +73,20 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 				</div>
 			</td>
 
+			{/* Fornecedor */}
+
+			<td>
+				<div className="flex items-center gap-2">
+					<div>
+						<div className="font-bold text-base">{Product?.fornecedor?.name}</div>
+						<div className="text-xs opacity-50 font-mono tracking-wide flex items-center gap-1">
+							CNPJ: {Product?.fornecedor?.cnpj || "N/A"}
+						</div>
+					</div>
+				</div>
+			</td>
+
+
 			{/* Categorias */}
 			<td>
 				<div className="flex flex-wrap gap-1 max-w-[200px]">
@@ -79,6 +94,7 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 						<span
 							key={cat.id}
 							className="badge badge-sm badge-ghost bg-base-200 border-base-300 text-xs"
+							style={ { backgroundColor: cat.color + "60" } }
 						>
 							{cat.name}
 						</span>

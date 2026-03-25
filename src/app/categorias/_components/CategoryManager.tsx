@@ -153,24 +153,31 @@ export default function CategoryManager() {
 							</tr>
 						) : (
 							categories.map((cat) => (
-								<tr key={cat.id} className="hover">
+								<tr key={cat.id} className="hover"
+									style={{ backgroundColor: cat.color + "20" || "#ccc" }}
+								>
 									<td>
 										<div
 											className="w-8 h-8 rounded-full border border-base-300 shadow-sm"
 											style={{ backgroundColor: cat.color || "#ccc" }}
 										></div>
 									</td>
-									<td className="font-semibold">{cat.name}</td>
+									<td className="font-semibold">
+										<div className="bg-white p-2 rounded-lg">
+											{cat.name}
+										</div>
+									</td>
 									<td>
 										<span className="badge badge-ghost font-mono">
 											{cat._count?.products ?? 0} itens
 										</span>
 									</td>
 									<td className="flex justify-end gap-2">
-										<button
-											onClick={() => openModal(cat)}
-											className="btn btn-square btn-sm btn-ghost text-info"
-										>
+										<div className="bg-white p-2 rounded-lg">
+											<button
+												onClick={() => openModal(cat)}
+												className="btn btn-square btn-sm btn-ghost text-info"
+											>
 											<Edit className="w-4 h-4" />
 										</button>
 										<button
@@ -179,6 +186,7 @@ export default function CategoryManager() {
 										>
 											<Trash2 className="w-4 h-4" />
 										</button>
+										</div>
 									</td>
 								</tr>
 							))

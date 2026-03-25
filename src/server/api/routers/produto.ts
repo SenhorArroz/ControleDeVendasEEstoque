@@ -56,7 +56,18 @@ export const productRouter = createTRPCRouter({
             take: 50,
         });
     }),
-
+	getByID: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.query(async ({ ctx, input }) => {
+			return ctx.db.product.findUnique({
+				where: { id: input.id },
+				include: {
+					codeBarras: true,
+					categories: true,
+					fornecedor: true,
+				},
+			});
+		}),
 	create: protectedProcedure
 		.input(
 			z.object({

@@ -16,6 +16,7 @@ import {
   X,
   Loader2,
   Image as ImageIcon,
+  Tag,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
   // --- 3. INICIALIZANDO O HOOK ---
   const { startUpload } = useUploadThing("imageUploader");
+
+  // --- BUSCANDO TODAS AS CATEGORIAS PARA O SELECT ---
+  const { data: categories } = api.categoria.getAll.useQuery();
 
   // --- ESTADOS ---
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,6 +77,16 @@ export default function ProductDetailClient({ product }: { product: any }) {
     setFormData((p) => ({ ...p, barcodes: newBarcodes }));
   };
 
+  // --- LÓGICA DE CATEGORIAS ---
+  const toggleCategory = (id: string) => {
+    setFormData(prev => ({
+      ...prev,
+      categoryIds: prev.categoryIds.includes(id)
+        ? prev.categoryIds.filter(cId => cId !== id)
+        : [...prev.categoryIds, id]
+    }));
+  };
+
   // --- MUTAÇÃO TRPC ---
   const updateMutation = api.produto.update.useMutation({
     onSuccess: () => {
@@ -98,13 +112,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
     try {
       let finalImageUrl = product.imageUrl;
 
-      // --- 4. UPLOAD COM UPLOADTHING ---
       if (selectedImageFile) {
-        // Envia para o UploadThing
         const uploadRes = await startUpload([selectedImageFile]);
-        
         if (uploadRes && uploadRes[0]) {
-           // Pega a URL nova (.ufsUrl é o padrão novo)
            finalImageUrl = uploadRes[0].ufsUrl;
         } else {
            throw new Error("Falha ao fazer upload da imagem");
@@ -141,8 +151,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
   return (
     <main className="p-4 md:p-8 space-y-8 bg-base-100 min-h-screen">
-      {/* ... (O RESTO DO SEU JSX CONTINUA IGUAL) ... */}
-      {/* Vou replicar apenas o início e fim para manter o contexto, o JSX visual não muda */}
       
       {/* ================= HEADER ================= */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-base-300 pb-6">
@@ -170,12 +178,10 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
       {/* ================= DASHBOARD GRID ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* ESQUERDA: IMAGEM + INFO BÁSICA */}
         <div className="lg:col-span-1 space-y-6">
           <div className="card bg-base-100 shadow-xl border border-base-200 overflow-hidden group">
             <figure className="aspect-square bg-base-200 relative">
               {product.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={product.imageUrl}
                   alt={product.name}
@@ -191,7 +197,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
             <div className="card-body p-6">
               <div className="flex flex-wrap gap-2 mb-2">
                 {product.categories?.map((cat: any) => (
-                  <span key={cat.id} className="badge badge-primary badge-outline text-xs font-bold">
+                  <span key={cat.id} className="badge text-white badge-outline text-xs font-bold"
+                  style={ { backgroundColor: cat.color + "60" } }
+                  >
                     {cat.name}
                   </span>
                 ))}
@@ -212,7 +220,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
               </div>
             </div>
           </div>
-          
           <div className="card bg-base-100 shadow-sm border border-base-200">
             <div className="card-body p-6">
               <h3 className="font-bold text-lg mb-2">Sobre o Produto</h3>
@@ -223,7 +230,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </div>
         </div>
 
-        {/* DIREITA: FINANCEIRO E LOGÍSTICA */}
         <div className="lg:col-span-2 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="stats shadow bg-base-100 border border-base-200">
@@ -292,9 +298,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
         </div>
       </div>
 
-      {/* ================= MODAL DE EDIÇÃO ================= */}
+      {/* ================= MODAL DE EDIÇÃO (GRID ATUALIZADA) ================= */}
       {isModalOpen && (
-        <dialog className="modal modal-open backdrop-blur-sm bg-black/40 z-50 transition-all duration-300">
+        <dialog className="modal modal-open backdrop-blur-sm bg-black/40 z-50 flex items-center justify-center">
           <div className="modal-box w-11/12 max-w-5xl max-h-[90vh] p-0 overflow-hidden rounded-2xl shadow-2xl bg-base-100 border border-base-300 flex flex-col">
             
             <div className="bg-base-200/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-base-300 shrink-0">
@@ -316,156 +322,163 @@ export default function ProductDetailClient({ product }: { product: any }) {
             </div>
 
             <form onSubmit={handleSave} className="flex flex-col flex-1 overflow-hidden">
-              
               <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                   
-                  {/* --- COLUNA ESQUERDA: DADOS (8/12) --- */}
-                  <div className="lg:col-span-8 space-y-6">
-                    <div className="form-control">
-                      <label className="label text-xs font-bold uppercase opacity-60">Nome do Produto</label>
+                  {/* --- IMAGEM --- */}
+                  <div className="md:col-span-3 flex flex-col items-center gap-2">
+                    <label className="text-[10px] font-bold uppercase opacity-50 w-full text-center">Foto do Produto</label>
+                    <div className="w-full aspect-square bg-base-200 rounded-xl border-2 border-dashed border-base-300 relative overflow-hidden group hover:border-primary transition-all">
+                      {imagePreview ? (
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-40">
+                          <ImageIcon className="w-8 h-8" />
+                        </div>
+                      )}
                       <input
-                        className="input input-bordered focus:input-primary h-12 text-lg font-medium bg-base-200/30"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                      />
+                    </div>
+                  </div>
+
+                  {/* --- DADOS PRINCIPAIS --- */}
+                  <div className="md:col-span-9 grid grid-cols-12 gap-4">
+                    <div className="form-control col-span-12">
+                      <label className="label text-[10px] font-bold uppercase opacity-50">Nome do Produto</label>
+                      <input
+                        className="input input-bordered w-full h-12 focus:input-primary bg-base-200/30"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="form-control">
-                        <label className="label text-xs font-bold uppercase opacity-60">SKU</label>
-                        <input
-                          className="input input-bordered font-mono text-sm"
-                          value={formData.sku}
-                          onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-control">
-                        <label className="label text-xs font-bold uppercase opacity-60">Estoque</label>
-                        <div className="join w-full">
-                          <input
-                            type="number"
-                            className="join-item input input-bordered w-full"
-                            value={formData.stock}
-                            onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                          />
-                          <span className="join-item btn btn-ghost bg-base-200 border-base-300 no-animation text-xs">{formData.unidadeMedida}</span>
-                        </div>
-                      </div>
+                    <div className="form-control col-span-6">
+                      <label className="label text-[10px] font-bold uppercase opacity-50">SKU / Referência</label>
+                      <input
+                        className="input input-bordered w-full h-12 font-mono"
+                        value={formData.sku}
+                        onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                      />
                     </div>
 
-                    <div className="divider text-xs opacity-50 uppercase tracking-widest">Financeiro</div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="form-control">
-                        <label className="label text-xs font-bold uppercase opacity-60 text-error">Custo (R$)</label>
+                    <div className="form-control col-span-6">
+                      <label className="label text-[10px] font-bold uppercase opacity-50">Quantidade em Estoque</label>
+                      <div className="join w-full">
                         <input
                           type="number"
-                          step="0.01"
-                          className="input input-bordered border-l-4 border-l-error bg-base-200/20"
-                          value={formData.precoCompra}
-                          onChange={(e) => setFormData({ ...formData, precoCompra: e.target.value })}
+                          className="join-item input input-bordered w-full h-12"
+                          value={formData.stock}
+                          onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                         />
-                      </div>
-                      <div className="form-control">
-                        <label className="label text-xs font-bold uppercase opacity-60 text-success">Venda (R$)</label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          className="input input-bordered border-l-4 border-l-success font-bold text-success bg-base-200/20"
-                          value={formData.precoVenda}
-                          onChange={(e) => setFormData({ ...formData, precoVenda: e.target.value })}
-                        />
+                        <span className="join-item btn btn-ghost h-12 bg-base-200 border-base-300 no-animation">{formData.unidadeMedida}</span>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="form-control mt-4">
-                      <label className="label text-xs font-bold uppercase opacity-60">Descrição Detalhada</label>
-                      <textarea
-                        className="textarea textarea-bordered h-24 leading-relaxed text-sm bg-base-200/30 focus:textarea-primary"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  <div className="col-span-12 divider my-0 opacity-50"></div>
+
+                  {/* --- FINANCEIRO --- */}
+                  <div className="md:col-span-6 grid grid-cols-2 gap-4">
+                    <div className="form-control">
+                      <label className="label text-[10px] font-bold uppercase opacity-50 text-error">Custo de Compra (R$)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="input input-bordered w-full h-12 border-l-4 border-l-error"
+                        value={formData.precoCompra}
+                        onChange={(e) => setFormData({ ...formData, precoCompra: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label text-[10px] font-bold uppercase opacity-50 text-success">Preço de Venda (R$)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        className="input input-bordered w-full h-12 border-l-4 border-l-success font-bold"
+                        value={formData.precoVenda}
+                        onChange={(e) => setFormData({ ...formData, precoVenda: e.target.value })}
                       />
                     </div>
                   </div>
 
-                  {/* --- COLUNA DIREITA: IMAGEM PEQUENA E BARCODES (4/12) --- */}
-                  <div className="lg:col-span-4 space-y-6">
-                    
-                    {/* UPLOAD IMAGEM (Tamanho reduzido) */}
-                    <div className="form-control text-center">
-                      <label className="label text-xs font-bold uppercase opacity-60 justify-center w-full mb-1">Imagem Principal</label>
-                      <div className="w-40 h-40 mx-auto bg-base-200 rounded-2xl border-2 border-dashed border-base-300 relative overflow-hidden group hover:border-primary transition-all shadow-inner">
-                        {imagePreview ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center opacity-40 text-base-content">
-                            <ImageIcon className="w-8 h-8 mb-1" />
-                            <span className="text-[10px] font-bold uppercase">Foto</span>
-                          </div>
-                        )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                        />
-                        {imagePreview && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                            <Edit3 className="text-white w-6 h-6" />
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-[10px] opacity-40 mt-2">Clique para alterar</p>
+                  {/* --- CATEGORIAS --- */}
+                  <div className="md:col-span-6">
+                    <label className="label text-[10px] font-bold uppercase opacity-50">Categorias</label>
+                    <div className="flex flex-wrap gap-2 p-2 bg-base-200/30 rounded-lg border border-base-300 min-h-[3rem]">
+                      {categories?.map((cat) => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => toggleCategory(cat.id)}
+                          className={`badge badge-md cursor-pointer transition-all gap-1 border ${
+                            formData.categoryIds.includes(cat.id) 
+                              ? 'badge-primary' 
+                              : 'badge-ghost opacity-60'
+                          }`}
+                        >
+                          <Tag className="w-3 h-3" />
+                          {cat.name}
+                        </button>
+                      ))}
                     </div>
-
-                    {/* BARCODES SECTION */}
-                    <div className="card bg-base-200/50 border border-base-300 shadow-sm">
-                      <div className="card-body p-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <h3 className="text-xs font-black uppercase opacity-60 flex items-center gap-2">
-                            <Barcode className="w-4 h-4" /> EAN / GTIN
-                          </h3>
-                          <button
-                            type="button"
-                            onClick={addBarcodeField}
-                            className="btn btn-xs btn-primary btn-circle"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                        
-                        <div className="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
-                          {formData.barcodes.map((code, index) => (
-                            <div key={index} className="flex gap-2 items-center">
-                              <input
-                                type="text"
-                                className="input input-sm input-bordered w-full font-mono text-xs bg-base-100"
-                                placeholder="Código..."
-                                value={code}
-                                onChange={(e) => updateBarcodeField(index, e.target.value)}
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeBarcodeField(index)}
-                                className="btn btn-sm btn-square btn-ghost text-error hover:bg-error/10"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
                   </div>
+
+                  {/* --- DESCRIÇÃO --- */}
+                  <div className="col-span-12">
+                    <label className="label text-[10px] font-bold uppercase opacity-50">Descrição do Produto</label>
+                    <textarea
+                      className="textarea textarea-bordered w-full h-24 bg-base-200/30 resize-none"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
+                  </div>
+
+                  {/* --- CÓDIGOS DE BARRA --- */}
+                  <div className="col-span-12">
+                    <div className="bg-base-200/50 rounded-xl border border-base-300 p-4">
+                      <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-[10px] font-black uppercase opacity-60 flex items-center gap-2">
+                          <Barcode className="w-4 h-4" /> Gerenciar Códigos EAN / GTIN
+                        </h3>
+                        <button type="button" onClick={addBarcodeField} className="btn btn-xs btn-primary gap-1">
+                          <Plus className="w-3 h-3" /> Adicionar
+                        </button>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {formData.barcodes.map((code, index) => (
+                          <div key={index} className="flex gap-1 items-center bg-base-100 p-1 rounded-lg border border-base-300">
+                            <input
+                              type="text"
+                              className="input input-sm w-full font-mono text-xs focus:outline-none"
+                              placeholder="000000000000"
+                              value={code}
+                              onChange={(e) => updateBarcodeField(index, e.target.value)}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeBarcodeField(index)}
+                              className="btn btn-ghost btn-xs text-error"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
-              {/* FOOTER (Fixo) */}
-              <div className="border-t border-base-300 p-4 bg-base-100/80 backdrop-blur flex justify-end gap-3 shrink-0">
+              {/* FOOTER DO MODAL */}
+              <div className="border-t border-base-300 p-4 bg-base-100 flex justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
@@ -476,17 +489,13 @@ export default function ProductDetailClient({ product }: { product: any }) {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary px-8 shadow-lg shadow-primary/20"
+                  className="btn btn-primary px-8"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Salvando...
-                    </>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Salvando...</>
                   ) : (
-                    <>
-                      <Save className="w-4 h-4" /> Salvar Alterações
-                    </>
+                    <><Save className="w-4 h-4" /> Salvar Alterações</>
                   )}
                 </button>
               </div>

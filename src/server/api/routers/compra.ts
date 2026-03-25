@@ -58,6 +58,7 @@ export const salesRouter = createTRPCRouter({
 				status: z.string(), // "PENDING" | "COMPLETED"
 				total: z.number(),
 				paymentMethod: z.string(),
+				desconto: z.number().optional(),
 				items: z.array(
 					z.object({
 						productId: z.string(),
@@ -81,6 +82,7 @@ export const salesRouter = createTRPCRouter({
 						total: input.total,
 						date: new Date(),
 						metodoPagamento: input.paymentMethod,
+						desconto: input.desconto ?? 0,
 					},
 				});
 
