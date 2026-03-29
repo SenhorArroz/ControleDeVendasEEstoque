@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const productRouter = createTRPCRouter({
 	cont: protectedProcedure.query(async ({ ctx }) => {
@@ -20,42 +21,46 @@ export const productRouter = createTRPCRouter({
 		});
 	}),
 	getAll: protectedProcedure
-    .input(
-        z.object({
-            searchTerm: z.string().optional(),
-            categoryId: z.string().optional(),
-        }),
-    )
-    .query(async ({ ctx, input }) => {
-        return ctx.db.product.findMany({
-            where: {
-                userId: ctx.session.user.id,
+		.input(
+			z.object({
+				searchTerm: z.string().optional(),
+				categoryId: z.string().optional(),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
+			return ctx.db.product.findMany({
+				where: {
+					userId: ctx.session.user.id,
 
-                ...(input.categoryId ? {
-                    categories: { some: { id: input.categoryId } }
-                } : {}),
+					...(input.categoryId
+						? {
+								categories: { some: { id: input.categoryId } },
+							}
+						: {}),
 
-                ...(input.searchTerm ? {
-                    OR: [
-                        { name: { contains: input.searchTerm, mode: "insensitive" } },
-                        { sku: { contains: input.searchTerm, mode: "insensitive" } },
-                        {
-                            codeBarras: {
-                                some: {
-                                    code: { contains: input.searchTerm },
-                                },
-                            },
-                        },
-                    ],
-                } : {})
-            },
-            include: {
-                codeBarras: true,
-                categories: true,
-            },
-            take: 50,
-        });
-    }),
+					...(input.searchTerm
+						? {
+								OR: [
+									{ name: { contains: input.searchTerm, mode: "insensitive" } },
+									{ sku: { contains: input.searchTerm, mode: "insensitive" } },
+									{
+										codeBarras: {
+											some: {
+												code: { contains: input.searchTerm },
+											},
+										},
+									},
+								],
+							}
+						: {}),
+				},
+				include: {
+					codeBarras: true,
+					categories: true,
+				},
+				take: 50,
+			});
+		}),
 	getByID: protectedProcedure
 		.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {
@@ -88,6 +93,19 @@ export const productRouter = createTRPCRouter({
 			}),
 		)
 		.mutation(async ({ ctx, input }) => {
+			const existingBarcodes = await ctx.db.codigoDeBarras.findMany({
+				where: {
+					code: { in: input.barcodes.filter((c) => c.trim() !== "") },
+				},
+			});
+
+			if (existingBarcodes.length > 0) {
+				const codes = existingBarcodes.map((b) => b.code).join(", ");
+				throw new TRPCError({
+					code: "CONFLICT",
+					message: `Os seguintes códigos de barras já estão em uso: ${codes}`,
+				});
+			}
 			return ctx.db.product.create({
 				data: {
 					userId: ctx.session.user.id,
