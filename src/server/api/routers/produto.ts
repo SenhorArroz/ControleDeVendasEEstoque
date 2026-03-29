@@ -58,7 +58,6 @@ export const productRouter = createTRPCRouter({
 					codeBarras: true,
 					categories: true,
 				},
-				take: 50,
 			});
 		}),
 	getByID: protectedProcedure
