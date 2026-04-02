@@ -89,6 +89,7 @@ export default function FuncionariosPage() {
                     <th className="py-4 px-6">Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
+                    <th>Senha</th>
                     <th className="text-right px-6">Status</th>
                   </tr>
                 </thead>
@@ -98,6 +99,7 @@ export default function FuncionariosPage() {
                       <td className="py-4 px-6 font-medium text-gray-900">{funcionario.name}</td>
                       <td className="text-gray-600">{funcionario.email}</td>
                       <td className="text-gray-600">{funcionario.phone || "-"}</td>
+                      <td className="text-gray-600">{funcionario.phone.replace(/\D/g, '').replace("(", "").replace(")", "").replace("-", "").replace(" ", "") || "-"}</td>
                       <td className="text-right px-6">
                         <span className="badge badge-ghost badge-sm py-3 px-3">Ativo</span>
                       </td>
