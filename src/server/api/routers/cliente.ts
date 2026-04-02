@@ -8,9 +8,25 @@ import { api } from "~/trpc/server";
 
 export const clienteRouter = createTRPCRouter({
 	getAll: protectedProcedure.query(async ({ ctx }) => {
+		const userId = ctx.session.user.id;
+        const userRole = ctx.session.user.role;
+
+        let ownerId = userId;
+
+        if (userRole === "FUNCIONARIO") {
+            const funcionario = await ctx.db.funcionario.findFirst({
+                where: { userId: userId },
+                select: { creatorId: true },
+            });
+
+            if (funcionario?.creatorId) {
+                ownerId = funcionario.creatorId;
+            }
+        }
+
 		return ctx.db.client.findMany({
 			where: {
-				userId: ctx.session.user.id,
+				userId: ownerId,
 			},
 			orderBy: { createdAt: "desc" },
 		});

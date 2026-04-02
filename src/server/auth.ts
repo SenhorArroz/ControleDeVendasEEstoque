@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type Adapter } from "next-auth/adapters"; // <--- Importação necessária para corrigir o erro de tipo
 import NextAuth, { type DefaultSession } from "next-auth";
+import { type JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
@@ -19,8 +20,19 @@ declare module "next-auth" {
             image: string;
             phone: string;
             bio: string;
+            role: "FUNCIONARIO" | "ADMIN";
             createdAt: string;
         } & DefaultSession["user"];
+    }
+
+    interface User {
+        role: "FUNCIONARIO" | "ADMIN";
+    }
+}
+
+declare module "next-auth/jwt" {
+    interface JWT {
+        role?: "FUNCIONARIO" | "ADMIN";
     }
 }
 
@@ -68,6 +80,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     email: user.email,
                     image: user.image,
                     phone: user.phone,
+                    role: user.role,
                     bio: user.bio,
                 };
             },
@@ -80,12 +93,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 user: {
                     ...session.user,
                     id: token.sub as string,
+                    role: token.role as "FUNCIONARIO" | "ADMIN",
                 },
             };
         },
         jwt: ({ token, user }) => {
             if (user) {
                 token.sub = user.id;
+                token.role = user.role;
             }
             return token;
         },

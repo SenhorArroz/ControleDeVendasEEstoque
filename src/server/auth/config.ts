@@ -24,13 +24,13 @@ declare module "next-auth" {
 			phone: string;
 			bio: string;
 			createdAt: string;
+			role: "FUNCIONARIO" | "ADMIN";
 		} & DefaultSession["user"];
 	}
 
-	// interface User {
-	//   // ...other properties
-	//   // role: UserRole;
-	// }
+	interface User {
+		role: "FUNCIONARIO" | "ADMIN";
+	}
 }
 
 /**
@@ -48,6 +48,7 @@ export const authConfig = {
 			clientSecret: env.AUTH_GOOGLE_SECRET,
 			allowDangerousEmailAccountLinking: true,
 		}),
+		
 		CredentialsProvider({
 			name: "credentials",
 			credentials: {
@@ -109,6 +110,7 @@ export const authConfig = {
 			user: {
 				...session.user,
 				id: user.id,
+				role: user.role,
 			},
 		}),
 	},

@@ -7,7 +7,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import type image from "next/image";
 import { Resend } from "resend";
-import { randomBytes } from "crypto";
+import { privateDecrypt, randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcryptjs";
 
@@ -110,6 +110,81 @@ export const authRouter = createTRPCRouter({
 
 			return user;
 		}),
+	getAllFuncionarios: protectedProcedure.query(async ({ ctx }) => {
+		const funcionarios = await ctx.db.user.findMany({
+			where: {
+				funcionarios: {
+					some: {
+						creatorId: ctx.session.user.id,
+					},
+				},
+			},
+		});
+		return funcionarios;
+	}),
+	getAllPerId : protectedProcedure.query(async ({ ctx }) => {
+		const funcionarios = await ctx.db.funcionario.findMany({
+			where: {
+				userCreatorId: ctx.session.user.id,
+			},
+		});
+		return funcionarios;
+	}),
+	registerFuncionario : protectedProcedure
+	.input(
+		z.object({
+			name: z.string(),
+			phone: z.string(),
+			
+		}),
+	)
+	.mutation(async ({ ctx, input }) => {
+		const lojaNome = ctx.session.user.name?.toLowerCase().replace(/\s/g, '');
+            const email = input.name
+			.normalize("NFD")                     // Decompõe os acentos
+			.replace(/[\u0300-\u036f]/g, "")      // Remove os acentos (combining marks)
+			.toLowerCase()                        // Tudo em minúsculo
+			.replace(/[^a-z0-9]/g, "")            // Remove TUDO que não for letra ou número
+			+ '@' + lojaNome + '.com';
+			const password = input.phone.replace(/\D/g, '').replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
+		const funcio = await ctx.db.funcionario.create({
+        	data: {
+            	name: input.name,
+            	email: email,
+            	password: await bcrypt.hash(password, 10),
+            	phone: input.phone,
+            	creatorId: ctx.session.user.id,
+				userId: ctx.session.user.id,
+            // userId: ctx.session.user.id, <-- Você estava colocando o ID do admin aqui, o que é um erro se o campo deve ser do funcionário
+        },	
+    });
+
+    // 2. Cria o usuário e conecta ao funcionário recém-criado
+    const user = await ctx.db.user.create({
+        data: {
+            name: input.name,
+            email: email,
+            password: await bcrypt.hash(password, 10),
+            phone: input.phone,
+            role: "FUNCIONARIO",
+            funcionarios: {
+                connect: {
+                    id: funcio.id,
+                },
+            },
+        },
+    });
+
+    // 3. AGORA você atualiza o funcionário com o ID do usuário que acabou de ser criado
+    await ctx.db.funcionario.update({
+        where: { id: funcio.id },
+        data: {
+            userId: user.id, // Aqui inserimos o ID do user criado no passo acima
+        },
+    });
+
+    return { user, funcio };
+	}),
 	deleteUser: protectedProcedure.mutation(async ({ ctx }) => {
 		await ctx.db.user.delete({
 			where: {

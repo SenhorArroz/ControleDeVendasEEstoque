@@ -11,6 +11,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  FUNCIONARIO
+  ADMIN
+}
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
@@ -47,10 +52,12 @@ model User {
   image         String?
   bio           String?
   phone         String?
+  role          Role         @default(ADMIN)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @default(now()) @updatedAt
   accounts      Account[]
   sessions      Session[]
+  funcionarios  Funcionario[]
   clients       Client[]
   products      Product[]
   categories    Category[]
@@ -93,6 +100,27 @@ model Category {
   products Product[]
 
   @@unique([name, userId])
+  @@index([userId])
+}
+
+model Funcionario {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name    String
+  email   String
+  password String
+  role    Role     @default(FUNCIONARIO)
+  phone   String?
+  creatorId String?
+  
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  purchases Purchase[]
+
   @@index([userId])
 }
 
@@ -228,6 +256,9 @@ model Purchase {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  funcionarioId String?
+  funcionario   Funcionario? @relation(fields: [funcionarioId], references: [id], onDelete: Cascade)
 
   clientId        String
   client          Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)

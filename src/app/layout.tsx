@@ -1,7 +1,8 @@
 import "~/styles/globals.css";
 import { ThemeProvider } from "next-themes";
-
+import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
 import type { Metadata } from "next";
+import { AuthProvider } from "./_components/auth-provider";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -23,12 +24,16 @@ export default function RootLayout({
 	return (
 		<html className={`${geist.variable}`} lang="pt-br" suppressHydrationWarning>
 			<body>
-				<ThemeProvider attribute="data-theme"
-				defaultTheme="light"
-				enableSystem
-				>
-					<TRPCReactProvider>{children}</TRPCReactProvider>
+				<AuthProvider>
+				<ClerkProvider>
+					<ThemeProvider attribute="data-theme"
+					defaultTheme="light"
+					enableSystem
+					>
+						<TRPCReactProvider>{children}</TRPCReactProvider>
 				</ThemeProvider>
+				</ClerkProvider>
+				</AuthProvider>
 			</body>
 		</html>
 		

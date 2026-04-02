@@ -4,9 +4,25 @@ import { z } from "zod";
 
 export const categoriaRouter = createTRPCRouter({
 	getAll: protectedProcedure.query(async ({ ctx }) => {
+		const userId = ctx.session.user.id;
+        const userRole = ctx.session.user.role;
+
+        // 1. Determinar o ID do proprietário dos produtos
+        let ownerId = userId;
+
+        if (userRole === "FUNCIONARIO") {
+            const funcionario = await ctx.db.funcionario.findFirst({
+                where: { userId: userId },
+                select: { creatorId: true },
+            });
+
+            if (funcionario?.creatorId) {
+                ownerId = funcionario.creatorId;
+            }
+        }
 		return ctx.db.category.findMany({
 			where: {
-				userId: ctx.session.user.id,
+				userId: ownerId,
 			},
 			include: {
 				_count: {

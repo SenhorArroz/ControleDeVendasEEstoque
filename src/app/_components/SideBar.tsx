@@ -121,6 +121,11 @@ export default function SideBar() {
 							</ul>
 						</details>
 					</li>
+					<li className="mb-1">
+						<Link href="/funcionarios" className="font-medium">
+							<User className="w-5 h-5" /> Funcionários
+						</Link>
+					</li>
 				</div>
 
 				{/* Rodapé */}

@@ -31,7 +31,6 @@ export const salesRouter = createTRPCRouter({
 					// stock: { gt: 0 }
 				},
 				orderBy: { name: "asc" },
-				take: 20, // Limita a 20 para não pesar a tela
 			});
 		}),
 	// --- 2.1. CONTAR ITENS VENDIDOS (Para o Dashboard) ---
@@ -71,12 +70,26 @@ export const salesRouter = createTRPCRouter({
 		)
 		.mutation(async ({ ctx, input }) => {
 			const userId = ctx.session.user.id;
+			const userRole = ctx.session.user.role;
+
+			let ownerId = userId;
+
+			if (userRole === "FUNCIONARIO") {
+				const funcionario = await ctx.db.funcionario.findFirst({
+					where: { userId: userId },
+					select: { creatorId: true },
+				});
+
+				if (funcionario?.creatorId) {
+					ownerId = funcionario.creatorId;
+				}
+			}
 
 			return ctx.db.$transaction(async (tx) => {
 				// 1. Criar a Compra (Cabeçalho)
 				const purchase = await tx.purchase.create({
 					data: {
-						userId: userId,
+						userId: ownerId,
 						clientId: input.clientId,
 						status: input.status,
 						total: input.total,

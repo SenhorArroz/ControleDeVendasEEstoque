@@ -31,7 +31,7 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
+import { useSession } from "next-auth/react";
 // --- TIPOS ---
 type SaleSuccessData = {
     clientName: string;
@@ -68,7 +68,8 @@ const PAYMENT_METHODS = [
 export default function NewSalePage() {
     const router = useRouter();
     const utils = api.useUtils();
-
+    const { data: session } = useSession();
+    const userRole = session?.user?.role;
     // --- ESTADOS ---
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
@@ -283,11 +284,13 @@ export default function NewSalePage() {
             {/* LADO ESQUERDO: CATÁLOGO */}
             <div className="flex-1 flex flex-col h-full overflow-hidden relative border-r border-base-300">
                 <div className="p-4 space-y-4 bg-base-100/50 backdrop-blur-sm z-10">
+                {userRole !== "FUNCIONARIO" && (
                     <div>
                         <Link href="/dashboard" className="btn btn-ghost gap-2 pl-0 hover:bg-transparent hover:underline text-base-content/70">
                             <ArrowLeft size={18} /> Voltar para Dashboard
                         </Link>
                     </div>
+                )}
                     <div className="form-control w-full">
                         <div className="relative">
                             <input
@@ -459,9 +462,12 @@ export default function NewSalePage() {
 
                         <div className="p-6 bg-base-200/80 border-t border-base-300 rounded-b-3xl flex flex-col gap-3">
                             <button onClick={handleResetSale} className="btn btn-primary w-full btn-lg shadow-lg rounded-2xl"><Repeat className="w-5 h-5" /> Nova Venda</button>
+                {userRole !== "FUNCIONARIO" && (
+                            
                             <div className="grid grid-cols-2 gap-2">
                                 <Link href="/dashboard" className="btn btn-ghost btn-sm text-[10px] font-black uppercase opacity-50"><Home className="w-4 h-4" /> Home</Link>
                             </div>
+                            )}
                         </div>
                     </div>
                 </dialog>

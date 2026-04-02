@@ -21,45 +21,63 @@ export const productRouter = createTRPCRouter({
 		});
 	}),
 	getAll: protectedProcedure
-		.input(
-			z.object({
-				searchTerm: z.string().optional(),
-				categoryId: z.string().optional(),
-			}),
-		)
-		.query(async ({ ctx, input }) => {
-			return ctx.db.product.findMany({
-				where: {
-					userId: ctx.session.user.id,
+    .input(
+        z.object({
+            searchTerm: z.string().optional(),
+            categoryId: z.string().optional(),
+        }),
+    )
+    .query(async ({ ctx, input }) => {
+        const userId = ctx.session.user.id;
+        const userRole = ctx.session.user.role;
 
-					...(input.categoryId
-						? {
-								categories: { some: { id: input.categoryId } },
-							}
-						: {}),
+        // 1. Determinar o ID do proprietário dos produtos
+        let ownerId = userId;
 
-					...(input.searchTerm
-						? {
-								OR: [
-									{ name: { contains: input.searchTerm, mode: "insensitive" } },
-									{ sku: { contains: input.searchTerm, mode: "insensitive" } },
-									{
-										codeBarras: {
-											some: {
-												code: { contains: input.searchTerm },
-											},
-										},
-									},
-								],
-							}
-						: {}),
-				},
-				include: {
-					codeBarras: true,
-					categories: true,
-				},
-			});
-		}),
+        if (userRole === "FUNCIONARIO") {
+            const funcionario = await ctx.db.funcionario.findFirst({
+                where: { userId: userId },
+                select: { creatorId: true },
+            });
+
+            if (funcionario?.creatorId) {
+                ownerId = funcionario.creatorId;
+            }
+        }
+
+        // 2. Buscar produtos usando o ownerId (seja o próprio user ou o patrão)
+        return ctx.db.product.findMany({
+            where: {
+                userId: ownerId, // Filtra pelo dono real dos produtos
+
+                ...(input.categoryId
+                    ? {
+                            categories: { some: { id: input.categoryId } },
+                        }
+                    : {}),
+
+                ...(input.searchTerm
+                    ? {
+                            OR: [
+                                { name: { contains: input.searchTerm, mode: "insensitive" } },
+                                { sku: { contains: input.searchTerm, mode: "insensitive" } },
+                                {
+                                    codeBarras: {
+                                        some: {
+                                            code: { contains: input.searchTerm },
+                                        },
+                                    },
+                                },
+                            ],
+                        }
+                    : {}),
+            },
+            include: {
+                codeBarras: true,
+                categories: true,
+            },
+        });
+    }),
 	getByID: protectedProcedure
 		.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {

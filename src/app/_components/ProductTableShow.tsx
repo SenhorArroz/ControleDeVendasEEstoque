@@ -147,12 +147,6 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 						className="dropdown-content z-[20] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-200"
 					>
 						<li>
-							<button onClick={() => onEdit(product)}>
-								<Pencil className="w-4 h-4" /> Editar Produto
-							</button>
-						</li>
-						<div className="divider my-0"></div>
-						<li>
 							<button
 								className="text-error hover:bg-error/10"
 								onClick={() => onDelete(product.id)}
