@@ -20,6 +20,9 @@ export const productRouter = createTRPCRouter({
 			select: { stock: { _sum: true } },
 		});
 	}),
+	contProducts: protectedProcedure.query(async ({ ctx }) => {
+		return ctx.db.product.count();
+	}),
 	getAll: protectedProcedure
     .input(
         z.object({

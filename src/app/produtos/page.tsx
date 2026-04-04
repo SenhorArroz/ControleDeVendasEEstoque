@@ -19,6 +19,7 @@ export default function ProductsPage() {
 
   // Queries
   const { data: products, isLoading, refetch } = api.produto.getAll.useQuery({ searchTerm });
+  const productCount = api.produto.contProducts.useQuery();
   const { data: fornecedores } = api.fornecedor.getEvery.useQuery(); 
   const { data: categorias } = api.categoria.getAll.useQuery(); 
 
@@ -154,7 +155,7 @@ export default function ProductsPage() {
                 <Plus className="w-4 h-4" /> Novo Produto
             </button>
           </div>
-
+          
           <div className="bg-base-100 rounded-2xl shadow-sm border border-base-300 overflow-hidden">
             <div className="p-4 border-b border-base-300">
                <label className="input input-bordered flex items-center gap-2 w-full md:w-96">
@@ -163,6 +164,15 @@ export default function ProductsPage() {
                 {isLoading && <Loader2 className="w-4 h-4 animate-spin"/>}
               </label>
             </div>
+  
+  <div className="stat">
+    <div className="stat-figure text-primary">
+      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+    </div>
+    <div className="stat-title">Total de Produtos</div>
+    <div className="stat-value">{productCount.data}</div>
+  </div>
+
 
             <div className="overflow-x-auto">
               <table className="table w-full">
