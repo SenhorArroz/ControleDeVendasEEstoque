@@ -165,7 +165,7 @@ export const productRouter = createTRPCRouter({
 				stock: z.number(),
 				unidadeMedida: z.string().optional(),
 				peso: z.number().optional(),
-				imageUrl: z.string().optional(),
+				imageUrl: z.string().nullish(),
 				fornecedorId: z.string(),
 				barcodes: z.array(z.string()),
 				categoryIds: z.array(z.string()),

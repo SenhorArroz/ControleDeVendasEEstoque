@@ -25,6 +25,7 @@ export interface ClienteData {
 	phone: string | null;
 	address: string | null;
 	status: string;
+	purchases: any;
 }
 
 const formatCurrency = (value: number) => {
@@ -57,8 +58,9 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 
 	const { data: lastPurchaseDate, isLoading: isLoadingDate } =
 		api.cliente.lastPurchase.useQuery({ id: client.id });
-	const { data: totalGastos, isLoading: isLoadingGastos } =
-		api.cliente.gastosTotais.useQuery({ id: client.id });
+	const totalGastos= client?.purchases
+		.filter((p: any) => p.status === "COMPLETED")
+		.reduce((acc: number, p: any) => acc + Number(p.total), 0);
 
 	const utils = api.useUtils();
 
