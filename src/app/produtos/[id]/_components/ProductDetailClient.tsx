@@ -35,8 +35,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
   // --- 3. INICIALIZANDO O HOOK ---
   const { startUpload } = useUploadThing("imageUploader");
 
-  // --- BUSCANDO TODAS AS CATEGORIAS PARA O SELECT ---
+  // --- BUSCAS DE DADOS ---
   const { data: categories } = api.categoria.getAll.useQuery();
+  const { data: suppliers } = api.fornecedor.getAll.useQuery({}); // BUSCA FORNECEDORES
 
   // --- ESTADOS ---
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +56,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
     stock: product.stock.toString(),
     unidadeMedida: product.unidadeMedida || "un",
     peso: product.peso ? Number(product.peso).toString() : "",
-    fornecedorId: product.fornecedorId,
+    fornecedorId: product.fornecedorId || "", // INICIALIZA COM O ID ATUAL
     barcodes: product.codeBarras?.length > 0 ? product.codeBarras.map((b: any) => b.code) : [""],
     categoryIds: product.categories?.map((c: any) => c.id) || [],
   });
@@ -130,6 +131,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
         peso: parseFloat(formData.peso) || 0,
         imageUrl: finalImageUrl,
         categoryIds: formData.categoryIds,
+        fornecedorId: formData.fornecedorId || null, // ENVIA O ID SELECIONADO OU NULL
         barcodes: formData.barcodes.filter((b: string) => b.trim() !== ""),
       });
     } catch (err: any) {
@@ -298,7 +300,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
         </div>
       </div>
 
-      {/* ================= MODAL DE EDIÇÃO (GRID ATUALIZADA) ================= */}
+      {/* ================= MODAL DE EDIÇÃO ================= */}
       {isModalOpen && (
         <dialog className="modal modal-open backdrop-blur-sm bg-black/40 z-50 flex items-center justify-center">
           <div className="modal-box w-11/12 max-w-5xl max-h-[90vh] p-0 overflow-hidden rounded-2xl shadow-2xl bg-base-100 border border-base-300 flex flex-col">
@@ -383,7 +385,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
                   <div className="col-span-12 divider my-0 opacity-50"></div>
 
-                  {/* --- FINANCEIRO --- */}
+                  {/* --- FINANCEIRO E FORNECEDOR --- */}
                   <div className="md:col-span-6 grid grid-cols-2 gap-4">
                     <div className="form-control">
                       <label className="label text-[10px] font-bold uppercase opacity-50 text-error">Custo de Compra (R$)</label>
@@ -407,11 +409,28 @@ export default function ProductDetailClient({ product }: { product: any }) {
                     </div>
                   </div>
 
-                  {/* --- CATEGORIAS --- */}
+                  {/* NOVO CAMPO: FORNECEDOR */}
                   <div className="md:col-span-6">
+                    <label className="label text-[10px] font-bold uppercase opacity-50">Fornecedor</label>
+                    <select
+                      className="select select-bordered w-full h-12 bg-base-200/30"
+                      value={formData.fornecedorId || ""}
+                      onChange={(e) => setFormData({ ...formData, fornecedorId: e.target.value })}
+                    >
+                      <option value="">Selecione um fornecedor</option>
+                      {suppliers?.map((sup: any) => (
+                        <option key={sup.id} value={sup.id}>
+                          {sup.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* --- CATEGORIAS --- */}
+                  <div className="col-span-12">
                     <label className="label text-[10px] font-bold uppercase opacity-50">Categorias</label>
                     <div className="flex flex-wrap gap-2 p-2 bg-base-200/30 rounded-lg border border-base-300 min-h-[3rem]">
-                      {categories?.map((cat) => (
+                      {categories?.map((cat: any) => (
                         <button
                           key={cat.id}
                           type="button"

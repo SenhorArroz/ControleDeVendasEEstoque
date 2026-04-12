@@ -19,7 +19,7 @@ export default function ProductsPage() {
 
   // Queries
   const { data: products, isLoading, refetch } = api.produto.getAll.useQuery({ searchTerm });
-  const productCount = api.produto.contProducts.useQuery();
+  const productCount = api.produto.cont.useQuery();
   const { data: fornecedores } = api.fornecedor.getEvery.useQuery(); 
   const { data: categorias } = api.categoria.getAll.useQuery(); 
 

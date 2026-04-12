@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import {
 	createTRPCRouter,
 	protectedProcedure,
@@ -9,20 +10,26 @@ import { api } from "~/trpc/server";
 export const clienteRouter = createTRPCRouter({
 	getAll: protectedProcedure.query(async ({ ctx }) => {
 		const userId = ctx.session.user.id;
-        const userRole = ctx.session.user.role;
+		const userRole = ctx.session.user.role;
 
-        let ownerId = userId;
+		let ownerId = userId;
 
-        if (userRole === "FUNCIONARIO") {
-            const funcionario = await ctx.db.funcionario.findFirst({
-                where: { userId: userId },
-                select: { creatorId: true },
-            });
+		if (userRole === "FUNCIONARIO") {
+			const funcionario = await ctx.db.funcionario.findFirst({
+				where: { userId: userId },
+				select: { creatorId: true },
+			});
 
-            if (funcionario?.creatorId) {
-                ownerId = funcionario.creatorId;
-            }
-        }
+			if (funcionario?.creatorId) {
+				ownerId = funcionario.creatorId;
+			}
+			if (!funcionario?.creatorId) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: "Vínculo de funcionário não encontrado.",
+				});
+			}
+		}
 
 		return ctx.db.client.findMany({
 			where: {
