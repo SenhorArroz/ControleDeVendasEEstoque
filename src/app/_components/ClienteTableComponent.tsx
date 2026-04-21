@@ -58,9 +58,8 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 
 	const { data: lastPurchaseDate, isLoading: isLoadingDate } =
 		api.cliente.lastPurchase.useQuery({ id: client.id });
-	const totalGastos= client?.purchases
-		.filter((p: any) => p.status === "COMPLETED")
-		.reduce((acc: number, p: any) => acc + Number(p.total), 0);
+	const totalGastos = client?.purchases?.filter((p: any) => p.status === "COMPLETED")
+    .reduce((acc: number, p: any) => acc + Number(p.total), 0) ?? 0;
 
 	const utils = api.useUtils();
 
