@@ -59,7 +59,7 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 	const { data: lastPurchaseDate, isLoading: isLoadingDate } =
 		api.cliente.lastPurchase.useQuery({ id: client.id });
 	const totalGastos = client?.purchases?.filter((p: any) => p.status === "COMPLETED")
-    .reduce((acc: number, p: any) => acc + Number(p.total), 0) ?? 0;
+		.reduce((acc: number, p: any) => acc + Number(p.total), 0) ?? 0;
 
 	const utils = api.useUtils();
 
@@ -117,11 +117,10 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 				{/* 2. Status */}
 				<td>
 					<div
-						className={`badge badge-sm font-medium gap-1 py-3 px-3 ${
-							client.status === "ATIVO"
+						className={`badge badge-sm font-medium gap-1 py-3 px-3 ${client.status === "ATIVO"
 								? "badge-success text-white"
 								: "badge-warning text-white"
-						}`}
+							}`}
 					>
 						{client.status}
 					</div>
@@ -130,11 +129,7 @@ export function ClienteRow({ client }: { client: ClienteData }) {
 				{/* 3. Gastos */}
 				<td>
 					<div className="font-semibold text-base-content flex items-center gap-1">
-						{isLoadingGastos ? (
-							<span className="loading loading-dots loading-xs" />
-						) : (
-							formatCurrency(totalGastos ?? 0)
-						)}
+						{formatCurrency(totalGastos)}
 					</div>
 				</td>
 
