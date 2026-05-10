@@ -1,8 +1,7 @@
-// src/app/dashboard/clientes/[id]/page.tsx
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { notFound, redirect } from "next/navigation";
-import ClientView from "./client-view"; // Importe o componente que criamos acima
+import ClientView from "./client-view";
 import SideBar from "../../_components/SideBar";
 
 export default async function ClientDetailsPage({ params }: { params: { id: string } }) {
@@ -23,10 +22,15 @@ export default async function ClientDetailsPage({ params }: { params: { id: stri
 
   if (!client) notFound();
 
+  const serializedClient = JSON.parse(JSON.stringify(client));
+
   return (
     <div className="drawer lg:drawer-open font-sans bg-base-200 min-h-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <ClientView client={client} />
+      
+      {/* Passa o cliente serializado */}
+      <ClientView client={serializedClient} /> 
+      
       <SideBar />
     </div>
   );

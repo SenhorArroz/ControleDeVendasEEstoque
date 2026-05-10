@@ -3,23 +3,21 @@
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { 
-  Search, Plus, Loader2, Users, Phone, MapPin, User, Menu 
+  Search, Plus, Loader2, Users, Phone, MapPin, User, Menu, ChevronRight 
 } from "lucide-react";
 
 import SideBar from "../../_components/SideBar"; 
-import { ClienteRow } from "../../_components/ClienteTableComponent"; // Importe o componente que criamos acima
+import { ClienteRow } from "../../_components/ClienteTableComponent";
 
 export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
   const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
 
   const { data: clients, isLoading, refetch } = api.cliente.getAll.useQuery({ search: searchTerm });
 
   const createMutation = api.cliente.create.useMutation({
     onSuccess: () => {
-      alert("Cliente cadastrado!");
       setIsModalOpen(false);
       setFormData({ name: "", phone: "", address: "" });
       refetch();
@@ -33,128 +31,113 @@ export default function ClientsPage() {
   };
 
   return (
-    <div className="drawer lg:drawer-open bg-base-200 min-h-screen">
-      
+    <div className="drawer lg:drawer-open bg-[#F8FAFC] min-h-screen font-sans">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       
-      {/* CONTEÚDO */}
       <div className="drawer-content flex flex-col">
-        
-        {/* Menu Mobile */}
-        <div className="w-full navbar bg-base-100 lg:hidden shadow-sm mb-4">
-            <div className="flex-none">
-                <label htmlFor="my-drawer-2" className="btn btn-square btn-ghost">
-                    <Menu className="w-6 h-6" />
-                </label>
-            </div>
-            <div className="flex-1 px-2 mx-2 font-bold text-lg">CashFlow</div>
+        {/* Mobile Navbar */}
+        <div className="w-full navbar bg-white lg:hidden border-b border-slate-100 px-6">
+          <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button lg:hidden">
+            <Menu className="w-6 h-6" />
+          </label>
+          <div className="flex-1 font-black text-xl tracking-tighter">CASHFLOW</div>
         </div>
 
-        <main className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500">
-            
-            {/* Header da Página */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold flex items-center gap-2">
-                        <Users className="text-primary"/> Meus Clientes
-                    </h1>
-                    <p className="text-base-content/60">Gerencie sua carteira de clientes.</p>
-                </div>
-
-                <div className="flex gap-3 w-full md:w-auto">
-                    <div className="relative w-full md:w-64">
-                        <Search className="absolute left-3 top-3 w-4 h-4 text-base-content/50" />
-                        <input 
-                            type="text" 
-                            placeholder="Buscar..." 
-                            className="input input-bordered w-full pl-10 bg-base-100 focus:input-primary"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <button onClick={() => setIsModalOpen(true)} className="btn btn-primary gap-2 shadow-lg">
-                        <Plus size={18} /> <span className="hidden sm:inline">Novo Cliente</span>
-                    </button>
-                </div>
+        <main className="p-6 md:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+          
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="space-y-1">
+              <h1 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+                <Users className="text-primary" size={36}/> Clientes
+              </h1>
+              <p className="text-slate-500 font-medium italic">Base de dados e histórico de relacionamento</p>
             </div>
 
-            {/* TABELA DE CLIENTES */}
-            <div className="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="table w-full">
-                        {/* Cabeçalho Atualizado para combinar com o ClienteRow */}
-                        <thead>
-                            <tr className="bg-base-200/50 text-sm uppercase text-base-content/70">
-                                <th className="py-4 pl-6">Cliente</th>
-                                <th>Status</th>
-                                <th>Total Gasto</th>
-                                <th>Última Compra</th>
-                                <th className="text-right pr-6">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Loading */}
-                            {isLoading && (
-                                <tr><td colSpan={5} className="text-center py-10"><Loader2 className="animate-spin mx-auto"/></td></tr>
-                            )}
-                            
-                            {/* Vazio */}
-                            {!isLoading && clients?.length === 0 && (
-                                <tr><td colSpan={5} className="text-center py-10 text-base-content/50">Nenhum cliente encontrado.</td></tr>
-                            )}
-                            
-                            {/* Linhas (Usando o novo componente) */}
-                            {clients?.map((client) => (
-                                <ClienteRow key={client.id} client={client} />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <div className="relative group flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-primary transition-colors" />
+                <input 
+                  type="text" 
+                  placeholder="Pesquisar cliente..." 
+                  className="input w-full md:w-80 pl-11 bg-white border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/5 transition-all font-semibold"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <button onClick={() => setIsModalOpen(true)} className="btn btn-primary rounded-2xl px-6 font-black shadow-lg shadow-primary/20 gap-2 border-none">
+                <Plus size={20} /> ADICIONAR
+              </button>
             </div>
+          </div>
+
+          {/* Tabela Section */}
+          <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
+            <div className="overflow-x-auto">
+              <table className="table w-full border-separate border-spacing-0">
+                <thead>
+                  <tr className="bg-slate-50/50">
+                    <th className="py-6 pl-10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-none">Informações Básicas</th>
+                    <th className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-none">Status</th>
+                    <th className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-none">LTV (Total Gasto)</th>
+                    <th className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-none">Último Contato</th>
+                    <th className="text-right pr-10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-none">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {isLoading ? (
+                    <tr><td colSpan={5} className="text-center py-20"><Loader2 className="animate-spin mx-auto text-primary" size={32}/></td></tr>
+                  ) : clients?.length === 0 ? (
+                    <tr><td colSpan={5} className="text-center py-20 text-slate-400 font-bold italic">Nenhum cliente na base de dados.</td></tr>
+                  ) : (
+                    clients?.map((client) => (
+                      <ClienteRow key={client.id} client={client as any} />
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </main>
       </div> 
 
-      {/* SIDEBAR */}
       <SideBar />
 
-      {/* MODAL DE CADASTRO */}
+      {/* MODAL REESTILIZADO */}
       {isModalOpen && (
-        <dialog className="modal modal-open bg-black/50 backdrop-blur-sm z-50">
-          <div className="modal-box w-11/12 max-w-lg">
-            <h3 className="font-bold text-xl flex items-center gap-2 border-b border-base-200 pb-3 mb-4">
-              <User className="text-primary"/> Adicionar Cliente
-            </h3>
-            <form onSubmit={handleCreate} className="space-y-4">
+        <dialog className="modal modal-open bg-slate-900/40 backdrop-blur-sm z-[100] animate-in fade-in duration-300">
+          <div className="modal-box w-11/12 max-w-xl rounded-[3rem] p-10 shadow-2xl border border-white">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-8">
+              <h3 className="font-black text-2xl tracking-tighter flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-xl text-primary"><User size={24}/></div>
+                Novo Cadastro
+              </h3>
+              <button onClick={() => setIsModalOpen(false)} className="btn btn-ghost btn-circle btn-sm"><X size={20}/></button>
+            </div>
+            
+            <form onSubmit={handleCreate} className="space-y-6">
               <div className="form-control">
-                <label className="label font-medium"><span className="label-text">Nome *</span></label>
-                <div className="relative">
-                    <User className="absolute left-3 top-3.5 w-4 h-4 text-base-content/40" />
-                    <input type="text" required autoFocus className="input input-bordered w-full pl-10" 
-                        value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                </div>
+                <label className="label uppercase text-[10px] font-black text-slate-400 tracking-widest px-1">Nome Completo</label>
+                <input type="text" required className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold" 
+                  value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="form-control">
-                  <label className="label font-medium"><span className="label-text">Telefone</span></label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-3.5 w-4 h-4 text-base-content/40" />
-                    <input type="tel" className="input input-bordered w-full pl-10" 
-                        value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
-                  </div>
+                  <label className="label uppercase text-[10px] font-black text-slate-400 tracking-widest px-1">Telefone / WhatsApp</label>
+                  <input type="tel" className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold" 
+                    value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
                 </div>
                 <div className="form-control">
-                  <label className="label font-medium"><span className="label-text">Endereço</span></label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-3.5 w-4 h-4 text-base-content/40" />
-                    <input type="text" className="input input-bordered w-full pl-10" 
-                        value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
-                  </div>
+                  <label className="label uppercase text-[10px] font-black text-slate-400 tracking-widest px-1">Localização / Endereço</label>
+                  <input type="text" className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold" 
+                    value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
                 </div>
               </div>
-              <div className="modal-action pt-4">
-                <button type="button" className="btn btn-ghost" onClick={() => setIsModalOpen(false)}>Cancelar</button>
-                <button type="submit" className="btn btn-primary" disabled={createMutation.isPending}>
-                  {createMutation.isPending ? <Loader2 className="animate-spin" size={18}/> : <Plus size={18}/>} Salvar
+
+              <div className="pt-6">
+                <button type="submit" className="btn btn-primary w-full h-14 rounded-2xl font-black shadow-xl shadow-primary/20 border-none" disabled={createMutation.isPending}>
+                  {createMutation.isPending ? <Loader2 className="animate-spin" size={24}/> : "CONFIRMAR CADASTRO"}
                 </button>
               </div>
             </form>

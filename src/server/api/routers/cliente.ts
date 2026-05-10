@@ -20,22 +20,26 @@ export const clienteRouter = createTRPCRouter({
 				select: { creatorId: true },
 			});
 
-			if (funcionario?.creatorId) {
-				ownerId = funcionario.creatorId;
-			}
 			if (!funcionario?.creatorId) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
 					message: "Vínculo de funcionário não encontrado.",
 				});
 			}
+			ownerId = funcionario.creatorId;
 		}
 
+		// BUSCA OS CLIENTES INCLUINDO AS COMPRAS
 		return ctx.db.client.findMany({
 			where: {
-				userId: ownerId,
+				userId: ownerId, // Busca os clientes do dono (seja o dono logado ou o patrão do funcionário)
 			},
-			orderBy: { createdAt: "desc" },
+			include: {
+				purchases: true, // ESSA LINHA É A CHAVE: Carrega o histórico de compras para o cálculo do LTV
+			},
+			orderBy: {
+				name: "asc", // Já traz em ordem alfabética como você pediu
+			},
 		});
 	}),
 	lastPurchase: publicProcedure

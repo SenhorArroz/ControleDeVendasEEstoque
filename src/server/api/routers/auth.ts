@@ -3,7 +3,7 @@ import {
 	protectedProcedure,
 	publicProcedure,
 } from "~/server/api/trpc";
-import { z } from "zod";
+import { optional, z } from "zod";
 import bcrypt from "bcryptjs";
 import type image from "next/image";
 import { Resend } from "resend";
@@ -197,9 +197,9 @@ export const authRouter = createTRPCRouter({
 		.input(
 			z.object({
 				name: z.string(),
-				image: z.string(),
-				phone: z.string(),
-				bio: z.string(),
+				image: z.string().optional(),
+				phone: z.string().optional(),
+				bio: z.string().optional(),
 			}),
 		)
 		.mutation(async ({ ctx, input }) => {

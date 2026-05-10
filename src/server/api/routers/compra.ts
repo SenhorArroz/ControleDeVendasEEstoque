@@ -170,12 +170,58 @@ export const salesRouter = createTRPCRouter({
 			z.object({
 				id: z.string(),
 				status: z.string(), // "PENDING" | "COMPLETED" | "CANCELED"
+				metodoPagamento: z.string().optional(), // <-- 1. ADICIONE ESTA LINHA
 			}),
 		)
 		.mutation(async ({ ctx, input }) => {
 			return ctx.db.purchase.update({
 				where: { id: input.id },
-				data: { status: input.status },
+				data: {
+					status: input.status,
+					// 2. ATUALIZA O PAGAMENTO SE FOR ENVIADO
+					...(input.metodoPagamento && { metodoPagamento: input.metodoPagamento })
+				},
 			});
 		}),
+
+	delete: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			return ctx.db.$transaction(async (tx) => {
+				// 1. Busca a compra e os itens atrelados a ela
+				const purchase = await tx.purchase.findUnique({
+					where: { id: input.id },
+					include: { items: true },
+				});
+
+				if (!purchase) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: "Compra não encontrada.",
+					});
+				}
+
+				// 2. Devolve os itens para o estoque do produto
+				for (const item of purchase.items) {
+					await tx.product.update({
+						where: { id: item.productId },
+						data: {
+							stock: {
+								increment: item.quantity, // Soma a quantidade de volta ao estoque
+							},
+						},
+					});
+				}
+
+				// 3. Deleta a compra (O 'onDelete: Cascade' no banco cuidará de apagar os purchaseItems atrelados)
+				return tx.purchase.delete({
+					where: { id: input.id },
+				});
+			});
+		}),
+
 });

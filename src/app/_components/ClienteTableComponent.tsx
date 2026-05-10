@@ -1,263 +1,144 @@
 "use client";
 
 import {
-	MoreVertical,
-	Pencil,
-	Trash2,
-	MapPin,
-	Phone,
-	Calendar,
-	DollarSign,
-	AlertTriangle,
-	Save,
-	Loader2,
-	X,
-	ChevronRight,
+    MoreVertical, Pencil, Trash2, Save, Loader2, X, ChevronRight, User
 } from "lucide-react";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 
-// ... (Mantenha suas interfaces e funções formatCurrency/formatDate aqui) ...
 export interface ClienteData {
-	id: string;
-	name: string;
-	phone: string | null;
-	address: string | null;
-	status: string;
-	purchases: any;
+    id: string;
+    name: string;
+    phone: string | null;
+    address: string | null;
+    status: string;
+    purchases: any;
 }
 
-const formatCurrency = (value: number) => {
-	return new Intl.NumberFormat("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-	}).format(value);
-};
-
-const formatDate = (date: Date | string | null) => {
-	if (!date) return "-";
-	return new Date(date).toLocaleDateString("pt-BR", {
-		day: "2-digit",
-		month: "short",
-		year: "numeric",
-	});
-};
-
 export function ClienteRow({ client }: { client: ClienteData }) {
-	const router = useRouter();
+    const router = useRouter();
+    const editModalId = `edit_modal_${client.id}`;
+    const deleteModalId = `delete_modal_${client.id}`;
+    const [formData, setFormData] = useState({ name: client.name, phone: client.phone ?? "", address: client.address ?? "" });
 
-	const editModalId = `edit_modal_${client.id}`;
-	const deleteModalId = `delete_modal_${client.id}`;
+    const { data: lastPurchaseDate, isLoading: isLoadingDate } = api.cliente.lastPurchase.useQuery({ id: client.id });
+    const totalGastos = client?.purchases?.filter((p: any) => p.status === "COMPLETED")
+        .reduce((acc: number, p: any) => acc + Number(p.total), 0) ?? 0;
 
-	const [formData, setFormData] = useState({
-		name: client.name,
-		phone: client.phone ?? "",
-		address: client.address ?? "",
-	});
+    const utils = api.useUtils();
 
-	const { data: lastPurchaseDate, isLoading: isLoadingDate } =
-		api.cliente.lastPurchase.useQuery({ id: client.id });
-	const totalGastos = client?.purchases?.filter((p: any) => p.status === "COMPLETED")
-		.reduce((acc: number, p: any) => acc + Number(p.total), 0) ?? 0;
+    const updateMutation = api.cliente.update.useMutation({
+        onSuccess: () => {
+            utils.cliente.getAll.invalidate();
+            (document.getElementById(editModalId) as HTMLDialogElement).close();
+        },
+    });
 
-	const utils = api.useUtils();
+    const deleteMutation = api.cliente.delete.useMutation({
+        onSuccess: () => {
+            utils.cliente.getAll.invalidate();
+            (document.getElementById(deleteModalId) as HTMLDialogElement).close();
+        },
+    });
 
-	const updateMutation = api.cliente.update.useMutation({
-		onSuccess: () => {
-			utils.cliente.getAll.invalidate();
-			(document.getElementById(editModalId) as HTMLDialogElement).close();
-			router.refresh();
-		},
-		onError: (err) => alert("Erro: " + err.message),
-	});
+    const formatCurrency = (val: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(val);
 
-	const deleteMutation = api.cliente.delete.useMutation({
-		onSuccess: () => {
-			utils.cliente.getAll.invalidate();
-			router.refresh();
-		},
-	});
+    return (
+        <>
+            <tr
+                onClick={() => router.push(`/clientes/${client.id}`)}
+                className="group hover:bg-slate-50 transition-all duration-300 cursor-pointer"
+            >
+                {/* Perfil */}
+                <td className="py-5 pl-10">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
+                            <span className="text-lg font-black">{client.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div>
+                            <div className="font-black text-slate-800 tracking-tight">{client.name}</div>
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{client.phone || "S/ CONTATO"}</div>
+                        </div>
+                    </div>
+                </td>
 
-	// --- NAVEGAÇÃO ---
-	const handleRowClick = () => {
-		router.push(`/clientes/${client.id}`);
-	};
+                {/* Status */}
+                <td>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                        client.status === "ATIVO" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-amber-50 text-amber-600 border-amber-100"
+                    }`}>
+                        {client.status}
+                    </span>
+                </td>
 
-	const handleUpdate = (e: React.FormEvent) => {
-		e.preventDefault();
-		updateMutation.mutate({ id: client.id, ...formData });
-	};
+                {/* Gastos */}
+                <td>
+                    <div className="font-black text-slate-900">{formatCurrency(totalGastos)}</div>
+                </td>
 
-	return (
-		<>
-			<tr
-				onClick={handleRowClick}
-				className="group hover:bg-base-200/50 transition-all duration-200 border-b border-base-200 last:border-none cursor-pointer"
-			>
-				{/* 1. Perfil */}
-				<td className="py-4 pl-6">
-					<div className="flex items-center gap-4">
-						<div className="avatar placeholder">
-							<div className="w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20">
-								<span className="text-lg font-bold uppercase">
-									{client.name.charAt(0)}
-								</span>
-							</div>
-						</div>
-						<div>
-							<div className="font-bold text-base">{client.name}</div>
-							<div className="text-xs text-base-content/60 flex items-center gap-1">
-								{client.phone || "Sem telefone"}
-							</div>
-						</div>
-					</div>
-				</td>
+                {/* Data */}
+                <td>
+                    <span className="text-xs font-bold text-slate-500 uppercase">
+                        {isLoadingDate ? "..." : lastPurchaseDate ? new Date(lastPurchaseDate as string).toLocaleDateString('pt-BR') : "SEM REGISTRO"}
+                    </span>
+                </td>
 
-				{/* 2. Status */}
-				<td>
-					<div
-						className={`badge badge-sm font-medium gap-1 py-3 px-3 ${client.status === "ATIVO"
-								? "badge-success text-white"
-								: "badge-warning text-white"
-							}`}
-					>
-						{client.status}
-					</div>
-				</td>
+                {/* Ações */}
+                <th className="text-right pr-10" onClick={(e) => e.stopPropagation()}>
+                    <div className="dropdown dropdown-left">
+                        <button tabIndex={0} className="btn btn-ghost btn-sm btn-circle hover:bg-slate-200">
+                            <MoreVertical size={16} />
+                        </button>
+                        <ul tabIndex={0} className="dropdown-content z-50 menu p-2 shadow-2xl bg-slate-900 text-white rounded-2xl w-44 font-bold text-xs uppercase tracking-widest border border-slate-700">
+                            <li><button onClick={() => (document.getElementById(editModalId) as HTMLDialogElement).showModal()}><Pencil size={14}/> Editar</button></li>
+                            <li><button onClick={() => router.push(`/clientes/${client.id}`)}><ChevronRight size={14}/> Detalhes</button></li>
+                            <li className="border-t border-slate-700 mt-2 pt-2"><button onClick={() => (document.getElementById(deleteModalId) as HTMLDialogElement).showModal()} className="text-rose-400"><Trash2 size={14}/> Excluir</button></li>
+                        </ul>
+                    </div>
+                </th>
+            </tr>
 
-				{/* 3. Gastos */}
-				<td>
-					<div className="font-semibold text-base-content flex items-center gap-1">
-						{formatCurrency(totalGastos)}
-					</div>
-				</td>
+            {/* MODAL DE EDIÇÃO */}
+            <dialog id={editModalId} className="modal bg-slate-900/60 backdrop-blur-sm" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-box rounded-[2.5rem] p-10">
+                    <h3 className="font-black text-xl mb-6 uppercase tracking-widest">Editar Perfil</h3>
+                    <form onSubmit={(e) => { e.preventDefault(); updateMutation.mutate({ id: client.id, ...formData }); }} className="space-y-4">
+                        <div className="form-control">
+                            <label className="label text-[10px] font-black text-slate-400 uppercase">Nome</label>
+                            <input className="input input-bordered rounded-xl bg-slate-50 font-bold" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="form-control">
+                                <label className="label text-[10px] font-black text-slate-400 uppercase">Telefone</label>
+                                <input className="input input-bordered rounded-xl bg-slate-50 font-bold" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                            </div>
+                            <div className="form-control">
+                                <label className="label text-[10px] font-black text-slate-400 uppercase">Endereço</label>
+                                <input className="input input-bordered rounded-xl bg-slate-50 font-bold" value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
+                            </div>
+                        </div>
+                        <div className="modal-action">
+                            <button type="button" className="btn btn-ghost font-black text-xs" onClick={() => (document.getElementById(editModalId) as HTMLDialogElement).close()}>CANCELAR</button>
+                            <button className="btn btn-primary px-8 rounded-xl font-black text-xs" disabled={updateMutation.isPending}>
+                                {updateMutation.isPending ? <Loader2 className="animate-spin" /> : "SALVAR ALTERAÇÕES"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
 
-				{/* 4. Data */}
-				<td>
-					<span className="text-sm opacity-70">
-						{isLoadingDate ? "..." : formatDate(lastPurchaseDate as string)}
-					</span>
-				</td>
-
-				{/* 5. Ações (STOP PROPAGATION AQUI) */}
-				<th className="text-right pr-6" onClick={(e) => e.stopPropagation()}>
-					<div className="dropdown dropdown-end dropdown-left">
-						<div
-							tabIndex={0}
-							role="button"
-							className="btn btn-ghost btn-sm btn-square"
-						>
-							<MoreVertical className="w-4 h-4" />
-						</div>
-						<ul
-							tabIndex={0}
-							className="dropdown-content z-[50] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-200"
-						>
-							<li>
-								<button
-									onClick={() =>
-										(
-											document.getElementById(editModalId) as HTMLDialogElement
-										).showModal()
-									}
-								>
-									<Pencil className="w-4 h-4" /> Editar
-								</button>
-							</li>
-							<li>
-								<button
-									onClick={() =>
-										router.push(`clientes/${client.id}`)
-									}
-								>
-									<ChevronRight className="w-4 h-4" /> Ver Detalhes
-								</button>
-							</li>
-							<div className="divider my-0"></div>
-							<li>
-								<button
-									onClick={() =>
-										(
-											document.getElementById(
-												deleteModalId,
-											) as HTMLDialogElement
-										).showModal()
-									}
-									className="text-error"
-								>
-									<Trash2 className="w-4 h-4" /> Excluir
-								</button>
-							</li>
-						</ul>
-					</div>
-				</th>
-			</tr>
-
-			{/* --- MANTENHA SEUS MODAIS AQUI (CÓDIGO ANTERIOR) --- */}
-			{/* Apenas lembre de usar e.stopPropagation() se os modais forem clicados, 
-          embora o <dialog> nativo geralmente lide bem com isso fora da árvore DOM */}
-			<dialog
-				id={editModalId}
-				className="modal modal-bottom sm:modal-middle cursor-default"
-				onClick={(e) => e.stopPropagation()}
-			>
-				{/* ... Conteúdo do Modal de Edição que você já fez ... */}
-				<div className="modal-box">
-					{/* ... form ... */}
-					<form onSubmit={handleUpdate} className="space-y-4">
-						{/* Inputs... */}
-						<div className="form-control">
-							<label className="label">Nome</label>
-							<input
-								className="input input-bordered"
-								value={formData.name}
-								onChange={(e) =>
-									setFormData({ ...formData, name: e.target.value })
-								}
-							/>
-						</div>
-						{/* ... Botões ... */}
-						<div className="modal-action">
-							<form method="dialog">
-								<button className="btn btn-ghost">Cancelar</button>
-							</form>
-							<button className="btn btn-primary">Salvar</button>
-						</div>
-					</form>
-				</div>
-				<form method="dialog" className="modal-backdrop">
-					<button>close</button>
-				</form>
-			</dialog>
-
-			<dialog
-				id={deleteModalId}
-				className="modal modal-bottom sm:modal-middle cursor-default"
-				onClick={(e) => e.stopPropagation()}
-			>
-				{/* ... Conteúdo do Modal de Exclusão ... */}
-				<div className="modal-box">
-					<h3 className="font-bold text-lg text-error">Excluir Cliente?</h3>
-					<p className="py-4">
-						Essa ação removerá o histórico de compras deste cliente.
-					</p>
-					<div className="modal-action">
-						<form method="dialog">
-							<button className="btn">Cancelar</button>
-						</form>
-						<button
-							onClick={() => deleteMutation.mutate({ id: client.id })}
-							className="btn btn-error"
-						>
-							Excluir
-						</button>
-					</div>
-				</div>
-				<form method="dialog" className="modal-backdrop">
-					<button>close</button>
-				</form>
-			</dialog>
-		</>
-	);
+            {/* MODAL DE EXCLUSÃO */}
+            <dialog id={deleteModalId} className="modal bg-rose-900/20 backdrop-blur-sm" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-box rounded-[2rem] border border-rose-100">
+                    <h3 className="font-black text-xl text-rose-600 uppercase tracking-tighter">Confirmar Exclusão?</h3>
+                    <p className="py-4 text-slate-500 font-medium leading-relaxed">Você está prestes a remover <span className="text-slate-900 font-bold">{client.name}</span>. Esta ação é irreversível e removerá todos os vínculos financeiros.</p>
+                    <div className="modal-action">
+                        <button className="btn btn-ghost font-black" onClick={() => (document.getElementById(deleteModalId) as HTMLDialogElement).close()}>MANTER CLIENTE</button>
+                        <button onClick={() => deleteMutation.mutate({ id: client.id })} className="btn btn-error text-white rounded-xl font-black px-8">EXCLUIR AGORA</button>
+                    </div>
+                </div>
+            </dialog>
+        </>
+    );
 }

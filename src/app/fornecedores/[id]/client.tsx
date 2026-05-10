@@ -5,19 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import {
-  ArrowLeft,
-  Phone,
-  Mail,
-  MapPin,
-  Package,
-  Edit3,
-  Save,
-  Building2,
-  Calendar,
-  ExternalLink,
-  Loader2,
-  X
+  ArrowLeft, Phone, Mail, MapPin, Package, Edit3, Save, 
+  Building2, Calendar, ExternalLink, Loader2, X, FileText, Menu, Eye
 } from "lucide-react";
+import SideBar from "../../_components/SideBar";
 
 export default function FornecedorDetailClient({ supplier }: { supplier: any }) {
   const router = useRouter();
@@ -46,7 +37,6 @@ export default function FornecedorDetailClient({ supplier }: { supplier: any }) 
       setIsEditModalOpen(false);
       setIsSubmitting(false);
       router.refresh();
-      alert("Fornecedor atualizado!");
     },
     onError: (err) => {
       setIsSubmitting(false);
@@ -60,277 +50,313 @@ export default function FornecedorDetailClient({ supplier }: { supplier: any }) 
     updateMutation.mutate({ id: supplier.id, ...formData });
   };
 
-  // Utilitário de formatação de moeda
   const formatMoney = (val: number) => 
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 
   return (
-    <div className="min-h-screen bg-base-200 p-4 md:p-8 font-sans">
+    <div className="drawer lg:drawer-open font-sans bg-[#F8FAFC] min-h-screen text-slate-900">
+      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       
-      {/* HEADER DE NAVEGAÇÃO */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <Link href="/fornecedores" className="btn btn-circle btn-ghost hover:bg-base-300">
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
-          <div>
-            <h1 className="text-3xl font-extrabold text-base-content flex items-center gap-2">
-              {supplier.name}
-            </h1>
-            <div className="flex items-center gap-3 text-sm opacity-60 mt-1">
-              <span className="flex items-center gap-1"><Building2 className="w-3 h-3" /> {supplier.cnpj || "Sem CNPJ"}</span>
-              <span className="hidden sm:flex items-center gap-1"><Calendar className="w-3 h-3" /> Cliente desde {new Date(supplier.createdAt).getFullYear()}</span>
-            </div>
-          </div>
-        </div>
-        <button 
-          onClick={() => setIsEditModalOpen(true)}
-          className="btn btn-primary gap-2 shadow-lg shadow-primary/20"
-        >
-          <Edit3 className="w-4 h-4" /> <span className="hidden sm:inline">Editar Dados</span>
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="drawer-content flex flex-col min-h-screen">
         
-        {/* --- COLUNA 1: INFORMAÇÕES GERAIS --- */}
-        <div className="space-y-6">
-          
-          {/* Card Contato */}
-          <div className="card bg-base-100 shadow-sm border border-base-200">
-            <div className="card-body">
-              <h2 className="card-title text-sm uppercase opacity-50 mb-2">Canais de Contato</h2>
-              
-              <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-xl">
-                <div className="p-2 bg-primary/10 text-primary rounded-lg"><Phone className="w-5 h-5" /></div>
-                <div>
-                  <p className="text-xs opacity-60">Telefone</p>
-                  <p className="font-semibold">{supplier.phone || "--"}</p>
-                </div>
-              </div>
+        {/* Mobile Navbar */}
+        <div className="w-full navbar bg-white lg:hidden border-b border-slate-100 px-6">
+          <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button lg:hidden">
+            <Menu className="w-6 h-6" />
+          </label>
+          <div className="flex-1 font-black text-xl tracking-tighter">CASHFLOW</div>
+        </div>
 
-              <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-xl">
-                <div className="p-2 bg-secondary/10 text-secondary rounded-lg"><Mail className="w-5 h-5" /></div>
-                <div>
-                  <p className="text-xs opacity-60">Email</p>
-                  <a href={`mailto:${supplier.email}`} className="font-semibold hover:text-primary transition-colors truncate max-w-[200px] block">
-                    {supplier.email || "--"}
-                  </a>
+        <main className="flex-1 p-6 md:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-[1600px] mx-auto w-full">
+          
+          {/* ================= HEADER ================= */}
+          <div className="flex flex-col gap-4">
+            <Link href="/fornecedores" className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
+              <ArrowLeft size={16} /> Fornecedores
+            </Link>
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2">
+              <div>
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+                  {supplier.name}
+                </h1>
+                <div className="flex flex-wrap items-center gap-3 mt-3">
+                  <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest border border-slate-200 flex items-center gap-1.5">
+                    <Building2 size={12} /> {supplier.cnpj || "Sem CNPJ"}
+                  </span>
+                  <span className="px-3 py-1 bg-primary/5 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest border border-primary/10 flex items-center gap-1.5">
+                    <Calendar size={12} /> Parceiro desde {new Date(supplier.createdAt).getFullYear()}
+                  </span>
                 </div>
               </div>
+              
+              <button onClick={() => setIsEditModalOpen(true)} className="btn btn-primary rounded-2xl px-8 h-14 font-black shadow-xl shadow-primary/30 border-none gap-2 w-full md:w-auto">
+                <Edit3 size={18} /> EDITAR DADOS
+              </button>
             </div>
           </div>
 
-          {/* Card Endereço */}
-          <div className="card bg-base-100 shadow-sm border border-base-200">
-            <div className="card-body">
-              <h2 className="card-title text-sm uppercase opacity-50 mb-2">Endereço</h2>
-              <div className="flex gap-3">
-                <MapPin className="w-6 h-6 text-error/70 mt-1 shrink-0" />
-                <div className="text-sm">
-                  {supplier.logradouro ? (
-                    <>
-                      <p className="font-bold">{supplier.logradouro}, {supplier.numero}</p>
-                      <p>{supplier.bairro}</p>
-                      <p>{supplier.cidade} - {supplier.estado}</p>
-                      <p className="font-mono text-xs opacity-50 mt-1">{supplier.cep}</p>
-                    </>
-                  ) : (
-                    <span className="italic opacity-50">Endereço não cadastrado.</span>
-                  )}
+          {/* ================= GRID DE CONTEÚDO ================= */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            
+            {/* --- COLUNA ESQUERDA: INFORMAÇÕES GERAIS --- */}
+            <div className="space-y-8">
+              
+              {/* Card Contato */}
+              <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50">
+                <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> Canais de Contato
+                </h2>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl">
+                    <div className="p-3 bg-white shadow-sm text-primary rounded-xl shrink-0"><Phone className="w-5 h-5" /></div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Telefone Principal</p>
+                      <p className="font-bold text-sm text-slate-800">{supplier.phone || "Não informado"}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl">
+                    <div className="p-3 bg-white shadow-sm text-secondary rounded-xl shrink-0"><Mail className="w-5 h-5" /></div>
+                    <div className="overflow-hidden">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Corporativo</p>
+                      {supplier.email ? (
+                        <a href={`mailto:${supplier.email}`} className="font-bold text-sm text-slate-800 hover:text-primary transition-colors truncate block">
+                          {supplier.email}
+                        </a>
+                      ) : (
+                        <p className="font-bold text-sm text-slate-800">Não informado</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-              {supplier.logradouro && (
-                <a 
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${supplier.logradouro}, ${supplier.numero}, ${supplier.cidade}`)}`}
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="btn btn-xs btn-outline btn-block mt-4 gap-2"
-                >
-                  Abrir no Mapa <ExternalLink className="w-3 h-3" />
-                </a>
+
+              {/* Card Endereço */}
+              <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50">
+                <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> Localização
+                </h2>
+                
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-rose-50 text-rose-500 rounded-xl shrink-0 mt-1">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div className="text-sm text-slate-600 font-medium leading-relaxed">
+                    {supplier.logradouro ? (
+                      <>
+                        <p className="font-bold text-slate-800 text-base">{supplier.logradouro}, {supplier.numero}</p>
+                        {supplier.complemento && <p>{supplier.complemento}</p>}
+                        <p>{supplier.bairro}</p>
+                        <p>{supplier.cidade} - {supplier.estado}</p>
+                        <p className="font-mono text-xs opacity-60 mt-2 tracking-widest">{supplier.cep}</p>
+                      </>
+                    ) : (
+                      <span className="italic opacity-50">Endereço não cadastrado no sistema.</span>
+                    )}
+                  </div>
+                </div>
+
+                {supplier.logradouro && (
+                  <a 
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${supplier.logradouro}, ${supplier.numero}, ${supplier.cidade}`)}`}
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="w-full mt-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-primary transition-all flex items-center justify-center gap-2 border border-slate-200"
+                  >
+                    ABRIR NO GOOGLE MAPS <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+
+              {/* Notas / Descrição */}
+              {supplier.description && (
+                <div className="bg-amber-50 rounded-[2.5rem] p-8 border border-amber-100/50 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-400"></div>
+                  <h3 className="text-[10px] font-black text-amber-600/60 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                    <FileText className="w-4 h-4" /> Observações Internas
+                  </h3>
+                  <p className="text-sm text-amber-900/80 font-medium leading-relaxed whitespace-pre-wrap">
+                    {supplier.description}
+                  </p>
+                </div>
               )}
             </div>
-          </div>
 
-          {/* Notas */}
-          {supplier.description && (
-            <div className="card bg-warning/10 border border-warning/20">
-              <div className="card-body p-4">
-                <h3 className="font-bold text-warning text-sm">Observações</h3>
-                <p className="text-sm opacity-80">{supplier.description}</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* --- COLUNA 2 e 3: CATÁLOGO DE PRODUTOS --- */}
-        <div className="lg:col-span-2 space-y-6">
-          
-          {/* Resumo Rápido */}
-          <div className="stats shadow-sm bg-base-100 w-full border border-base-200">
-            <div className="stat">
-              <div className="stat-figure text-primary bg-primary/10 p-2 rounded-full">
-                <Package className="w-6 h-6" />
-              </div>
-              <div className="stat-title">Produtos Fornecidos</div>
-              <div className="stat-value text-primary">{supplier._count?.products || 0}</div>
-              <div className="stat-desc">Itens ativos no sistema</div>
-            </div>
-          </div>
-
-          {/* Tabela de Produtos */}
-          <div className="card bg-base-100 shadow-xl border border-base-200">
-            <div className="card-body p-0">
-              <div className="p-5 border-b border-base-200">
-                <h3 className="font-bold text-lg">Catálogo de Itens</h3>
-              </div>
+            {/* --- COLUNA 2 e 3: CATÁLOGO DE PRODUTOS --- */}
+            <div className="lg:col-span-2 space-y-8">
               
-              <div className="overflow-x-auto">
-                <table className="table table-zebra">
-                  <thead className="bg-base-200/50">
-                    <tr>
-                      <th>Produto</th>
-                      <th>SKU</th>
-                      <th>Preço de Custo</th>
-                      <th className="text-center">Estoque</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {supplier.products.length === 0 ? (
-                      <tr>
-                        <td colSpan={5} className="text-center py-10 text-base-content/40">
-                          <Package className="w-12 h-12 mx-auto mb-2 opacity-20" />
-                          <p>Nenhum produto vinculado a este fornecedor.</p>
-                        </td>
+              {/* Resumo Rápido */}
+              <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 flex items-center gap-6">
+                <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center shrink-0">
+                  <Package className="w-8 h-8" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Produtos Fornecidos</p>
+                  <p className="text-3xl font-black text-slate-800 leading-none mt-1">{supplier._count?.products || 0}</p>
+                </div>
+              </div>
+
+              {/* Tabela de Produtos */}
+              <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 overflow-hidden flex flex-col h-full">
+                <div className="p-8 border-b border-slate-50 bg-slate-50/30">
+                  <h3 className="font-black text-slate-800 text-lg uppercase tracking-widest flex items-center gap-3">
+                    <Package className="text-primary w-5 h-5"/> Catálogo Vinculado
+                  </h3>
+                </div>
+                
+                <div className="overflow-x-auto p-4 flex-1">
+                  <table className="table w-full border-separate border-spacing-y-2">
+                    <thead>
+                      <tr className="text-slate-400 text-[10px] font-black uppercase tracking-widest border-none">
+                        <th className="pl-4">Produto</th>
+                        <th>SKU</th>
+                        <th>Preço de Custo</th>
+                        <th className="text-center">Estoque</th>
+                        <th className="text-right pr-4">Ação</th>
                       </tr>
-                    ) : (
-                      supplier.products.map((prod: any) => (
-                        <tr key={prod.id} className="hover:bg-base-100">
-                          <td>
-                            <div className="flex items-center gap-3">
-                              <div className="avatar rounded bg-base-300 w-10 h-10 flex items-center justify-center">
-                                {prod.imageUrl ? (
-                                  // eslint-disable-next-line @next/next/no-img-element
-                                  <img src={prod.imageUrl} alt="pic" className="rounded" />
-                                ) : (
-                                  <Package className="w-5 h-5 opacity-30" />
-                                )}
-                              </div>
-                              <div className="font-bold">{prod.name}</div>
-                            </div>
-                          </td>
-                          <td className="font-mono text-xs opacity-70">{prod.sku || "-"}</td>
-                          <td className="font-medium text-error">{formatMoney(Number(prod.precoCompra))}</td>
-                          <td className="text-center">
-                            <span className={`badge badge-sm ${prod.stock > 0 ? 'badge-success badge-outline' : 'badge-ghost opacity-50'}`}>
-                              {prod.stock} {prod.unidadeMedida}
-                            </span>
-                          </td>
-                          <td className="text-right">
-                            <Link href={`/produtos/${prod.id}`} className="btn btn-xs btn-ghost">
-                              Ver
-                            </Link>
+                    </thead>
+                    <tbody>
+                      {supplier.products.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="text-center py-20">
+                            <Package className="w-12 h-12 mx-auto mb-4 text-slate-200" />
+                            <p className="text-slate-400 font-bold italic">Nenhum produto vinculado a este fornecedor.</p>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : (
+                        supplier.products.map((prod: any) => (
+                          <tr key={prod.id} className="hover:bg-slate-50 transition-colors group cursor-pointer" onClick={() => router.push(`/produtos/${prod.id}`)}>
+                            <td className="pl-4 rounded-l-2xl py-3">
+                              <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border border-slate-200">
+                                  {prod.imageUrl ? (
+                                    <img src={prod.imageUrl} alt="pic" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <Package className="w-5 h-5 text-slate-300" />
+                                  )}
+                                </div>
+                                <div className="font-black text-sm text-slate-700 group-hover:text-primary transition-colors">{prod.name}</div>
+                              </div>
+                            </td>
+                            <td>
+                              <span className="font-mono text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">{prod.sku || "N/A"}</span>
+                            </td>
+                            <td>
+                              <span className="font-black text-rose-500">{formatMoney(Number(prod.precoCompra))}</span>
+                            </td>
+                            <td className="text-center">
+                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${prod.stock > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'}`}>
+                                {prod.stock} {prod.unidadeMedida}
+                              </span>
+                            </td>
+                            <td className="text-right pr-4 rounded-r-2xl">
+                              <button onClick={(e) => { e.stopPropagation(); router.push(`/produtos/${prod.id}`); }} className="btn btn-sm btn-ghost btn-circle text-slate-400 hover:text-primary">
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
 
-      {/* --- MODAL DE EDIÇÃO --- */}
+      <SideBar />
+
+      {/* ================= MODAL DE EDIÇÃO ================= */}
       {isEditModalOpen && (
-        <dialog className="modal modal-open backdrop-blur-sm bg-black/40 z-50">
-          <div className="modal-box w-11/12 max-w-4xl p-0 overflow-hidden rounded-2xl shadow-2xl bg-base-100 border border-base-300">
+        <dialog className="modal modal-open bg-slate-900/60 backdrop-blur-md z-[100] animate-in fade-in">
+          <div className="modal-box w-11/12 max-w-5xl p-0 rounded-[3rem] shadow-2xl border border-white bg-[#F8FAFC] flex flex-col max-h-[90vh]">
             
             {/* Header Modal */}
-            <div className="bg-base-200/90 px-6 py-4 flex justify-between items-center border-b border-base-300 sticky top-0 z-10">
-              <h3 className="font-bold text-lg flex items-center gap-2">
-                <Edit3 className="w-5 h-5 text-primary" /> Editar Fornecedor
+            <div className="bg-white px-10 py-6 flex justify-between items-center border-b border-slate-100 z-10 sticky top-0 rounded-t-[3rem]">
+              <h3 className="font-black text-2xl tracking-tighter flex items-center gap-3 text-slate-900">
+                <div className="p-2 bg-primary/10 rounded-xl text-primary"><Edit3 size={24}/></div>
+                Editar Fornecedor
               </h3>
-              <button onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-circle btn-ghost">
-                <X className="w-5 h-5" />
+              <button onClick={() => setIsEditModalOpen(false)} className="btn btn-ghost btn-circle btn-sm bg-slate-50 hover:bg-slate-200">
+                <X size={20} className="text-slate-500"/>
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="flex flex-col h-[70vh] md:h-auto">
-              <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+            <form onSubmit={handleSave} className="flex flex-col flex-1 overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-8 custom-scrollbar">
                 
                 {/* Seção 1: Dados Corporativos */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase opacity-50 mb-3 border-b pb-1">Dados Corporativos</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 space-y-6">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Dados Corporativos & Contato</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="form-control">
-                      <label className="label text-xs font-bold">Nome / Razão Social</label>
-                      <input className="input input-bordered" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Nome / Razão Social *</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
                     </div>
                     <div className="form-control">
-                      <label className="label text-xs font-bold">CNPJ</label>
-                      <input className="input input-bordered" value={formData.cnpj} onChange={e => setFormData({...formData, cnpj: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">CNPJ</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold font-mono text-slate-800 h-14 px-5" value={formData.cnpj} onChange={e => setFormData({...formData, cnpj: e.target.value})} />
                     </div>
                     <div className="form-control">
-                      <label className="label text-xs font-bold">Email</label>
-                      <input className="input input-bordered" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Email</label>
+                      <input type="email" className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                     </div>
                     <div className="form-control">
-                      <label className="label text-xs font-bold">Telefone</label>
-                      <input className="input input-bordered" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Telefone / WhatsApp</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
                     </div>
                     <div className="form-control md:col-span-2">
-                      <label className="label text-xs font-bold">Descrição</label>
-                      <textarea className="textarea textarea-bordered h-20" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Observações / Descrição</label>
+                      <textarea className="textarea textarea-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-medium text-slate-700 h-24 resize-none p-5" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
                     </div>
                   </div>
                 </div>
 
                 {/* Seção 2: Endereço */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase opacity-50 mb-3 border-b pb-1">Endereço</h4>
-                  <div className="grid grid-cols-12 gap-3">
+                <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-50 space-y-6">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Localização</h4>
+                  <div className="grid grid-cols-12 gap-6">
                     <div className="col-span-4 md:col-span-3 form-control">
-                      <label className="label text-xs font-bold">CEP</label>
-                      <input className="input input-bordered" value={formData.cep} onChange={e => setFormData({...formData, cep: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">CEP</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-4" value={formData.cep} onChange={e => setFormData({...formData, cep: e.target.value})} />
                     </div>
                     <div className="col-span-8 md:col-span-7 form-control">
-                      <label className="label text-xs font-bold">Logradouro</label>
-                      <input className="input input-bordered" value={formData.logradouro} onChange={e => setFormData({...formData, logradouro: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Logradouro / Rua</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.logradouro} onChange={e => setFormData({...formData, logradouro: e.target.value})} />
                     </div>
                     <div className="col-span-12 md:col-span-2 form-control">
-                      <label className="label text-xs font-bold">Número</label>
-                      <input className="input input-bordered" value={formData.numero} onChange={e => setFormData({...formData, numero: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Número</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.numero} onChange={e => setFormData({...formData, numero: e.target.value})} />
                     </div>
                     <div className="col-span-12 md:col-span-4 form-control">
-                      <label className="label text-xs font-bold">Bairro</label>
-                      <input className="input input-bordered" value={formData.bairro} onChange={e => setFormData({...formData, bairro: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Bairro</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.bairro} onChange={e => setFormData({...formData, bairro: e.target.value})} />
                     </div>
                     <div className="col-span-8 md:col-span-6 form-control">
-                      <label className="label text-xs font-bold">Cidade</label>
-                      <input className="input input-bordered" value={formData.cidade} onChange={e => setFormData({...formData, cidade: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Cidade</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.cidade} onChange={e => setFormData({...formData, cidade: e.target.value})} />
                     </div>
                     <div className="col-span-4 md:col-span-2 form-control">
-                      <label className="label text-xs font-bold">UF</label>
-                      <input className="input input-bordered uppercase" maxLength={2} value={formData.estado} onChange={e => setFormData({...formData, estado: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">UF</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5 uppercase text-center" maxLength={2} value={formData.estado} onChange={e => setFormData({...formData, estado: e.target.value})} />
                     </div>
                     <div className="col-span-12 form-control">
-                      <label className="label text-xs font-bold">Complemento</label>
-                      <input className="input input-bordered" value={formData.complemento} onChange={e => setFormData({...formData, complemento: e.target.value})} />
+                      <label className="label text-[10px] font-black uppercase text-slate-400 px-1">Complemento</label>
+                      <input className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5" value={formData.complemento} onChange={e => setFormData({...formData, complemento: e.target.value})} placeholder="Sala, Galpão, Ponto de referência..." />
                     </div>
                   </div>
                 </div>
-
               </div>
 
               {/* Footer Modal */}
-              <div className="p-4 bg-base-100 border-t border-base-300 flex justify-end gap-3 sticky bottom-0 z-10">
-                <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-ghost" disabled={isSubmitting}>Cancelar</button>
-                <button type="submit" className="btn btn-primary px-8" disabled={isSubmitting}>
-                  {isSubmitting ? <Loader2 className="animate-spin" /> : <><Save className="w-4 h-4 mr-1" /> Salvar</>}
+              <div className="bg-white p-6 border-t border-slate-100 flex justify-end gap-4 rounded-b-[3rem] shrink-0">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn btn-ghost rounded-2xl font-black text-xs tracking-widest px-8 text-slate-500 hover:bg-slate-100 h-14" disabled={isSubmitting}>CANCELAR</button>
+                <button type="submit" className="btn btn-primary rounded-2xl font-black text-xs tracking-widest px-10 shadow-xl shadow-primary/30 border-none h-14" disabled={isSubmitting}>
+                  {isSubmitting ? <Loader2 className="animate-spin w-5 h-5" /> : <><Save className="w-5 h-5 mr-1" /> SALVAR ALTERAÇÕES</>}
                 </button>
               </div>
             </form>
