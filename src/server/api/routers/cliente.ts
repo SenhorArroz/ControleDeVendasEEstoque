@@ -8,40 +8,53 @@ import {
 import { api } from "~/trpc/server";
 
 export const clienteRouter = createTRPCRouter({
-	getAll: protectedProcedure.query(async ({ ctx }) => {
-		const userId = ctx.session.user.id;
-		const userRole = ctx.session.user.role;
+	getAll: protectedProcedure
+        // 1. ADICIONAMOS O INPUT AQUI: avisando que pode receber um 'search' opcional
+        .input(
+            z.object({
+                search: z.string().optional(),
+            })
+        )
+        // 2. RECEBEMOS O INPUT AQUI JUNTO COM O CTX
+        .query(async ({ ctx, input }) => {
+            const userId = ctx.session.user.id;
+            const userRole = ctx.session.user.role;
 
-		let ownerId = userId;
+            let ownerId = userId;
 
-		if (userRole === "FUNCIONARIO") {
-			const funcionario = await ctx.db.funcionario.findFirst({
-				where: { userId: userId },
-				select: { creatorId: true },
-			});
+            if (userRole === "FUNCIONARIO") {
+                const funcionario = await ctx.db.funcionario.findFirst({
+                    where: { userId: userId },
+                    select: { creatorId: true },
+                });
 
-			if (!funcionario?.creatorId) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: "Vínculo de funcionário não encontrado.",
-				});
-			}
-			ownerId = funcionario.creatorId;
-		}
+                if (!funcionario?.creatorId) {
+                    throw new TRPCError({
+                        code: "FORBIDDEN",
+                        message: "Vínculo de funcionário não encontrado.",
+                    });
+                }
+                ownerId = funcionario.creatorId;
+            }
 
-		// BUSCA OS CLIENTES INCLUINDO AS COMPRAS
-		return ctx.db.client.findMany({
-			where: {
-				userId: ownerId, // Busca os clientes do dono (seja o dono logado ou o patrão do funcionário)
-			},
-			include: {
-				purchases: true, // ESSA LINHA É A CHAVE: Carrega o histórico de compras para o cálculo do LTV
-			},
-			orderBy: {
-				name: "asc", // Já traz em ordem alfabética como você pediu
-			},
-		});
-	}),
+            // BUSCA OS CLIENTES INCLUINDO AS COMPRAS
+            return ctx.db.client.findMany({
+                where: {
+                    userId: ownerId, // Busca os clientes do dono
+                    
+                    // 3. APLICA O FILTRO DA BUSCA (Ignora maiúsculas/minúsculas)
+                    ...(input.search
+                        ? { name: { contains: input.search, mode: "insensitive" } }
+                        : {}),
+                },
+                include: {
+                    purchases: true, // Carrega o histórico de compras para o cálculo do LTV
+                },
+                orderBy: {
+                    name: "asc", // Já traz em ordem alfabética direto do banco
+                },
+            });
+        }),
 	lastPurchase: publicProcedure
 		.input(z.object({ id: z.string() }))
 		.query(async ({ ctx, input }) => {
