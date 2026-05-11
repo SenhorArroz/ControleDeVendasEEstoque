@@ -60,7 +60,7 @@ export default function ClientsPage() {
                 <input 
                   type="text" 
                   placeholder="Pesquisar cliente..." 
-                  className="input w-full md:w-80 pl-11 bg-white border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/5 transition-all font-semibold"
+                  className="input w-full md:w-80 pl-11 text-white bg-white border-slate-200 rounded-2xl focus:ring-4 focus:ring-primary/5 transition-all font-semibold"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
