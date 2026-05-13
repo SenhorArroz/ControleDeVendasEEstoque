@@ -85,7 +85,7 @@ export default function NewSalePage() {
   const [saleSuccessData, setSaleSuccessData] = useState<SaleSuccessData | null>(null);
 
   // --- QUERIES ---
-  const { data: clients } = api.cliente.getAll.useQuery();
+  const { data: clients } = api.cliente.getAll.useQuery({});
   const { data: categories } = api.categoria.getAll.useQuery();
   const { data: products, isLoading: loadingProducts } = api.produto.getAll.useQuery({
     searchTerm: searchTerm,
