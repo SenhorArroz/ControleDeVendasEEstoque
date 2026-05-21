@@ -129,18 +129,46 @@ export default function NewSalePage() {
       });
       await utils.produto.getAll.invalidate();
       setCart([]);
-      toast.success("Venda processada!");
+      setDiscountPercent("0");
+      setPaymentAmount("");
+      toast.success("Venda processada com sucesso!");
     },
+    onError: (error) => {
+      toast.error(`Erro ao processar venda: ${error.message}`);
+    }
   });
 
   const handleFinishSale = () => {
     if (!selectedClientId) return toast.error("Selecione um cliente.");
-    if (cart.length === 0) return toast.error("Carrinho vazio.");
+    if (cart.length === 0) return toast.error("O carrinho está vazio.");
+    
+    // TRAVA: Impedir total zerado ou negativo
+    if (totalPurchase <= 0) {
+      return toast.error("O valor total da compra deve ser maior que zero.");
+    }
+    
+    // TRAVA: Impedir desconto absurdo
+    const disc = parseFloat(discountPercent) || 0;
+    if (disc < 0 || disc > 100) {
+      return toast.error("Desconto inválido. Use um valor entre 0 e 100.");
+    }
+
+    // TRAVA: Validar se o valor pago é suficiente quando não for fiado
+    if (!isPending) {
+      // Usa totalPurchase se o paymentAmount estiver vazio, senão usa o valor digitado
+      const paid = paymentAmount ? parseFloat(paymentAmount.replace(",", ".")) : totalPurchase;
+      if (isNaN(paid)) return toast.error("Valor pago inválido.");
+      
+      if (paid < totalPurchase) {
+        return toast.error(`Valor pago (${formatMoney(paid)}) é insuficiente para o total (${formatMoney(totalPurchase)}).`);
+      }
+    }
+
     createSaleMutation.mutate({
       clientId: selectedClientId,
       status: isPending ? "PENDING" : "COMPLETED",
       total: totalPurchase,
-      desconto: parseFloat(discountPercent) || 0,
+      desconto: disc,
       paymentMethod: selectedPaymentMethod,
       items: cart.map((item) => ({
         productId: item.productId,
@@ -159,10 +187,21 @@ export default function NewSalePage() {
       if (product.stock > 0) {
         setCart((prev) => {
           const existing = prev.find((item) => item.productId === product.id && !item.barcodeId);
-          if (existing) return prev.map((item) => item.cartId === existing.cartId ? { ...item, quantity: item.quantity + 1 } : item);
+          
+          if (existing) {
+            // TRAVA: Impedir adicionar mais que o estoque disponível
+            if (existing.quantity + 1 > product.stock) {
+              toast.error(`Estoque insuficiente. Restam apenas ${product.stock} unidades de ${product.name}.`);
+              return prev; // Retorna o carrinho sem alterar
+            }
+            return prev.map((item) => item.cartId === existing.cartId ? { ...item, quantity: item.quantity + 1 } : item);
+          }
+          
           return [...prev, { cartId: `gen-${product.id}`, productId: product.id, name: product.name, price: Number(product.precoVenda), quantity: 1, stock: product.stock, imageUrl: product.imageUrl }];
         });
-      } else toast.error("Sem estoque.");
+      } else {
+        toast.error("Produto sem estoque.");
+      }
     }
   };
 
@@ -227,8 +266,8 @@ export default function NewSalePage() {
             {!loadingProducts ? products?.map((product) => (
               <div 
                 key={product.id} 
-                onClick={() => product.stock > 0 && handleProductClick(product)}
-                className={`group bg-white rounded-3xl p-3 border border-slate-100 transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-1.5 ${product.stock <= 0 ? "opacity-40 grayscale" : "cursor-pointer"}`}
+                onClick={() => handleProductClick(product)}
+                className={`group bg-white rounded-3xl p-3 border border-slate-100 transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:-translate-y-1.5 ${product.stock <= 0 ? "opacity-40 grayscale cursor-not-allowed" : "cursor-pointer"}`}
               >
                 <div className="aspect-[4/5] rounded-[1.5rem] bg-slate-50 overflow-hidden relative mb-4">
                   {product.imageUrl ? (
@@ -236,15 +275,15 @@ export default function NewSalePage() {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-200"><PackageOpen size={48} /></div>
                   )}
-                  <div className="absolute top-3 right-3 px-2.5 py-1.5 bg-white/90 backdrop-blur rounded-xl text-[10px] font-black shadow-sm border border-slate-50">
-                    {product.stock} DISPONÍVEL
+                  <div className={`absolute top-3 right-3 px-2.5 py-1.5 backdrop-blur rounded-xl text-[10px] font-black shadow-sm border border-slate-50 ${product.stock <= 0 ? 'bg-red-500/90 text-white border-red-400' : 'bg-white/90 text-slate-800'}`}>
+                    {product.stock > 0 ? `${product.stock} DISPONÍVEL` : 'ESGOTADO'}
                   </div>
                 </div>
                 <div className="px-1">
                   <h3 className="font-bold text-sm text-slate-700 line-clamp-1 group-hover:text-primary transition-colors">{product.name}</h3>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-base font-black text-slate-900">{formatMoney(Number(product.precoVenda))}</span>
-                    <div className="p-1.5 rounded-full bg-slate-50 text-slate-300 group-hover:bg-primary group-hover:text-white transition-all">
+                    <div className={`p-1.5 rounded-full transition-all ${product.stock > 0 ? 'bg-slate-50 text-slate-300 group-hover:bg-primary group-hover:text-white' : 'bg-slate-100 text-slate-300'}`}>
                       <Plus size={14} />
                     </div>
                   </div>
@@ -374,14 +413,14 @@ export default function NewSalePage() {
               <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Desc %</label>
               <div className="relative">
                 <Percent className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" size={12} />
-                <input type="number" className="w-full bg-white border border-slate-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-primary/10" value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} />
+                <input type="number" min="0" max="100" className="w-full bg-white border border-slate-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-primary/10" value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} />
               </div>
             </div>
             <div className="flex-1 space-y-1.5">
               <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Pago R$</label>
               <div className="relative">
                 <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" size={12} />
-                <input type="number" className="w-full bg-white border border-slate-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-primary/10" value={isPending ? 0 : paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} disabled={isPending} />
+                <input type="number" placeholder="Total" className="w-full bg-white border border-slate-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-primary/10" value={isPending ? 0 : paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} disabled={isPending} />
               </div>
             </div>
           </div>
