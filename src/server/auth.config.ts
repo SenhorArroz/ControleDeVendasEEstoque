@@ -5,7 +5,6 @@ export const authConfig = {
     providers: [],
     callbacks: {
         async jwt({ token, user }) {
-                console.log(">>> AGORA O LOG TEM QUE APARECER:", user?.email);
             if (user) {
                 token.sub = user.id;
                 token.role = user.role;
@@ -25,10 +24,6 @@ export const authConfig = {
             const isLoggedIn = !!user;
             const role = user?.role; // O cargo deve vir do JWT automaticamente
             const { pathname } = nextUrl;
-            console.log("--- DEBUG MIDDLEWARE ---");
-            console.log("Email:", auth?.user?.email);
-            console.log("Role na Sessão:", role);
-
             const adminOnlyRoutes = [
                 "/dashboard",
                 "/funcionarios",

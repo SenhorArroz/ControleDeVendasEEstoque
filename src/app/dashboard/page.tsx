@@ -16,6 +16,7 @@ import { redirect } from "next/navigation";
 import SideBar from "../_components/SideBar";
 import DashboardCharts from "../_components/DashboardCharts";
 import { api } from "~/trpc/server";
+import Link from "next/link";
 
 // 1. MATEMÁTICA E LÓGICA BLINDADAS
 async function getDashboardData() {
@@ -135,116 +136,144 @@ export default async function DashboardPage() {
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(val);
 
   return (
-    <div className="drawer lg:drawer-open bg-[#F8FAFC] font-sans">
+    <div className="drawer lg:drawer-open bg-slate-50 font-sans selection:bg-orange-600/20">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
-      <div className="drawer-content flex flex-col min-h-screen">
-        <div className="w-full navbar bg-white lg:hidden border-b border-slate-200 px-6">
-          <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button lg:hidden">
-            <Activity className="w-6 h-6 text-primary" />
+      <div className="drawer-content flex flex-col min-h-screen min-w-0">
+        
+        {/* Navbar Mobile Premium */}
+        <div className="w-full navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 lg:hidden border-b border-slate-200/50 px-4">
+          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button lg:hidden">
+            <Activity className="w-6 h-6 text-orange-600" strokeWidth={2.5} />
           </label>
-          <div className="flex-1 font-black text-xl tracking-tighter">CASHFLOW</div>
+          <div className="flex-1 font-black text-xl tracking-tighter text-slate-900 ml-2">CASHFLOW</div>
         </div>
 
-        <main className="flex-1 p-6 md:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+        <main className="flex-1 px-4 py-4 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 space-y-4 sm:space-y-6 lg:space-y-4 2xl:space-y-6 max-w-full overflow-x-hidden min-w-0 w-full">
           
+          {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="space-y-1">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900">Visão Geral</h1>
-              <p className="text-slate-500 font-medium italic">
-                Bem-vindo de volta, <span className="text-primary font-bold">{session.user.name?.split(" ")[0]}</span>. Resumo dos últimos 7 dias.
+              <h1 className="text-lg sm:text-xl 2xl:text-2xl 2xl:text-3xl font-black tracking-tight text-slate-900">Visão Geral</h1>
+              <p className="text-slate-500 font-medium text-xs sm:text-sm">
+                Bem-vindo de volta, <span className="text-orange-600 font-bold">{session.user.name?.split(" ")[0]}</span>. Aqui está o resumo da sua semana.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-slate-100">
-              <CalendarDays className="w-5 h-5 text-primary" />
-              <span className="text-sm font-bold text-slate-700 uppercase tracking-wider">
-                {new Date().toLocaleDateString('pt-BR', { month: 'long', day: 'numeric' })}
-              </span>
+            
+            <div className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center">
+                <CalendarDays className="w-4 h-4 text-orange-600" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Período atual</span>
+                <span className="text-xs sm:text-sm font-black text-slate-700">Últimos 7 dias</span>
+              </div>
             </div>
           </div>
 
-          {/* Cards de KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {/* Cards de KPIs Ultra Premium - Compactos */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4 min-w-0">
             {[
-              { label: "Receita (7 dias)", val: data.receitaTotal, icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50", desc: "Vendas realizadas" },
-              { label: "Custo Estimado", val: data.custoTotal, icon: TrendingDown, color: "text-rose-600", bg: "bg-rose-50", desc: "Preço de compra" },
-              { label: "Lucro Bruto", val: data.lucro, icon: Wallet, color: "text-blue-600", bg: "bg-blue-50", desc: "Receita - Custo" },
-              { label: "Novos Clientes", val: data.newClientsCount, icon: Users, color: "text-violet-600", bg: "bg-violet-50", isMoney: false, desc: "Últimos 7 dias" },
+              { label: "Receita", val: data.receitaTotal, icon: TrendingUp, accent: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-100" },
+              { label: "Custos", val: data.custoTotal, icon: TrendingDown, accent: "text-rose-500", bg: "bg-rose-500/10", border: "border-rose-100" },
+              { label: "Lucro Líquido", val: data.lucro, icon: Wallet, accent: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-100" },
+              { label: "Novos Clientes", val: data.newClientsCount, icon: Users, accent: "text-violet-500", bg: "bg-violet-500/10", border: "border-violet-100", isMoney: false },
             ].map((kpi, i) => (
-              <div key={i} className="bg-white rounded-[2rem] p-7 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
-                <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{kpi.label}</p>
-                    <h3 className={`text-2xl font-black ${kpi.color}`}>
-                      {kpi.isMoney === false ? kpi.val : formatMoney(kpi.val as number)}
-                    </h3>
-                  </div>
-                  <div className={`${kpi.bg} ${kpi.color} p-4 rounded-2xl group-hover:scale-110 transition-transform`}>
-                    <kpi.icon size={24} />
-                  </div>
+              <div key={i} className="bg-white rounded-[1rem] p-4 shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3 relative overflow-hidden group">
+                
+                {/* Background Decoration */}
+                <div className={`absolute -right-4 -top-4 w-12 h-12 rounded-full ${kpi.bg} blur-xl opacity-50 group-hover:opacity-80 transition-opacity`}></div>
+
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.accent} relative z-10`}>
+                  <kpi.icon size={18} strokeWidth={2.5} />
                 </div>
-                <div className="mt-4 pt-4 border-t border-slate-50">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{kpi.desc}</span>
+
+                <div className="flex flex-col relative z-10 min-w-0">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{kpi.label}</p>
+                  <h3 className="text-lg lg:text-xl font-black text-slate-800 tracking-tight truncate">
+                    {kpi.isMoney === false ? kpi.val : formatMoney(kpi.val as number)}
+                  </h3>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Gráficos e Tabelas */}
-            <div className="lg:col-span-2 space-y-10">
+          {/* Main Grid: Charts, Tables & Side Widget */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 min-w-0">
+            
+            {/* Left Area (Col Span 2) */}
+            <div className="lg:col-span-2 space-y-4 lg:space-y-4 2xl:space-y-6 min-w-0">
               
-              {/* Gráfico */}
-              <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50">
-                <div className="flex justify-between items-center mb-10">
-                  <h2 className="font-black text-slate-800 text-lg uppercase tracking-widest">Fluxo de Vendas vs Custo</h2>
-                  <div className="flex gap-4">
-                    <span className="flex items-center gap-2 text-[10px] font-bold text-emerald-500"><div className="w-2 h-2 bg-emerald-500 rounded-full"/> ENTRADAS</span>
-                    <span className="flex items-center gap-2 text-[10px] font-bold text-rose-500"><div className="w-2 h-2 bg-rose-500 rounded-full"/> CUSTOS</span>
+              {/* Chart Card */}
+              <div className="bg-white rounded-[1.5rem] p-5 lg:p-6 shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 lg:mb-6">
+                  <div className="space-y-1 w-full sm:w-auto">
+                    <h2 className="font-black text-slate-800 text-sm sm:text-base uppercase tracking-widest break-words">Desempenho Financeiro</h2>
+                    <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Comparativo de 7 dias</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100 w-full sm:w-auto">
+                    <span className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 uppercase tracking-widest"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_6px_rgba(16,185,129,0.5)]"/> Entradas</span>
+                    <span className="flex items-center gap-1.5 text-[9px] font-bold text-rose-600 uppercase tracking-widest"><div className="w-1.5 h-1.5 bg-rose-500 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.5)]"/> Saídas</span>
                   </div>
                 </div>
-                <DashboardCharts data={data.chartData} />
+                
+                {/* Fixed height wrapper for the chart - scaled down */}
+                <div className="w-full h-[220px] lg:h-[260px] min-w-0">
+                  <DashboardCharts data={data.chartData} />
+                </div>
               </div>
 
-              {/* Tabela de Vendas Recentes */}
-              <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-50">
-                <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-                  <h2 className="font-black text-slate-800 uppercase tracking-widest text-sm">Últimas Vendas</h2>
-                  <ArrowRight size={20} className="text-slate-300" />
+              {/* Transactions Table */}
+              <div className="bg-white rounded-[1.5rem] overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0 max-w-full">
+                <div className="px-5 lg:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 flex-wrap gap-4">
+                  <h2 className="font-black text-slate-800 uppercase tracking-widest text-xs sm:text-sm break-words">Transações Recentes</h2>
+                  <Link href="/historico" className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-400 hover:text-orange-600 hover:shadow-sm transition-all border border-slate-100 shrink-0">
+                    <ArrowRight size={14} />
+                  </Link>
                 </div>
-                <div className="overflow-x-auto px-4 pb-4">
-                  <table className="table table-zebra w-full border-separate border-spacing-y-2">
+                
+                <div className="w-full overflow-x-auto custom-scrollbar">
+                  <table className="w-full min-w-[500px] text-left">
                     <thead>
-                      <tr className="text-slate-400 text-[10px] font-black uppercase tracking-widest border-none">
-                        <th>Transação</th>
-                        <th>Data/Hora</th>
-                        <th>Status</th>
-                        <th className="text-right">Total</th>
+                      <tr className="border-b border-slate-100">
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">ID</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Data / Hora</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Valor</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-slate-50">
                       {data.recentTransactions.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="text-center py-10 text-slate-400 font-bold italic">
-                            Nenhuma venda recente
+                          <td colSpan={4} className="text-center py-8 text-slate-400 font-bold italic text-xs">
+                            Nenhuma transação recente
                           </td>
                         </tr>
                       ) : (
                         data.recentTransactions.map((t) => (
-                          <tr key={t.id} className="hover:bg-slate-50 transition-colors">
-                            <td className="font-mono text-[10px] font-bold text-slate-400 bg-slate-50/50 rounded-l-xl">#{t.id.slice(-6).toUpperCase()}</td>
-                            <td className="text-xs font-bold text-slate-600">{t.date.toLocaleDateString()} <span className="opacity-40 ml-1">{t.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span></td>
-                            <td>
-                              <span className={`px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest border ${
+                          <tr key={t.id} className="hover:bg-slate-50/50 transition-colors group">
+                            <td className="px-5 py-3">
+                              <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded group-hover:bg-white group-hover:shadow-sm transition-all">#{t.id.slice(-6).toUpperCase()}</span>
+                            </td>
+                            <td className="px-5 py-3">
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-slate-700 whitespace-nowrap">{t.date.toLocaleDateString()}</span>
+                                <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">{t.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                              </div>
+                            </td>
+                            <td className="px-5 py-3 text-center">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border whitespace-nowrap ${
                                 t.status === "COMPLETED" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
                                 t.status === "PENDING" ? "bg-amber-50 text-amber-600 border-amber-100" :
                                 "bg-rose-50 text-rose-600 border-rose-100"
                               }`}>
-                                {t.status === "COMPLETED" ? "Pago" : t.status === "PENDING" ? "Pendente" : "Cancelado"}
+                                {t.status === "COMPLETED" ? "Aprovado" : t.status === "PENDING" ? "Pendente" : "Cancelado"}
                               </span>
                             </td>
-                            <td className="text-right font-black text-emerald-600 bg-emerald-50/30 rounded-r-xl">
-                              + {formatMoney(Number(t.total))}
+                            <td className="px-5 py-3 text-right">
+                              <span className="text-xs font-black text-emerald-600 whitespace-nowrap">
+                                + {formatMoney(Number(t.total))}
+                              </span>
                             </td>
                           </tr>
                         ))
@@ -255,34 +284,46 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            {/* Coluna Lateral */}
-            <div className="space-y-10">
+            {/* Right Area (Col Span 1) */}
+            <div className="space-y-4 lg:space-y-4 2xl:space-y-6 min-w-0">
               
-              <div className="bg-white rounded-[2.5rem] p-10 text-center shadow-sm border border-slate-50">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8">Performance Geral</h3>
-                <div className="radial-progress text-primary font-black shadow-inner bg-slate-50/50" style={{ "--value": data.percent, "--size": "14rem", "--thickness": "14px" } as any}>
-                  <div className="flex flex-col">
-                    <span className="text-4xl">{data.percent.toFixed(0)}%</span>
-                    <span className="text-[10px] opacity-40 uppercase tracking-widest mt-1">Giro LTV</span>
+              {/* Radial Progress Premium Card */}
+              <div className="bg-white rounded-[1.5rem] p-5 lg:p-6 text-center shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex flex-col items-center relative overflow-hidden group w-full max-w-full">
+                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
+                
+                <h3 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-5">Escore de Retenção</h3>
+                
+                {/* The radial progress */}
+                <div className="relative">
+                  {/* Subtle glow behind */}
+                  <div className="absolute inset-0 bg-orange-600 blur-2xl opacity-10 rounded-full scale-125 group-hover:opacity-20 transition-opacity"></div>
+                  
+                  <div className="radial-progress text-orange-600 font-black relative z-10 bg-slate-50 shadow-inner" style={{ "--value": data.percent, "--size": "8rem", "--thickness": "10px" } as any}>
+                    <div className="flex flex-col items-center justify-center h-full w-full">
+                      <span className="text-2xl text-slate-800 tracking-tighter">{data.percent.toFixed(0)}<span className="text-lg text-orange-600 ml-0.5">%</span></span>
+                      <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Giro LTV</span>
+                    </div>
                   </div>
                 </div>
-                <div className="mt-8">
-                  <p className="text-3xl font-black text-slate-800">{data.totalItemsSold}</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Produtos vendidos (Total)</p>
+
+                <div className="mt-6 p-4 bg-slate-50 w-full rounded-xl border border-slate-100/50">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total de Produtos</p>
+                  <p className="text-2xl font-black text-slate-800 tracking-tight">{data.totalItemsSold}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Quick Actions Grid */}
+              <div className="grid grid-cols-2 gap-3 lg:gap-4">
                 {[
-                  { label: "Nova Venda", icon: PlusCircle, color: "bg-primary", href: "/registrarCompra" },
-                  { label: "Estoque", icon: FileText, color: "bg-white border border-slate-100 text-slate-800", href: "/produtos" },
-                  { label: "Clientes", icon: Users, color: "bg-white border border-slate-100 text-slate-800", href: "/clientes" },
-                  { label: "Finanças", icon: DollarSign, color: "bg-white border border-slate-100 text-slate-800", href: "/financeiro" },
+                  { label: "Nova Venda", icon: PlusCircle, color: "bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-md shadow-orange-600/30 hover:shadow-orange-600/50", border: "border-orange-500", href: "/registrarCompra" },
+                  { label: "Estoque", icon: FileText, color: "bg-white text-slate-700 hover:bg-slate-50", border: "border-slate-200", href: "/produtos" },
+                  { label: "Clientes", icon: Users, color: "bg-white text-slate-700 hover:bg-slate-50", border: "border-slate-200", href: "/clientes" },
+                  { label: "Finanças", icon: DollarSign, color: "bg-white text-slate-700 hover:bg-slate-50", border: "border-slate-200", href: "/financeiro" },
                 ].map((btn, i) => (
-                  <a key={i} href={btn.href} className={`${btn.color} p-6 rounded-3xl flex flex-col items-center gap-3 hover:-translate-y-1 transition-all shadow-sm hover:shadow-md ${btn.color.includes('bg-primary') ? 'text-white shadow-primary/30' : ''}`}>
-                    <btn.icon size={28} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">{btn.label}</span>
-                  </a>
+                  <Link key={i} href={btn.href} className={`${btn.color} border ${btn.border} p-3 sm:p-4 rounded-[1rem] flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-all duration-300`}>
+                    <btn.icon size={20} strokeWidth={2.5} />
+                    <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-center">{btn.label}</span>
+                  </Link>
                 ))}
               </div>
 

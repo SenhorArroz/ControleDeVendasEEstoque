@@ -89,81 +89,81 @@ export default function CategoryManager() {
     const isLoading = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
     return (
-        <div className="space-y-10 py-5 animate-in fade-in slide-in-from-bottom-2 duration-700 font-sans max-w-6xl mx-auto w-full">
+        <div className="space-y-4 sm:space-y-5 2xl:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-700 font-sans max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             
             {/* HEADER */}
             <div className="flex flex-col gap-4">
                 <Link
                     href="/dashboard"
-                    className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors"
+                    className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-xl bg-white shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-slate-50 hover:text-orange-600 transition-colors"
                 >
-                    <ArrowLeft size={16} /> Dashboard
+                    <ArrowLeft size={16} /> Voltar ao Dashboard
                 </Link>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2">
-                    <div className="space-y-1">
-                        <h1 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
-                            <Tag className="text-primary" size={36} /> Categorias
+                    <div className="space-y-1.5">
+                        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+                            <Tag className="text-orange-600" size={32} /> Categorias
                         </h1>
-                        <p className="text-slate-500 font-medium italic">Organize seus produtos por coleções e etiquetas visuais.</p>
+                        <p className="text-slate-500 font-medium text-xs sm:text-sm">Organize seus produtos por coleções e etiquetas visuais no seu sistema.</p>
                     </div>
                     <button
                         onClick={() => openModal()}
-                        className="btn btn-primary rounded-2xl px-8 h-14 font-black shadow-xl shadow-primary/30 border-none gap-2 w-full md:w-auto hover:scale-[1.02] transition-transform"
+                        className="flex items-center justify-center gap-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 sm:px-8 h-10 sm:h-12 2xl:h-14 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-[0_8px_25px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none w-full md:w-auto transition-all"
                     >
-                        <Plus className="w-5 h-5" /> NOVA CATEGORIA
+                        <Plus size={20} strokeWidth={2.5} /> Nova Categoria
                     </button>
                 </div>
             </div>
 
             {/* TABELA DE CATEGORIAS */}
-            <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 overflow-hidden transition-all hover:shadow-md">
-                <div className="overflow-x-auto p-4 md:p-6">
-                    <table className="table w-full border-separate border-spacing-y-2">
+            <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0 max-w-full">
+                <div className="w-full overflow-x-auto custom-scrollbar">
+                    <table className="w-full min-w-[500px] text-left">
                         <thead>
-                            <tr className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-none">
-                                <th className="pl-6 w-24">Etiqueta</th>
-                                <th>Nome da Categoria</th>
-                                <th>Itens Vinculados</th>
-                                <th className="text-right pr-6">Ações</th>
+                            <tr className="border-b border-slate-100 bg-slate-50/50">
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest w-24">Etiqueta</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">Nome da Categoria</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">Itens Vinculados</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-slate-50">
                             {categories.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-20 text-slate-400 font-bold italic">
+                                    <td colSpan={4} className="text-center py-12 text-slate-400 font-bold italic text-xs sm:text-sm">
                                         Nenhuma categoria cadastrada.
                                     </td>
                                 </tr>
                             ) : (
                                 categories.map((cat) => (
-                                    <tr key={cat.id} className="hover:bg-slate-50 transition-colors group">
-                                        <td className="pl-6 py-4 rounded-l-2xl">
+                                    <tr key={cat.id} className="hover:bg-slate-50/50 transition-colors group">
+                                        <td className="px-5 sm:px-6 py-4">
                                             <div
-                                                className="w-12 h-12 rounded-2xl shadow-inner border border-white/20 group-hover:scale-110 transition-transform"
-                                                style={{ backgroundColor: cat.color || "#ccc" }}
+                                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-[0.8rem] shadow-sm border border-slate-200 group-hover:scale-105 transition-transform"
+                                                style={{ backgroundColor: cat.color || "#e2e8f0" }}
                                             />
                                         </td>
-                                        <td>
-                                            <span className="font-black text-slate-800 text-sm tracking-tight">{cat.name}</span>
+                                        <td className="px-5 sm:px-6 py-4">
+                                            <span className="font-black text-slate-800 text-sm sm:text-base tracking-tight">{cat.name}</span>
                                         </td>
-                                        <td>
-                                            <span className="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest border border-slate-200">
-                                                {cat._count?.products ?? 0} PRODUTOS
+                                        <td className="px-5 sm:px-6 py-4">
+                                            <span className="px-2 sm:px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-slate-200 inline-flex items-center gap-1.5 whitespace-nowrap">
+                                                {cat._count?.products ?? 0} Produtos
                                             </span>
                                         </td>
-                                        <td className="text-right pr-6 rounded-r-2xl">
-                                            <div className="flex justify-end gap-1">
+                                        <td className="px-5 sm:px-6 py-4 text-right">
+                                            <div className="flex justify-end gap-1 sm:gap-2">
                                                 <button
                                                     onClick={() => openModal(cat)}
-                                                    className="btn btn-ghost btn-sm h-10 w-10 btn-square text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors"
+                                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-600 hover:bg-orange-50 transition-colors shrink-0"
                                                 >
-                                                    <Edit className="w-4 h-4" />
+                                                    <Edit size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(cat.id)}
-                                                    className="btn btn-ghost btn-sm h-10 w-10 btn-square text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors"
+                                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0"
                                                 >
-                                                    <Trash2 className="w-4 h-4" />
+                                                    <Trash2 size={16} />
                                                 </button>
                                             </div>
                                         </td>
@@ -175,22 +175,21 @@ export default function CategoryManager() {
                 </div>
             </div>
 
-            {/* MODAL (Glassmorphism e Bordas Premium) */}
+            {/* MODAL (Premium Design) */}
             <dialog 
                 ref={modalRef} 
-                className="modal bg-slate-900/60 backdrop-blur-md z-[100]" 
-                // Clicar fora do modal fecha ele:
+                className="modal bg-slate-900/40 backdrop-blur-sm z-[100]" 
                 onClick={(e) => { if (e.target === modalRef.current) closeModal(); }}
             >
-                <div className="modal-box w-11/12 max-w-lg p-10 rounded-[3rem] shadow-2xl border border-white bg-white cursor-default">
+                <div className="modal-box w-11/12 max-w-md p-4 sm:p-5 2xl:p-8 lg:p-6 2xl:p-10 rounded-[2rem] shadow-2xl border border-white bg-white cursor-default">
                     
-                    <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-8">
-                        <h3 className="font-black text-2xl text-slate-800 tracking-tighter flex items-center gap-3">
-                            <div className="p-2 bg-primary/10 rounded-xl text-primary"><Tag size={24}/></div>
+                    <div className="flex justify-between items-center pb-5 sm:pb-6 mb-5 sm:mb-6 border-b border-slate-100">
+                        <h3 className="font-black text-lg sm:text-xl 2xl:text-2xl text-slate-800 tracking-tight flex items-center gap-3">
+                            <div className="p-2 sm:p-2.5 bg-orange-50 rounded-xl text-orange-600"><Tag size={20} strokeWidth={2.5}/></div>
                             {editingCat ? "Editar Categoria" : "Nova Categoria"}
                         </h3>
-                        <button type="button" onClick={closeModal} className="btn btn-ghost btn-circle btn-sm bg-slate-50 hover:bg-slate-200">
-                            <X size={20} className="text-slate-500"/>
+                        <button type="button" onClick={closeModal} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-colors">
+                            <X size={18} />
                         </button>
                     </div>
 
@@ -198,57 +197,57 @@ export default function CategoryManager() {
                         key={editingCat ? editingCat.id : "new"}
                         onSubmit={handleFormSubmit}
                         ref={formRef}
-                        className="space-y-6"
+                        className="space-y-5 sm:space-y-6"
                     >
-                        <div className="form-control">
-                            <label className="label uppercase text-[10px] font-black text-slate-400 tracking-widest px-1">
-                                Nome da Categoria *
+                        <div className="flex flex-col gap-1.5">
+                            <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">
+                                Nome da Categoria <span className="text-orange-600">*</span>
                             </label>
                             <input
                                 name="name"
                                 type="text"
                                 required
-                                className="input input-bordered w-full rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 px-5"
+                                className="w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-800 h-10 sm:h-12 2xl:h-14 px-4 sm:px-5 transition-all text-sm sm:text-base placeholder:text-slate-300"
                                 defaultValue={editingCat?.name}
                                 placeholder="Ex: Bebidas, Limpeza, Vestuário..."
                             />
                         </div>
 
-                        <div className="form-control">
-                            <label className="label uppercase text-[10px] font-black text-slate-400 tracking-widest px-1">
+                        <div className="flex flex-col gap-1.5">
+                            <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">
                                 Cor da Etiqueta
                             </label>
-                            <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100">
                                 <input
                                     name="color"
                                     type="color"
-                                    className="h-12 w-16 p-0 border-0 rounded-xl cursor-pointer bg-transparent"
-                                    defaultValue={editingCat?.color || "#3b82f6"}
+                                    className="h-10 w-14 sm:h-12 sm:w-16 p-0 border-0 rounded-xl cursor-pointer bg-transparent shrink-0"
+                                    defaultValue={editingCat?.color || "#ea580c"}
                                 />
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
                                     A cor facilita a identificação<br/>rápida dos itens no PDV.
                                 </span>
                             </div>
                         </div>
 
-                        <div className="pt-6 flex gap-3">
+                        <div className="pt-4 sm:pt-6 flex gap-3">
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="btn btn-ghost flex-1 rounded-2xl font-black text-xs tracking-widest text-slate-500 hover:bg-slate-100"
+                                className="flex-1 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-slate-500 bg-slate-50 hover:bg-slate-100 h-10 sm:h-12 2xl:h-14 transition-colors uppercase border border-slate-200"
                                 disabled={isLoading}
                             >
-                                CANCELAR
+                                Cancelar
                             </button>
                             <button
                                 type="submit"
-                                className="btn btn-primary flex-1 rounded-2xl font-black text-xs tracking-widest shadow-xl shadow-primary/30 border-none"
+                                className="flex-1 flex items-center justify-center rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(234,88,12,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(234,88,12,0.4)] h-10 sm:h-12 2xl:h-14 transition-all uppercase"
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
                                     <Loader2 className="w-5 h-5 animate-spin" />
                                 ) : (
-                                    "SALVAR CATEGORIA"
+                                    "Salvar"
                                 )}
                             </button>
                         </div>

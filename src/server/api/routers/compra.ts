@@ -140,25 +140,20 @@ export const salesRouter = createTRPCRouter({
 						},
 					});
 
-					// C. Lógica do Código de Barras (Histórico + Exclusão)
+					// C. Lógica do Código de Barras (Apenas Histórico — sem exclusão)
 					if (item.barcodeId && barcodeString) {
-						// 1. CRIAR LOG PERMANENTE (O que você pediu: armazenar os vendidos)
+						// CRIAR LOG PERMANENTE para rastreio de vendas
 						await tx.soldBarcodeLog.create({
 							data: {
 								barcode: barcodeString,
-								productName: productNameSnapshot, // Salva o nome caso o produto seja apagado depois
+								productName: productNameSnapshot,
 								purchaseId: purchase.id,
 								soldAt: new Date(),
 							},
 						});
 
-						// 2. APAGAR DO ESTOQUE ATIVO (Sua lógica original)
-						// Isso remove da tabela de códigos disponíveis para venda, mas o log acima mantém o histórico.
-						await tx.codigoDeBarras.delete({
-							where: {
-								id: item.barcodeId,
-							},
-						});
+						// O código de barras NÃO é mais deletado da tabela codigoDeBarras.
+						// Ele permanece no estoque ativo para reutilização futura.
 					}
 				}
 

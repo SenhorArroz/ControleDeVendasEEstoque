@@ -22,13 +22,13 @@ export default function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html className={`${geist.variable}`} lang="pt-br" suppressHydrationWarning>
-			<body>
+		<html className={`${geist.variable}`} lang="pt-br" suppressHydrationWarning data-theme="light">
+			<body className="bg-slate-50 text-slate-900">
 				<AuthProvider>
 				<ClerkProvider>
 					<ThemeProvider attribute="data-theme"
 					defaultTheme="light"
-					enableSystem
+					forcedTheme="light"
 					>
 						<TRPCReactProvider>{children}</TRPCReactProvider>
 				</ThemeProvider>

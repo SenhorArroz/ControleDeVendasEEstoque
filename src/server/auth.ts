@@ -73,8 +73,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 if (!isValid) return null;
                 const userWithRole = user as any;
   
-                console.log("VALOR REAL NO BANCO:", userWithRole.role);
-
                 return {
                     id: user.id,
                     name: user.name,
@@ -87,7 +85,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     callbacks: {
         // MUDANÇA AQUI: Usando sintaxe de método assíncrono direta
         async jwt({ token, user }) {
-                console.log(">>> AGORA O LOG TEM QUE APARECER:", user?.email);
             if (user) {
                 token.sub = user.id;
                 token.role = user.role;

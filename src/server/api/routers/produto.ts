@@ -29,7 +29,7 @@ export const productRouter = createTRPCRouter({
 		.input(
 			z.object({
 				searchTerm: z.string().optional(),
-				categoryId: z.string().optional(),
+				categoryIds: z.array(z.string()).optional(),
 			}),
 		)
 		.query(async ({ ctx, input }) => {
@@ -55,9 +55,9 @@ export const productRouter = createTRPCRouter({
 				where: {
 					userId: ownerId, // Filtra pelo dono real dos produtos
 
-					...(input.categoryId
+					...(input.categoryIds && input.categoryIds.length > 0
 						? {
-							categories: { some: { id: input.categoryId } },
+							categories: { some: { id: { in: input.categoryIds } } },
 						}
 						: {}),
 

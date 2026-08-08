@@ -35,7 +35,7 @@ export default async function ProductDetailsPage({ params }: PageProps) {
   if (!product) notFound();
 
   return (
-    <div className="drawer lg:drawer-open font-sans bg-base-200">
+    <div className="drawer lg:drawer-open font-sans bg-slate-50">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col min-h-screen">
         <ProductDetailClient product={JSON.parse(JSON.stringify(product))} />
