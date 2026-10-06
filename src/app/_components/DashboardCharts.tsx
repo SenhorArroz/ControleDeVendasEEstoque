@@ -50,7 +50,7 @@ export default function DashboardCharts({ data }: { data: any[] }) {
             }}
             itemStyle={{ fontSize: '13px', fontWeight: '800' }}
             labelStyle={{ color: "#94a3b8", marginBottom: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase' }}
-            formatter={(value: number) => [formatCurrency(value)]}
+            formatter={(value: number | undefined) => [formatCurrency(value ?? 0)]}
           />
           <Area 
             name="Entradas" 

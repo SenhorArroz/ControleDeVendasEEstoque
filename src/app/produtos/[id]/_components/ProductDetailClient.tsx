@@ -73,7 +73,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 	const removeBarcodeField = (index: number) =>
 		setFormData((p) => ({
 			...p,
-			barcodes: p.barcodes.filter((_, idx) => idx !== index),
+			barcodes: p.barcodes.filter((_: string, idx: number) => idx !== index),
 		}));
 	const updateBarcodeField = (index: number, value: string) => {
 		const newBarcodes = [...formData.barcodes];
@@ -86,7 +86,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 		setFormData((prev) => ({
 			...prev,
 			categoryIds: prev.categoryIds.includes(id)
-				? prev.categoryIds.filter((cId) => cId !== id)
+				? prev.categoryIds.filter((cId: string) => cId !== id)
 				: [...prev.categoryIds, id],
 		}));
 	};
@@ -682,7 +682,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 											</button>
 										</div>
 										<div className="space-y-3 max-h-40 overflow-y-auto custom-scrollbar pr-2">
-											{formData.barcodes.map((code, index) => (
+											{formData.barcodes.map((code: string, index: number) => (
 												<div key={index} className="flex gap-2">
 													<input
 														className="px-3 rounded-xl bg-slate-50 border border-slate-100 font-bold font-mono text-[10px] sm:text-xs flex-1 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 text-slate-700 h-10 transition-all placeholder:text-slate-300"

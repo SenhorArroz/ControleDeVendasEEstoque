@@ -37,7 +37,9 @@ function setupDatabase() {
   }
 }
 
-let mainWindow
+/** @type {BrowserWindow | null} */
+let mainWindow = null
+/** @type {ReturnType<typeof spawn> | null} */
 let serverProcess = null
 
 function createWindow() {

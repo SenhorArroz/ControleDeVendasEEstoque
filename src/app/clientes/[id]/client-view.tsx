@@ -75,7 +75,7 @@ export default function ClientView({ client }: ClientViewProps) {
     status: client.status,
   });
 
-  const [purchaseToEdit, setPurchaseToEdit] = useState<{ id: string; status: string; metodoPagamento: string } | null>(null);
+  const [purchaseToEdit, setPurchaseToEdit] = useState<{ id: string; status: "PENDING" | "COMPLETED" | "CANCELED"; metodoPagamento: string } | null>(null);
 
   const utils = api.useUtils();
 
@@ -104,7 +104,7 @@ export default function ClientView({ client }: ClientViewProps) {
     onSuccess: () => {
       setPurchaseToDelete(null); // Fecha o modal
       router.refresh();
-      toast.success("Venda excluída e estoque restaurado!");
+      toast.success("Venda excluída com sucesso!");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -120,7 +120,7 @@ export default function ClientView({ client }: ClientViewProps) {
   const handleOpenStatusModal = (purchase: any) => {
     setPurchaseToEdit({ 
         id: purchase.id, 
-        status: purchase.status, 
+        status: purchase.status as "PENDING" | "COMPLETED" | "CANCELED",
         metodoPagamento: purchase.metodoPagamento || "DINHEIRO" 
     });
     setIsStatusModalOpen(true);

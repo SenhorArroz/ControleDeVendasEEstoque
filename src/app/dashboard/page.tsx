@@ -307,7 +307,7 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="mt-6 p-4 bg-slate-50 w-full rounded-xl border border-slate-100/50">
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total de Produtos</p>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Itens Vendidos</p>
                   <p className="text-2xl font-black text-slate-800 tracking-tight">{data.totalItemsSold}</p>
                 </div>
               </div>

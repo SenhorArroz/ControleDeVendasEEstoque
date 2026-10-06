@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import {
   Mail,
   Lock,

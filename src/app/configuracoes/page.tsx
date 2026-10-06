@@ -16,9 +16,9 @@ export default async function SettingsPage() {
     // 2. Busca dados em paralelo (mais rápido)
     const [user, clients, products, sales] = await Promise.all([
         getUser(session.user.id),
-        getClientsCount(),  // Assumindo que essas funções não precisam de argumento ou pegam contexto
-        getProductsCount(),
-        getSalesCount(),
+        getClientsCount(session.user.id),
+        getProductsCount(session.user.id),
+        getSalesCount(session.user.id),
     ]);
 
     // 3. Monta objeto de estatísticas

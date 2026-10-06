@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Função para copiar pasta recursivamente
-function copyFolderSync(from, to) {
+function copyFolderSync(/** @type {string} */ from, /** @type {string} */ to) {
     if (!fs.existsSync(to)) fs.mkdirSync(to, { recursive: true });
     fs.readdirSync(from).forEach(element => {
         const stat = fs.lstatSync(path.join(from, element));

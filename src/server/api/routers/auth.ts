@@ -125,7 +125,7 @@ export const authRouter = createTRPCRouter({
 	getAllPerId : protectedProcedure.query(async ({ ctx }) => {
 		const funcionarios = await ctx.db.funcionario.findMany({
 			where: {
-				userCreatorId: ctx.session.user.id,
+				creatorId: ctx.session.user.id,
 			},
 		});
 		return funcionarios;

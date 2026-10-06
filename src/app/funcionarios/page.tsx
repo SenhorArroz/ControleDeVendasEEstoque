@@ -111,7 +111,7 @@ export default function FuncionariosPage() {
                       <td className="pl-6 py-4 rounded-l-2xl">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shadow-inner shrink-0 border border-slate-200">
-                            <span className="text-lg font-black">{funcionario.name.charAt(0).toUpperCase()}</span>
+                            <span className="text-lg font-black">{(funcionario.name ?? "?").charAt(0).toUpperCase()}</span>
                           </div>
                           <div>
                             <div className="font-black text-sm text-slate-800 tracking-tight">{funcionario.name}</div>
@@ -133,7 +133,7 @@ export default function FuncionariosPage() {
 
                       <td>
                         <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 tracking-widest">
-                          {funcionario.phone.replace(/\D/g, '').replace("(", "").replace(")", "").replace("-", "").replace(" ", "") || "S/ Telefone"}
+                          {funcionario.phone?.replace(/\D/g, '') || "S/ Telefone"}
                         </span>
                       </td>
 

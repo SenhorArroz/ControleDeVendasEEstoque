@@ -84,7 +84,7 @@ export function ClienteRow({ client }: { client: ClienteData }) {
                 {/* Data */}
                 <td className="px-3 py-4">
                     <span className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase">
-                        {isLoadingDate ? "..." : lastPurchaseDate ? new Date(lastPurchaseDate as string).toLocaleDateString('pt-BR') : "SEM REGISTRO"}
+                        {isLoadingDate ? "..." : lastPurchaseDate ? new Date(lastPurchaseDate).toLocaleDateString('pt-BR') : "SEM REGISTRO"}
                     </span>
                 </td>
 

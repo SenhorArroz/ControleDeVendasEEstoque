@@ -17,10 +17,11 @@ export const productRouter = createTRPCRouter({
 	}),
 
 	somaStock: protectedProcedure.query(async ({ ctx }) => {
-		return ctx.db.product.aggregate({
+		const result = await ctx.db.product.aggregate({
 			where: { userId: ctx.session.user.id },
-			select: { stock: { _sum: true } },
+			_sum: { stock: true },
 		});
+		return result._sum.stock ?? 0;
 	}),
 	contProducts: protectedProcedure.query(async ({ ctx }) => {
 		return ctx.db.product.count();
@@ -135,7 +136,7 @@ export const productRouter = createTRPCRouter({
 					description: input.description,
 					sku: input.sku,
 					precoVenda: input.precoVenda,
-					precoCompra: input.precoCompra,
+					precoCompra: input.precoCompra ?? 0,
 					stock: input.stock,
 					lifetimeStock: input.stock,
 					unidadeMedida: input.unidadeMedida,

@@ -47,7 +47,7 @@ export default function FinancialChart({ data }: { data: FinancialData[] }) {
             tickLine={false}
           />
           <Tooltip 
-            formatter={(value: number) => [formatCurrency(value)]}
+            formatter={(value: number | undefined) => [formatCurrency(value ?? 0)]}
             contentStyle={{ backgroundColor: "#1f2937", border: "none", borderRadius: "8px", color: "#fff" }}
             itemStyle={{ paddingBottom: 4 }}
           />

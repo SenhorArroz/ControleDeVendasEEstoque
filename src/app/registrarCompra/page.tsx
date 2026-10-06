@@ -31,6 +31,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
@@ -69,6 +70,7 @@ const PAYMENT_METHODS = [
 
 export default function NewSalePage() {
   const utils = api.useUtils();
+  const router = useRouter();
   const { data: session } = useSession();
   const userRole = session?.user?.role;
 
@@ -140,7 +142,11 @@ export default function NewSalePage() {
         status: variables.status,
         date: new Date(),
       });
-      await utils.produto.getAll.invalidate();
+      await Promise.all([
+        utils.produto.getAll.invalidate(),
+        utils.compra.itensVendidosCont.invalidate(),
+      ]);
+      router.refresh();
       setCart([]);
       setDiscountPercent("0");
       setPaymentAmount("");
@@ -275,6 +281,7 @@ export default function NewSalePage() {
             </button>
             {categories?.map((cat) => {
               const isSelected = selectedCategoryIds.includes(cat.id);
+              const categoryColor = cat.color ?? "#f97316";
               return (
                 <button
                   key={cat.id}
@@ -283,9 +290,9 @@ export default function NewSalePage() {
                   )}
                   className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap border hover:scale-105 active:scale-95`}
                   style={{ 
-                    backgroundColor: isSelected ? cat.color : "white", 
-                    color: isSelected ? "white" : cat.color, 
-                    borderColor: isSelected ? "transparent" : cat.color + "40" 
+                    backgroundColor: isSelected ? categoryColor : "white",
+                    color: isSelected ? "white" : categoryColor,
+                    borderColor: isSelected ? "transparent" : `${categoryColor}40`,
                   }}
                 >
                   {cat.name}
