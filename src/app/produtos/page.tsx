@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ProductTableShow from "../_components/ProductTableShow";
 import SideBar from "../_components/SideBar";
 import { 
@@ -13,8 +13,11 @@ import type { OurFileRouter } from "~/server/api/uploadthing/core";
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
+type StockFilter = "all" | "inStock" | "outOfStock";
+
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [stockFilter, setStockFilter] = useState<StockFilter>("all");
   const { startUpload } = useUploadThing("imageUploader");
 
   // Queries
@@ -22,6 +25,16 @@ export default function ProductsPage() {
   const productCount = api.produto.cont.useQuery();
   const { data: fornecedores } = api.fornecedor.getEvery.useQuery(); 
   const { data: categorias } = api.categoria.getAll.useQuery(); 
+
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+
+    return products.filter((product) => {
+      if (stockFilter === "inStock") return product.stock > 0;
+      if (stockFilter === "outOfStock") return product.stock <= 0;
+      return true;
+    });
+  }, [products, stockFilter]);
 
   // Mutations
   const createMutation = api.produto.create.useMutation({
@@ -186,16 +199,39 @@ export default function ProductsPage() {
           {/* Tabela de Produtos */}
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex flex-col overflow-hidden min-w-0 max-w-full">
             <div className="p-4 sm:p-5 lg:p-6 border-b border-slate-100 bg-slate-50/50">
-               <div className="relative group w-full max-w-md">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
-                <input 
-                  type="text" 
-                  className="w-full h-10 sm:h-12 pl-10 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all font-bold text-sm text-slate-700 placeholder:text-slate-300" 
-                  placeholder="Pesquisar por nome ou SKU..." 
-                  value={searchTerm} 
-                  onChange={e => setSearchTerm(e.target.value)} 
-                />
-                {isLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-orange-600"/>}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative group w-full max-w-md">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
+                  <input
+                    type="text"
+                    className="w-full h-10 sm:h-12 pl-10 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all font-bold text-sm text-slate-700 placeholder:text-slate-300"
+                    placeholder="Pesquisar por nome ou SKU..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                  />
+                  {isLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-orange-600"/>}
+                </div>
+
+                <div className="flex w-full items-center gap-1 rounded-xl bg-white p-1 border border-slate-200 sm:w-auto" role="group" aria-label="Filtrar por disponibilidade em estoque">
+                  {[
+                    { value: "all", label: "Todos" },
+                    { value: "inStock", label: "Em estoque" },
+                    { value: "outOfStock", label: "Esgotados" },
+                  ].map((filter) => (
+                    <button
+                      key={filter.value}
+                      type="button"
+                      onClick={() => setStockFilter(filter.value as StockFilter)}
+                      aria-pressed={stockFilter === filter.value}
+                      className={`flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:flex-none ${stockFilter === filter.value
+                        ? "bg-orange-600 text-white shadow-sm"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -214,10 +250,10 @@ export default function ProductsPage() {
                 <tbody className="divide-y divide-slate-50">
                   {isLoading ? (
                     <tr><td colSpan={6} className="text-center py-12"><Loader2 className="w-6 h-6 animate-spin mx-auto text-orange-600"/></td></tr>
-                  ) : products?.length === 0 ? (
+                  ) : filteredProducts.length === 0 ? (
                     <tr><td colSpan={6} className="text-center py-12 font-bold italic text-slate-400 text-xs sm:text-sm">Nenhum produto encontrado.</td></tr>
                   ) : (
-                    products?.map((product) => (
+                    filteredProducts.map((product) => (
                         <ProductTableShow 
                             key={product.id} 
                             product={product as any} 
