@@ -23,7 +23,7 @@ export default function ProductsPage() {
 
   // Queries
   const { data: products, isLoading, refetch } = api.produto.getAll.useQuery({ searchTerm });
-  const productCount = api.produto.cont.useQuery();
+  const stockTotal = api.produto.somaStock.useQuery();
   const { data: fornecedores } = api.fornecedor.getEvery.useQuery(); 
   const { data: categorias } = api.categoria.getAll.useQuery(); 
 
@@ -194,8 +194,8 @@ export default function ProductsPage() {
               <div className="bg-white px-4 py-2.5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-3 w-full sm:w-auto">
                 <div className="p-2 bg-orange-50 text-orange-600 rounded-xl"><PackageOpen size={18}/></div>
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Total Cadastrado</p>
-                  <p className="text-lg font-black text-slate-800 leading-none">{productCount.data || 0}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Total em Estoque</p>
+                  <p className="text-lg font-black text-slate-800 leading-none">{stockTotal.data || 0}</p>
                 </div>
               </div>
               <button 
