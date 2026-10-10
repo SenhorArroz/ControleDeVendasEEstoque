@@ -11,10 +11,14 @@ import { ClienteRow } from "../../_components/ClienteTableComponent";
 
 export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [clientFilter, setClientFilter] = useState<"all" | "pending">("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
 
-  const { data: clients, isLoading, refetch } = api.cliente.getAll.useQuery({ search: searchTerm });
+  const { data: clients, isLoading, refetch } = api.cliente.getAll.useQuery({
+    search: searchTerm,
+    pendingPurchases: clientFilter === "pending",
+  });
 
   const createMutation = api.cliente.create.useMutation({
     onSuccess: () => {
@@ -80,6 +84,25 @@ export default function ClientsPage() {
             </div>
           </div>
 
+          <div className="flex w-full items-center gap-1 rounded-xl border border-slate-200 bg-white p-1 sm:w-fit" role="group" aria-label="Filtrar clientes por pendências">
+            <button
+              type="button"
+              onClick={() => setClientFilter("all")}
+              aria-pressed={clientFilter === "all"}
+              className={`flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:flex-none ${clientFilter === "all" ? "bg-orange-600 text-white shadow-sm" : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"}`}
+            >
+              Todos
+            </button>
+            <button
+              type="button"
+              onClick={() => setClientFilter("pending")}
+              aria-pressed={clientFilter === "pending"}
+              className={`flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:flex-none ${clientFilter === "pending" ? "bg-amber-500 text-white shadow-sm" : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"}`}
+            >
+              Com pendência
+            </button>
+          </div>
+
           {/* ================= TABELA ================= */}
           <div className="bg-white rounded-2xl sm:rounded-[2rem] shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 overflow-hidden flex flex-col min-w-0">
             <div className="w-full overflow-x-auto custom-scrollbar p-2 sm:p-4">
@@ -108,7 +131,9 @@ export default function ClientsPage() {
                             <Users className="w-6 h-6 sm:w-8 sm:h-8 text-slate-300" />
                           </div>
                           <p className="font-bold text-xs sm:text-sm">
-                            {searchTerm ? "Nenhum cliente encontrado para esta busca." : "Nenhum cliente na base de dados."}
+                            {clientFilter === "pending"
+                              ? "Nenhum cliente com compra pendente encontrado."
+                              : searchTerm ? "Nenhum cliente encontrado para esta busca." : "Nenhum cliente na base de dados."}
                           </p>
                         </div>
                       </td>

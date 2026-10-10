@@ -13,6 +13,7 @@ export const clienteRouter = createTRPCRouter({
         .input(
             z.object({
                 search: z.string().optional(),
+                pendingPurchases: z.boolean().optional(),
             })
         )
         // 2. RECEBEMOS O INPUT AQUI JUNTO COM O CTX
@@ -45,6 +46,9 @@ export const clienteRouter = createTRPCRouter({
                     // 3. APLICA O FILTRO DA BUSCA (Ignora maiúsculas/minúsculas)
                     ...(input.search
                         ? { name: { contains: input.search, mode: "insensitive" } }
+                        : {}),
+                    ...(input.pendingPurchases
+                        ? { purchases: { some: { status: "PENDING" } } }
                         : {}),
                 },
                 include: {
