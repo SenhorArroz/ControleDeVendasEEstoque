@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import ProductTableShow from "../_components/ProductTableShow";
 import SideBar from "../_components/SideBar";
 import { 
-  Search, Plus, X, Barcode, Trash2, Loader2, PackageOpen, UploadCloud, Info, Package, Menu, Activity
+  Search, Plus, X, Barcode, Trash2, Loader2, PackageOpen, UploadCloud, Info, Package, Menu, Activity, ChevronDown, Tags
 } from "lucide-react";
 
 import { api } from "~/trpc/react";
@@ -18,6 +18,7 @@ type StockFilter = "all" | "inStock" | "outOfStock";
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const { startUpload } = useUploadThing("imageUploader");
 
   // Queries
@@ -30,11 +31,21 @@ export default function ProductsPage() {
     if (!products) return [];
 
     return products.filter((product) => {
-      if (stockFilter === "inStock") return product.stock > 0;
-      if (stockFilter === "outOfStock") return product.stock <= 0;
-      return true;
+      const matchesStock = stockFilter === "all"
+        || (stockFilter === "inStock" && product.stock > 0)
+        || (stockFilter === "outOfStock" && product.stock <= 0);
+      const matchesCategory = selectedCategoryIds.length === 0
+        || product.categories?.some((category) => selectedCategoryIds.includes(category.id));
+
+      return matchesStock && matchesCategory;
     });
-  }, [products, stockFilter]);
+  }, [products, selectedCategoryIds, stockFilter]);
+
+  const toggleCategoryFilter = (categoryId: string) => {
+    setSelectedCategoryIds((current) => current.includes(categoryId)
+      ? current.filter((id) => id !== categoryId)
+      : [...current, categoryId]);
+  };
 
   // Mutations
   const createMutation = api.produto.create.useMutation({
@@ -212,25 +223,63 @@ export default function ProductsPage() {
                   {isLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-orange-600"/>}
                 </div>
 
-                <div className="flex w-full items-center gap-1 rounded-xl bg-white p-1 border border-slate-200 sm:w-auto" role="group" aria-label="Filtrar por disponibilidade em estoque">
-                  {[
-                    { value: "all", label: "Todos" },
-                    { value: "inStock", label: "Em estoque" },
-                    { value: "outOfStock", label: "Esgotados" },
-                  ].map((filter) => (
-                    <button
-                      key={filter.value}
-                      type="button"
-                      onClick={() => setStockFilter(filter.value as StockFilter)}
-                      aria-pressed={stockFilter === filter.value}
-                      className={`flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:flex-none ${stockFilter === filter.value
-                        ? "bg-orange-600 text-white shadow-sm"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-                      }`}
-                    >
-                      {filter.label}
-                    </button>
-                  ))}
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-nowrap">
+                  <div className="flex flex-1 items-center gap-1 rounded-xl bg-white p-1 border border-slate-200 sm:flex-none" role="group" aria-label="Filtrar por disponibilidade em estoque">
+                    {[
+                      { value: "all", label: "Todos" },
+                      { value: "inStock", label: "Em estoque" },
+                      { value: "outOfStock", label: "Esgotados" },
+                    ].map((filter) => (
+                      <button
+                        key={filter.value}
+                        type="button"
+                        onClick={() => setStockFilter(filter.value as StockFilter)}
+                        aria-pressed={stockFilter === filter.value}
+                        className={`flex-1 whitespace-nowrap rounded-lg px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:flex-none ${stockFilter === filter.value
+                          ? "bg-orange-600 text-white shadow-sm"
+                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                        }`}
+                      >
+                        {filter.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <details className="group relative w-full sm:w-auto">
+                    <summary className="flex h-10 cursor-pointer list-none items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 text-[10px] font-black uppercase tracking-wider text-slate-600 transition-colors hover:border-orange-200 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
+                      <span className="flex items-center gap-2"><Tags size={14} /> Categorias{selectedCategoryIds.length > 0 ? ` (${selectedCategoryIds.length})` : ""}</span>
+                      <ChevronDown size={14} className="transition-transform group-open:rotate-180" />
+                    </summary>
+                    <div className="absolute right-0 z-20 mt-2 w-full min-w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg sm:w-64">
+                      <div className="flex items-center justify-between px-2 pb-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Filtrar categorias</span>
+                        {selectedCategoryIds.length > 0 && (
+                          <button type="button" onClick={() => setSelectedCategoryIds([])} className="text-[9px] font-black uppercase tracking-wider text-orange-600 hover:text-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded">
+                            Limpar
+                          </button>
+                        )}
+                      </div>
+                      <div className="max-h-56 space-y-1 overflow-y-auto pr-1 custom-scrollbar">
+                        {categorias?.map((category) => {
+                          const isSelected = selectedCategoryIds.includes(category.id);
+
+                          return (
+                            <label key={category.id} className={`flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold transition-colors ${isSelected ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}>
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleCategoryFilter(category.id)}
+                                className="h-3.5 w-3.5 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+                              />
+                              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: category.color ?? "#cbd5e1" }} aria-hidden="true" />
+                              <span className="truncate">{category.name}</span>
+                            </label>
+                          );
+                        })}
+                        {categorias?.length === 0 && <p className="px-2 py-3 text-xs font-medium text-slate-400">Nenhuma categoria cadastrada.</p>}
+                      </div>
+                    </div>
+                  </details>
                 </div>
               </div>
             </div>
