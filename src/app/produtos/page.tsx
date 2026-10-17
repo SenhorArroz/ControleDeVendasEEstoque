@@ -1,4 +1,7 @@
 "use client";
+import MobileNav from "../_components/MobileNav";
+import TableViewport from "../_components/TableViewport";
+
 
 import { useMemo, useState } from "react";
 import ProductTableShow from "../_components/ProductTableShow";
@@ -172,35 +175,30 @@ export default function ProductsPage() {
       <div className="drawer-content flex flex-col min-h-screen min-w-0">
         
         {/* Mobile Navbar */}
-        <div className="w-full navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 lg:hidden border-b border-slate-200/50 px-4">
-          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button lg:hidden">
-            <Activity className="w-6 h-6 text-orange-600" strokeWidth={2.5} />
-          </label>
-          <div className="flex-1 font-black text-xl tracking-tighter text-slate-900 ml-2">CASHFLOW</div>
-        </div>
+        <MobileNav />
 
-        <main className="flex-1 px-4 py-4 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 space-y-4 sm:space-y-6 max-w-full overflow-x-hidden min-w-0 w-full">
+        <main className="min-w-0 [overflow-wrap:anywhere] flex-1 px-3 py-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 max-w-screen-2xl mx-auto w-full">
           
           {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 min-w-0">
             <div className="space-y-1">
-              <h1 className="text-lg sm:text-xl 2xl:text-2xl 2xl:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+              <h1 className="text-xl sm:text-2xl 2xl:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3 [overflow-wrap:anywhere]">
                 <Package className="text-orange-600" size={32}/> Catálogo
               </h1>
-              <p className="text-slate-500 font-medium text-xs sm:text-sm">Gerencie seu inventário centralizado.</p>
+              <p className="text-slate-500 font-medium text-xs sm:text-sm [overflow-wrap:anywhere]">Gerencie seu inventário centralizado.</p>
             </div>
             
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
               <div className="bg-white px-4 py-2.5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-3 w-full sm:w-auto">
                 <div className="p-2 bg-orange-50 text-orange-600 rounded-xl"><PackageOpen size={18}/></div>
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Total em Estoque</p>
-                  <p className="text-lg font-black text-slate-800 leading-none">{stockTotal.data || 0}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 [overflow-wrap:anywhere]">Total em Estoque</p>
+                  <p className="text-lg font-black text-slate-800 leading-none [overflow-wrap:anywhere]">{stockTotal.data || 0}</p>
                 </div>
               </div>
               <button 
                 onClick={() => handleOpenModal()} 
-                className="flex items-center justify-center gap-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 sm:px-8 h-10 sm:h-12 2xl:h-14 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-[0_8px_25px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none w-full sm:w-auto transition-all"
+                className="flex items-center justify-center gap-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 sm:px-8 h-11 sm:h-12 2xl:h-14 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-[0_8px_25px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none w-full sm:w-auto transition-all"
               >
                 <Plus size={20} strokeWidth={2.5} /> Novo Produto
               </button>
@@ -208,14 +206,14 @@ export default function ProductsPage() {
           </div>
           
           {/* Tabela de Produtos */}
-          <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex flex-col overflow-hidden min-w-0 max-w-full">
+          <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex flex-col min-w-0 max-w-full">
             <div className="p-4 sm:p-5 lg:p-6 border-b border-slate-100 bg-slate-50/50">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between min-w-0">
                 <div className="relative group w-full max-w-md">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-600 transition-colors" />
                   <input
                     type="text"
-                    className="w-full h-10 sm:h-12 pl-10 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all font-bold text-sm text-slate-700 placeholder:text-slate-300"
+                    className="min-w-0 max-w-full w-full h-10 sm:h-12 pl-10 pr-10 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all font-bold text-base sm:text-sm text-slate-700 placeholder:text-slate-300"
                     placeholder="Pesquisar por nome ou SKU..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
@@ -223,8 +221,8 @@ export default function ProductsPage() {
                   {isLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-orange-600"/>}
                 </div>
 
-                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-nowrap">
-                  <div className="flex flex-1 items-center gap-1 rounded-xl bg-white p-1 border border-slate-200 sm:flex-none" role="group" aria-label="Filtrar por disponibilidade em estoque">
+                <div className="flex w-full flex-wrap items-center gap-2 xl:w-auto">
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1 rounded-xl bg-white p-1 border border-slate-200 sm:flex-none" role="group" aria-label="Filtrar por disponibilidade em estoque">
                     {[
                       { value: "all", label: "Todos" },
                       { value: "inStock", label: "Em estoque" },
@@ -246,12 +244,12 @@ export default function ProductsPage() {
                   </div>
 
                   <details className="group relative w-full sm:w-auto">
-                    <summary className="flex h-10 cursor-pointer list-none items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 text-[10px] font-black uppercase tracking-wider text-slate-600 transition-colors hover:border-orange-200 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
+                    <summary className="flex h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 text-[10px] font-black uppercase tracking-wider text-slate-600 transition-colors hover:border-orange-200 hover:text-orange-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
                       <span className="flex items-center gap-2"><Tags size={14} /> Categorias{selectedCategoryIds.length > 0 ? ` (${selectedCategoryIds.length})` : ""}</span>
                       <ChevronDown size={14} className="transition-transform group-open:rotate-180" />
                     </summary>
-                    <div className="absolute right-0 z-20 mt-2 w-full min-w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-lg sm:w-64">
-                      <div className="flex items-center justify-between px-2 pb-2">
+                    <div className="relative sm:absolute right-0 z-20 mt-2 w-full min-w-0 rounded-xl border border-slate-200 bg-white p-2 shadow-lg sm:w-64">
+                      <div className="flex items-center justify-between px-2 pb-2 min-w-0">
                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Filtrar categorias</span>
                         {selectedCategoryIds.length > 0 && (
                           <button type="button" onClick={() => setSelectedCategoryIds([])} className="text-[9px] font-black uppercase tracking-wider text-orange-600 hover:text-orange-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded">
@@ -276,7 +274,7 @@ export default function ProductsPage() {
                             </label>
                           );
                         })}
-                        {categorias?.length === 0 && <p className="px-2 py-3 text-xs font-medium text-slate-400">Nenhuma categoria cadastrada.</p>}
+                        {categorias?.length === 0 && <p className="px-2 py-3 text-xs font-medium text-slate-400 [overflow-wrap:anywhere]">Nenhuma categoria cadastrada.</p>}
                       </div>
                     </div>
                   </details>
@@ -284,16 +282,16 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <div className="w-full overflow-x-auto custom-scrollbar">
+            <TableViewport className="w-full overflow-x-auto custom-scrollbar">
               <table className="w-full min-w-[750px] text-left">
                 <thead>
                   <tr className="text-slate-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest border-b border-slate-100">
-                    <th className="pl-5 sm:pl-6 py-4">Produto</th>
-                    <th className="px-3 py-4">Fornecedor</th>
-                    <th className="px-3 py-4">Categorias</th>
-                    <th className="px-3 py-4">Precificação</th>
-                    <th className="px-3 py-4">Estoque</th>
-                    <th className="text-right pr-5 sm:pr-6 py-4">Ações</th>
+                    <th className="pl-5 sm:pl-6 py-4 whitespace-nowrap">Produto</th>
+                    <th className="px-3 py-4 whitespace-nowrap">Fornecedor</th>
+                    <th className="px-3 py-4 whitespace-nowrap">Categorias</th>
+                    <th className="px-3 py-4 whitespace-nowrap">Precificação</th>
+                    <th className="px-3 py-4 whitespace-nowrap">Estoque</th>
+                    <th className="text-right pr-5 sm:pr-6 py-4 whitespace-nowrap">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -313,7 +311,7 @@ export default function ProductsPage() {
                   )}
                 </tbody>
               </table>
-            </div>
+            </TableViewport>
           </div>
         </main>
       </div> 
@@ -323,68 +321,68 @@ export default function ProductsPage() {
       {/* --- MODAL DE PRODUTOS --- */}
       {isModalOpen && (
         <dialog className="modal modal-open bg-slate-900/40 backdrop-blur-sm z-[100] animate-in fade-in" onClick={(e) => { if (e.target === e.currentTarget) handleCloseModal(); }}>
-          <div className="modal-box w-11/12 max-w-5xl p-0 rounded-[2rem] shadow-2xl border border-white flex flex-col max-h-[90vh] bg-slate-50 overflow-hidden cursor-default">
+          <div className="modal-box w-11/12 max-w-5xl p-0 rounded-[2rem] shadow-2xl border border-white flex flex-col max-h-[90dvh] bg-slate-50 overflow-y-auto cursor-default">
             
             {/* Header Modal */}
-            <div className="bg-white px-6 sm:px-8 py-5 flex justify-between items-center border-b border-slate-100 z-10 sticky top-0">
-                <div className="flex items-center gap-3 sm:gap-4">
+            <div className="bg-white px-4 sm:px-8 py-5 flex shrink-0 gap-3 justify-between items-center border-b border-slate-100 z-10 sticky top-0 min-w-0">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="p-2.5 bg-orange-50 rounded-xl">
                     <PackageOpen className="w-5 h-5 text-orange-600" />
                   </div>
-                  <h3 className="font-black text-lg sm:text-xl 2xl:text-2xl text-slate-800 tracking-tight">{editingId ? "Editar Produto" : "Novo Produto"}</h3>
+                  <h3 className="font-black text-lg sm:text-xl 2xl:text-2xl text-slate-800 tracking-tight [overflow-wrap:anywhere]">{editingId ? "Editar Produto" : "Novo Produto"}</h3>
                 </div>
-                <button type="button" onClick={handleCloseModal} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-colors">
+                <button type="button" onClick={handleCloseModal} className="w-11 h-11 shrink-0 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-colors">
                     <X className="w-4 h-4" />
                 </button>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSave} className="overflow-y-auto p-4 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 flex-1 custom-scrollbar">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <form onSubmit={handleSave} className="overflow-y-auto p-4 sm:p-5 lg:p-6 flex-1 min-h-0 custom-scrollbar">
+                <div className="grid [&>*]:min-w-0 grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
                     
                     {/* Coluna Dados (Esquerda) */}
                     <div className="lg:col-span-8 space-y-6">
                         
                         {/* Seção Identificação */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
                             <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">Informações Básicas</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
-                                <div className="flex flex-col gap-1.5 md:col-span-8">
+                            <div className="grid [&>*]:min-w-0 grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
+                                <div className="flex flex-col gap-1.5 md:col-span-8 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Nome do Produto <span className="text-orange-600">*</span></label>
-                                    <input required className="w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-800 h-12 px-4 transition-all text-sm" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
+                                    <input required className="min-w-0 max-w-full w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-800 h-12 px-4 transition-all text-base" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}/>
                                 </div>
-                                <div className="flex flex-col gap-1.5 md:col-span-4">
+                                <div className="flex flex-col gap-1.5 md:col-span-4 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Código SKU</label>
-                                    <input className="w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold font-mono text-slate-800 h-12 px-4 transition-all text-sm placeholder:text-slate-300" placeholder="Opcional" value={formData.sku} onChange={e => setFormData({...formData, sku: e.target.value})}/>
+                                    <input className="min-w-0 max-w-full w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold font-mono text-slate-800 h-12 px-4 transition-all text-base sm:text-sm placeholder:text-slate-300" placeholder="Opcional" value={formData.sku} onChange={e => setFormData({...formData, sku: e.target.value})}/>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-1.5">
+                            <div className="flex flex-col gap-1.5 min-w-0">
                                 <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Descrição</label>
-                                <textarea className="w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-medium text-slate-700 h-24 sm:h-28 resize-none p-4 transition-all text-sm placeholder:text-slate-300" placeholder="Detalhes, especificações..." value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                                <textarea className="min-w-0 max-w-full w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-medium text-slate-700 h-24 sm:h-28 resize-none p-4 transition-all text-base sm:text-sm placeholder:text-slate-300" placeholder="Detalhes, especificações..." value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
                             </div>
                         </div>
 
                         {/* Seção Financeira e Fornecedor */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
                             <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">Precificação & Fornecimento</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-                                <div className="flex flex-col gap-1.5">
+                            <div className="grid [&>*]:min-w-0 grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+                                <div className="flex flex-col gap-1.5 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Preço Compra</label>
                                     <div className="relative">
                                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">R$</span>
-                                      <input type="number" step="0.01" className="w-full pl-10 pr-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-slate-700 h-12 transition-all text-sm" value={formData.precoCompra} onChange={e => setFormData({...formData, precoCompra: e.target.value})}/>
+                                      <input type="number" step="0.01" className="min-w-0 max-w-full w-full pl-10 pr-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-slate-700 h-12 transition-all text-base" value={formData.precoCompra} onChange={e => setFormData({...formData, precoCompra: e.target.value})}/>
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-1.5">
+                                <div className="flex flex-col gap-1.5 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-orange-600 tracking-widest pl-1">Preço Venda *</label>
                                     <div className="relative">
                                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-orange-600/50">R$</span>
-                                      <input type="number" step="0.01" required className="w-full pl-10 pr-4 rounded-xl bg-orange-50/50 border border-orange-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-orange-600 h-12 transition-all text-sm" value={formData.precoVenda} onChange={e => setFormData({...formData, precoVenda: e.target.value})}/>
+                                      <input type="number" step="0.01" required className="min-w-0 max-w-full w-full pl-10 pr-4 rounded-xl bg-orange-50/50 border border-orange-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-orange-600 h-12 transition-all text-base" value={formData.precoVenda} onChange={e => setFormData({...formData, precoVenda: e.target.value})}/>
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-1.5">
+                                <div className="flex flex-col gap-1.5 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Fornecedor *</label>
-                                    <select required className="w-full px-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 transition-all text-sm" value={formData.fornecedorId} onChange={e => setFormData({...formData, fornecedorId: e.target.value})}>
+                                    <select required className="min-w-0 max-w-full w-full px-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 transition-all text-base" value={formData.fornecedorId} onChange={e => setFormData({...formData, fornecedorId: e.target.value})}>
                                         <option value="" disabled>Selecionar...</option>
                                         {fornecedores?.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                                     </select>
@@ -393,24 +391,24 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Seção Inventário */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 space-y-5">
                             <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">Estoque & Logística</h4>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
-                                <div className="flex flex-col gap-1.5">
+                            <div className="grid [&>*]:min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
+                                <div className="flex flex-col gap-1.5 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Qtd Estoque</label>
-                                    <input type="number" required className="w-full px-3 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-slate-700 h-12 text-center transition-all text-sm" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})}/>
+                                    <input type="number" required className="min-w-0 max-w-full w-full px-3 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-black text-slate-700 h-12 text-center transition-all text-base" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value})}/>
                                 </div>
-                                <div className="flex flex-col gap-1.5">
+                                <div className="flex flex-col gap-1.5 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Unidade</label>
-                                    <select className="w-full px-3 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 text-center transition-all text-sm" value={formData.unidadeMedida} onChange={e => setFormData({...formData, unidadeMedida: e.target.value})}>
+                                    <select className="min-w-0 max-w-full w-full px-3 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 text-center transition-all text-base" value={formData.unidadeMedida} onChange={e => setFormData({...formData, unidadeMedida: e.target.value})}>
                                         <option value="un">UN</option>
                                         <option value="kg">KG</option>
                                         <option value="l">Litros</option>
                                     </select>
                                 </div>
-                                <div className="flex flex-col gap-1.5 col-span-2">
+                                <div className="flex flex-col gap-1.5 sm:col-span-2 min-w-0">
                                     <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">Peso Líquido (g)</label>
-                                    <input type="number" className="w-full px-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 transition-all text-sm" value={formData.peso} onChange={e => setFormData({...formData, peso: e.target.value})}/>
+                                    <input type="number" className="min-w-0 max-w-full w-full px-4 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-700 h-12 transition-all text-base" value={formData.peso} onChange={e => setFormData({...formData, peso: e.target.value})}/>
                                 </div>
                             </div>
                         </div>
@@ -420,7 +418,7 @@ export default function ProductsPage() {
                     <div className="lg:col-span-4 space-y-6">
                         
                         {/* Imagem Card */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 text-center">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100 text-center">
                           <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Mídia Principal</h4>
                           <div className="w-full aspect-square bg-slate-50 rounded-[1.5rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center relative overflow-hidden group hover:border-orange-500/50 transition-all cursor-pointer">
                               {imagePreview ? (
@@ -441,9 +439,9 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Categorias Card */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100">
                           <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Categorias</h4>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-2 min-w-0">
                               {categorias?.map(cat => (
                                   <button 
                                       key={cat.id} 
@@ -458,16 +456,16 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Códigos de Barras */}
-                        <div className="bg-white p-5 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100">
-                          <div className="flex justify-between items-center mb-4">
+                        <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-[1.5rem] shadow-[0_2px_15px_rgb(0,0,0,0.02)] border border-slate-100">
+                          <div className="flex justify-between items-center mb-4 min-w-0">
                               <h4 className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Barcode size={14}/> Códigos EAN</h4>
                               <button type="button" onClick={() => setFormData(p => ({ ...p, barcodes: [...p.barcodes, ""] }))} className="p-1.5 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white transition-colors"><Plus size={14}/></button>
                           </div>
                           <div className="space-y-3 max-h-40 overflow-y-auto custom-scrollbar pr-2">
                               {formData.barcodes.map((code, index) => (
-                                  <div key={index} className="flex gap-2">
-                                      <input className="px-3 rounded-xl bg-slate-50 border border-slate-100 font-bold font-mono text-[10px] sm:text-xs flex-1 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 text-slate-700 h-10 transition-all placeholder:text-slate-300" placeholder="Código..." value={code} onChange={(e) => updateBarcodeField(index, e.target.value)}/>
-                                      <button type="button" onClick={() => setFormData(p => ({ ...p, barcodes: p.barcodes.filter((_, idx) => idx !== index) }))} className="h-10 w-10 flex items-center justify-center shrink-0 bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors" disabled={formData.barcodes.length === 1}><Trash2 size={14} /></button>
+                                  <div key={index} className="flex gap-2 min-w-0">
+                                      <input className="min-w-0 max-w-full px-3 rounded-xl bg-slate-50 border border-slate-100 font-bold font-mono text-base sm:text-xs flex-1 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 text-slate-700 h-10 transition-all placeholder:text-slate-300" placeholder="Código..." value={code} onChange={(e) => updateBarcodeField(index, e.target.value)}/>
+                                      <button type="button" onClick={() => setFormData(p => ({ ...p, barcodes: p.barcodes.filter((_, idx) => idx !== index) }))} className="h-11 w-10 flex items-center justify-center shrink-0 bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors" disabled={formData.barcodes.length === 1}><Trash2 size={14} /></button>
                                   </div>
                               ))}
                           </div>
@@ -478,9 +476,9 @@ export default function ProductsPage() {
             </form>
 
             {/* Footer Fixo */}
-            <div className="bg-white px-6 sm:px-8 py-4 sm:py-5 flex justify-end gap-3 sm:gap-4 border-t border-slate-100 z-10 sticky bottom-0">
-                <button type="button" onClick={handleCloseModal} className="flex items-center justify-center px-6 sm:px-8 h-10 sm:h-12 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest bg-slate-50 text-slate-500 border border-slate-200 hover:bg-slate-100 transition-colors">Cancelar</button>
-                <button type="button" onClick={handleSave} className="flex items-center justify-center px-8 sm:px-10 h-10 sm:h-12 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-[0_8px_20px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_25px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none transition-all" disabled={isSubmitting}>
+            <div className="bg-white px-4 sm:px-8 py-4 sm:py-5 flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 border-t border-slate-100 z-10 sticky bottom-0 min-w-0">
+                <button type="button" onClick={handleCloseModal} className="flex items-center justify-center px-6 sm:px-8 h-11 sm:h-12 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest bg-slate-50 text-slate-500 border border-slate-200 hover:bg-slate-100 transition-colors">Cancelar</button>
+                <button type="button" onClick={handleSave} className="flex items-center justify-center px-8 sm:px-10 h-11 sm:h-12 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-[0_8px_20px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_25px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none transition-all" disabled={isSubmitting}>
                     {isSubmitting ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" /> : "Salvar Produto"}
                 </button>
             </div>

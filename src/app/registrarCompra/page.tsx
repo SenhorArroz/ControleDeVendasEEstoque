@@ -232,20 +232,20 @@ export default function NewSalePage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-orange-50/40 via-white to-amber-50/30 text-slate-900 font-sans overflow-hidden">
+    <div className="mx-auto w-full max-w-screen-2xl flex flex-col lg:flex-row min-h-dvh lg:h-dvh bg-gradient-to-br from-orange-50/40 via-white to-amber-50/30 text-slate-900 font-sans lg:overflow-hidden">
       
       {/* SEÇÃO ESQUERDA: CATÁLOGO */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="p-6 lg:p-8 space-y-5 bg-white/70 backdrop-blur-2xl sticky top-0 z-10 border-b border-orange-100/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+      <div className="min-w-0 flex-1 flex flex-col lg:h-full lg:min-h-0">
+        <header className="p-3 sm:p-6 lg:p-8 space-y-5 shrink-0 bg-white/70 backdrop-blur-2xl sticky top-0 z-10 border-b border-orange-100/50">
+          <div className="flex flex-wrap items-center justify-between gap-3 min-w-0">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-4">
               {userRole !== "FUNCIONARIO" && (
                 <Link href="/dashboard" className="p-2.5 rounded-xl bg-orange-50 text-orange-400 hover:bg-orange-100 hover:text-orange-600 transition-all duration-200 hover:scale-105 active:scale-95">
                   <ArrowLeft size={18} />
                 </Link>
               )}
               <div>
-                <h1 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+                <h1 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-2 [overflow-wrap:anywhere]">
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-200">
                     <Receipt size={16} className="text-white" />
                   </div>
@@ -254,10 +254,10 @@ export default function NewSalePage() {
               </div>
             </div>
             {cart.length > 0 && (
-              <div className="lg:hidden flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-orange-200">
+              <a href="#checkout" aria-label="Ir para o carrinho" className="lg:hidden min-h-11 flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-orange-200">
                 <ShoppingCart size={14} />
                 {totalCartItems}
-              </div>
+              </a>
             )}
           </div>
           
@@ -265,7 +265,7 @@ export default function NewSalePage() {
             <input
               type="text"
               placeholder="Pesquisar produtos (Nome, SKU ou Código)..."
-              className="w-full bg-white border-2 border-orange-100 rounded-2xl pl-12 pr-4 h-14 focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none font-semibold text-slate-700 placeholder:text-slate-300 shadow-sm"
+              className="min-w-0 max-w-full w-full bg-white border-2 border-orange-100 rounded-2xl pl-12 pr-4 h-14 focus:ring-4 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none font-semibold text-slate-700 placeholder:text-slate-300 shadow-sm text-base"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -302,8 +302,8 @@ export default function NewSalePage() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8 pt-4 scroll-smooth">
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5">
+        <main className="min-w-0 [overflow-wrap:anywhere] flex-1 min-h-0 lg:overflow-y-auto p-3 sm:p-6 lg:p-8 pt-4 scroll-smooth">
+          <div className="grid [&>*]:min-w-0 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 lg:gap-5">
             {!loadingProducts ? products?.map((product) => (
               <div 
                 key={product.id} 
@@ -326,8 +326,8 @@ export default function NewSalePage() {
                   )}
                 </div>
                 <div className="px-1 pb-1">
-                  <h3 className="font-bold text-sm text-slate-700 line-clamp-1 group-hover:text-orange-600 transition-colors">{product.name}</h3>
-                  <div className="flex items-center justify-between mt-2">
+                  <h3 className="font-bold text-sm text-slate-700 line-clamp-1 group-hover:text-orange-600 transition-colors [overflow-wrap:anywhere]">{product.name}</h3>
+                  <div className="flex items-center justify-between mt-2 min-w-0">
                     <span className="text-base font-black text-slate-900">{formatMoney(Number(product.precoVenda))}</span>
                     <div className={`p-2 rounded-xl transition-all duration-200 ${product.stock > 0 ? 'bg-orange-50 text-orange-400 group-hover:bg-orange-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-orange-200 group-hover:scale-110' : 'bg-slate-100 text-slate-300'}`}>
                       <Plus size={14} />
@@ -343,23 +343,23 @@ export default function NewSalePage() {
           </div>
 
           {!loadingProducts && products?.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="flex flex-col items-center justify-center py-20 text-center min-w-0">
               <div className="w-20 h-20 bg-orange-50 rounded-2xl flex items-center justify-center mb-4">
                 <PackageOpen size={36} className="text-orange-300" />
               </div>
-              <p className="text-slate-400 font-bold text-sm">Nenhum produto encontrado</p>
-              <p className="text-slate-300 text-xs mt-1">Tente ajustar a busca ou categoria</p>
+              <p className="text-slate-400 font-bold text-sm [overflow-wrap:anywhere]">Nenhum produto encontrado</p>
+              <p className="text-slate-300 text-xs mt-1 [overflow-wrap:anywhere]">Tente ajustar a busca ou categoria</p>
             </div>
           )}
         </main>
       </div>
 
       {/* SEÇÃO DIREITA: CARRINHO & CHECKOUT */}
-      <div className="w-full lg:w-[480px] bg-white flex flex-col h-full shadow-[-20px_0_60px_-15px_rgba(234,88,12,0.08)] relative z-20 border-l border-orange-100/50">
+      <div id="checkout" className="min-w-0 w-full lg:w-96 xl:w-[480px] shrink-0 lg:overflow-y-auto scroll-mt-4 bg-white flex flex-col lg:h-full shadow-[-20px_0_60px_-15px_rgba(234,88,12,0.08)] relative z-20 border-l border-orange-100/50">
         
         {/* BUSCA DE CLIENTE */}
-        <div className="p-6 border-b border-orange-50 bg-gradient-to-b from-orange-50/50 to-white">
-          <div className="flex items-center justify-between mb-3">
+        <div className="p-3 sm:p-6 shrink-0 border-b border-orange-50 bg-gradient-to-b from-orange-50/50 to-white">
+          <div className="flex items-center justify-between mb-3 min-w-0">
              <label className="text-[10px] font-black text-orange-500/70 uppercase tracking-[0.2em] flex items-center gap-2">
                <User size={12} /> Cliente
              </label>
@@ -371,7 +371,7 @@ export default function NewSalePage() {
               <input 
                 type="text" 
                 placeholder="Pesquisar por nome..." 
-                className="w-full bg-white border-2 border-orange-100 rounded-xl pl-10 pr-4 h-10 text-xs font-semibold focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none placeholder:text-slate-300"
+                className="min-w-0 max-w-full w-full bg-white border-2 border-orange-100 rounded-xl pl-10 pr-4 h-10 text-base sm:text-xs font-semibold focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none placeholder:text-slate-300"
                 value={clientSearch}
                 onChange={(e) => setClientSearch(e.target.value)}
               />
@@ -379,7 +379,7 @@ export default function NewSalePage() {
             
             <div className="relative">
               <select 
-                className="w-full bg-white border-2 border-orange-100 rounded-xl px-4 h-12 text-sm font-bold focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none appearance-none cursor-pointer pr-10 text-slate-700"
+                className="min-w-0 max-w-full w-full bg-white border-2 border-orange-100 rounded-xl px-4 h-12 text-base sm:text-sm font-bold focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all outline-none appearance-none cursor-pointer pr-10 text-slate-700"
                 value={selectedClientId}
                 onChange={(e) => setSelectedClientId(e.target.value)}
               >
@@ -394,39 +394,39 @@ export default function NewSalePage() {
         </div>
 
         {/* LISTA DO CARRINHO */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+        <div className="flex-1 min-h-40 lg:overflow-y-auto px-3 sm:px-6 py-4 space-y-3">
           {cart.length > 0 ? (
             <>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-2 min-w-0">
                 <span className="text-[10px] font-black text-orange-500/70 uppercase tracking-[0.2em]">{totalCartItems} {totalCartItems === 1 ? 'item' : 'itens'}</span>
                 <button onClick={() => setCart([])} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest">Limpar</button>
               </div>
               {cart.map((item) => (
-                <div key={item.cartId} className="flex items-center gap-3 group bg-gradient-to-r from-orange-50/50 to-transparent p-3 rounded-2xl border border-orange-100/50 hover:border-orange-200 transition-all">
+                <div key={item.cartId} className="flex flex-wrap items-center gap-3 group bg-gradient-to-r from-orange-50/50 to-transparent p-3 rounded-2xl border border-orange-100/50 hover:border-orange-200 transition-all min-w-0">
                   <div className="relative w-12 h-12 bg-white rounded-xl overflow-hidden flex-shrink-0 border border-orange-100">
                     {item.imageUrl ? <img src={item.imageUrl} className="w-full h-full object-cover" /> : <PackageOpen className="w-full h-full p-2.5 text-orange-200" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-slate-800 truncate">{item.name}</p>
-                    <p className="text-[10px] font-semibold text-slate-400">{formatMoney(item.price)} /un</p>
+                    <p className="text-sm font-bold text-slate-800 truncate [overflow-wrap:anywhere]">{item.name}</p>
+                    <p className="text-[10px] font-semibold text-slate-400 [overflow-wrap:anywhere]">{formatMoney(item.price)} /un</p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 min-w-0">
                     <button 
                       onClick={() => handleUpdateQuantity(item.cartId, -1)}
-                      className="w-7 h-7 rounded-lg bg-white border border-orange-100 text-orange-400 hover:bg-orange-50 flex items-center justify-center transition-all"
+                      className="w-11 h-11 shrink-0 rounded-lg bg-white border border-orange-100 text-orange-400 hover:bg-orange-50 flex items-center justify-center transition-all"
                     >
                       <Minus size={12} />
                     </button>
                     <span className="w-8 text-center text-sm font-black text-slate-800">{item.quantity}</span>
                     <button 
                       onClick={() => handleUpdateQuantity(item.cartId, 1)}
-                      className="w-7 h-7 rounded-lg bg-white border border-orange-100 text-orange-400 hover:bg-orange-50 flex items-center justify-center transition-all"
+                      className="w-11 h-11 shrink-0 rounded-lg bg-white border border-orange-100 text-orange-400 hover:bg-orange-50 flex items-center justify-center transition-all"
                     >
                       <Plus size={12} />
                     </button>
                   </div>
-                  <div className="text-right flex items-center gap-2">
-                    <p className="text-sm font-black text-slate-900 whitespace-nowrap">{formatMoney(item.price * item.quantity)}</p>
+                  <div className="text-right flex items-center gap-2 min-w-0">
+                    <p className="text-sm font-black text-slate-900 whitespace-nowrap [overflow-wrap:anywhere]">{formatMoney(item.price * item.quantity)}</p>
                     <button 
                        onClick={() => setCart(c => c.filter(i => i.cartId !== item.cartId))}
                        className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
@@ -438,34 +438,34 @@ export default function NewSalePage() {
               ))}
             </>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40 min-w-0">
                <div className="w-24 h-24 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-300">
                  <ShoppingCart size={40} />
                </div>
                <div>
-                 <p className="text-sm font-black tracking-tight text-slate-500">CARRINHO VAZIO</p>
-                 <p className="text-xs text-slate-400 mt-1">Clique nos produtos para adicionar</p>
+                 <p className="text-sm font-black tracking-tight text-slate-500 [overflow-wrap:anywhere]">CARRINHO VAZIO</p>
+                 <p className="text-xs text-slate-400 mt-1 [overflow-wrap:anywhere]">Clique nos produtos para adicionar</p>
                </div>
             </div>
           )}
         </div>
 
         {/* FOOTER DE CHECKOUT */}
-        <div className="p-6 bg-gradient-to-t from-orange-50/80 to-white border-t border-orange-100/50 rounded-t-3xl space-y-5 shadow-[0_-10px_30px_-10px_rgba(234,88,12,0.05)]">
+        <div className="p-3 sm:p-6 shrink-0 bg-gradient-to-t from-orange-50/80 to-white border-t border-orange-100/50 rounded-t-3xl space-y-5 shadow-[0_-10px_30px_-10px_rgba(234,88,12,0.05)]">
           
           {/* TOTAIS */}
           <div className="space-y-2 px-1">
-            <div className="flex justify-between text-slate-400 text-xs font-bold uppercase tracking-widest">
+            <div className="flex justify-between text-slate-400 text-xs font-bold uppercase tracking-widest min-w-0">
               <span>Subtotal</span>
               <span>{formatMoney(subtotal)}</span>
             </div>
             {discountAmount > 0 && (
-              <div className="flex justify-between text-emerald-500 text-xs font-bold uppercase tracking-widest">
+              <div className="flex justify-between text-emerald-500 text-xs font-bold uppercase tracking-widest min-w-0">
                 <span>Desconto</span>
                 <span>-{formatMoney(discountAmount)}</span>
               </div>
             )}
-            <div className="flex justify-between items-baseline pt-1">
+            <div className="flex flex-wrap gap-2 justify-between items-baseline pt-1 min-w-0">
               <span className="text-slate-900 font-black text-xs uppercase tracking-[0.2em]">Total</span>
               <span className={`text-3xl font-black tracking-tight ${isPending ? "text-amber-500" : "text-orange-600"}`}>
                 {formatMoney(totalPurchase)}
@@ -474,7 +474,7 @@ export default function NewSalePage() {
           </div>
 
           {/* TOGGLE PAGO/PENDENTE */}
-          <div className="grid grid-cols-2 p-1 bg-orange-100/40 rounded-2xl gap-1">
+          <div className="grid [&>*]:min-w-0 grid-cols-2 p-1 bg-orange-100/40 rounded-2xl gap-1">
             <button onClick={() => setIsPending(false)} className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase transition-all duration-200 ${!isPending ? "bg-white text-orange-600 shadow-sm shadow-orange-100" : "text-slate-400 hover:bg-white/50"}`}>
               <CheckCircle2 size={14} /> Recebido
             </button>
@@ -484,7 +484,7 @@ export default function NewSalePage() {
           </div>
 
           {/* MÉTODOS DE PAGAMENTO */}
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid [&>*]:min-w-0 grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-2">
             {PAYMENT_METHODS.map((m) => (
               <button 
                 key={m.id} 
@@ -498,15 +498,15 @@ export default function NewSalePage() {
           </div>
 
           {/* DESCONTO E VALOR PAGO */}
-          <div className="flex gap-3">
-            <div className="flex-1 space-y-1">
+          <div className="flex gap-3 min-w-0">
+            <div className="min-w-0 flex-1 space-y-1">
               <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Desc %</label>
               <div className="relative">
                 <Percent className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-300" size={12} />
                 <input 
                   type="text" 
                   inputMode="decimal"
-                  className="w-full bg-white border-2 border-orange-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all" 
+                  className="min-w-0 max-w-full w-full bg-white border-2 border-orange-100 rounded-xl h-11 pl-9 font-bold text-base sm:text-sm outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all"
                   value={discountPercent} 
                   onChange={(e) => {
                     const val = e.target.value.replace(/[^\d.,]/g, "");
@@ -515,7 +515,7 @@ export default function NewSalePage() {
                 />
               </div>
             </div>
-            <div className="flex-1 space-y-1">
+            <div className="min-w-0 flex-1 space-y-1">
               <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Pago R$</label>
               <div className="relative">
                 <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-300" size={12} />
@@ -523,7 +523,7 @@ export default function NewSalePage() {
                   type="text" 
                   inputMode="decimal"
                   placeholder="Total" 
-                  className="w-full bg-white border-2 border-orange-100 rounded-xl h-11 pl-9 font-bold text-sm outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all disabled:opacity-40 disabled:bg-slate-50" 
+                  className="min-w-0 max-w-full w-full bg-white border-2 border-orange-100 rounded-xl h-11 pl-9 font-bold text-base sm:text-sm outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-400 transition-all disabled:opacity-40 disabled:bg-slate-50"
                   value={isPending ? "0" : paymentAmount} 
                   onChange={(e) => setPaymentAmount(e.target.value)} 
                   disabled={isPending} 
@@ -545,30 +545,30 @@ export default function NewSalePage() {
 
       {/* MODAL SUCESSO */}
       {saleSuccessData && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500">
-          <div className="bg-white w-full max-w-sm rounded-3xl p-10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] animate-in zoom-in-95 duration-300 flex flex-col items-center text-center">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-500">
+          <div className="bg-white w-full max-w-sm max-h-[90dvh] overflow-y-auto rounded-3xl p-4 sm:p-8 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] animate-in zoom-in-95 duration-300 flex flex-col items-center text-center">
             <div className={`w-24 h-24 rounded-3xl flex items-center justify-center mb-8 ${saleSuccessData.status === "PENDING" ? "bg-amber-50 text-amber-500" : "bg-orange-50 text-orange-500"}`}>
               {saleSuccessData.status === "PENDING" ? <Clock size={48} /> : <CheckCircle2 size={48} />}
             </div>
-            <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">
+            <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight [overflow-wrap:anywhere]">
               {saleSuccessData.status === "PENDING" ? "Venda Registrada" : "Venda Concluída!"}
             </h2>
-            <p className="text-slate-400 text-sm font-medium mb-8 leading-relaxed">Cliente: <span className="text-slate-900 font-black">{saleSuccessData.clientName}</span></p>
+            <p className="text-slate-400 text-sm font-medium mb-8 leading-relaxed [overflow-wrap:anywhere]">Cliente: <span className="text-slate-900 font-black">{saleSuccessData.clientName}</span></p>
             
             <div className="w-full bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 mb-8 space-y-4 border border-orange-100">
-               <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400">
+               <div className="flex flex-wrap gap-2 justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 min-w-0">
                  <span>Valor Total</span>
                  <span className="text-xl font-black text-slate-900">{formatMoney(saleSuccessData.total)}</span>
                </div>
                <div className="h-px bg-orange-200/50 w-full" />
-               <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400">
+               <div className="flex flex-wrap gap-2 justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 min-w-0">
                  <span>Pagamento</span>
                  <span className="text-slate-900 font-bold">{saleSuccessData.paymentMethod}</span>
                </div>
                {saleSuccessData.change > 0 && (
                  <>
                    <div className="h-px bg-orange-200/50 w-full" />
-                   <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400">
+                   <div className="flex flex-wrap gap-2 justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 min-w-0">
                      <span>Troco</span>
                      <span className="text-emerald-600 font-black">{formatMoney(saleSuccessData.change)}</span>
                    </div>
@@ -585,18 +585,18 @@ export default function NewSalePage() {
 
       {/* MODAL SELEÇÃO DE CÓDIGOS */}
       {isBarcodeModalOpen && selectedProductForModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-orange-100">
-            <div className="p-8 border-b border-orange-50 flex justify-between items-center bg-gradient-to-r from-orange-50/80 to-transparent">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-md max-h-[90dvh] overflow-y-auto rounded-3xl shadow-2xl border border-orange-100">
+            <div className="p-4 sm:p-8 border-b border-orange-50 flex justify-between items-center bg-gradient-to-r from-orange-50/80 to-transparent min-w-0">
               <div>
-                <h3 className="font-black text-slate-800 text-sm tracking-wide flex items-center gap-2">
+                <h3 className="font-black text-slate-800 text-sm tracking-wide flex items-center gap-2 [overflow-wrap:anywhere]">
                   <Barcode size={16} className="text-orange-500" /> Código Serial
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">Selecione uma unidade específica de <span className="font-bold text-slate-600">{selectedProductForModal.name}</span></p>
+                <p className="text-xs text-slate-400 mt-1 [overflow-wrap:anywhere]">Selecione uma unidade específica de <span className="font-bold text-slate-600">{selectedProductForModal.name}</span></p>
               </div>
               <button onClick={() => setIsBarcodeModalOpen(false)} className="p-2.5 hover:bg-orange-100 rounded-xl transition-colors text-slate-400 hover:text-orange-600"><X size={20} /></button>
             </div>
-            <div className="p-6 space-y-2 max-h-[50vh] overflow-y-auto">
+            <div className="p-6 space-y-2 max-h-[50dvh] overflow-y-auto">
               {selectedProductForModal.codeBarras?.map((cb: any) => (
                 <button 
                   key={cb.id} 
@@ -606,14 +606,14 @@ export default function NewSalePage() {
                   }}
                   className="w-full flex items-center justify-between p-4 bg-orange-50/50 rounded-xl border-2 border-transparent hover:border-orange-300 hover:bg-orange-50 transition-all group"
                 >
-                  <span className="font-mono font-bold text-slate-500 group-hover:text-orange-600 transition-colors tracking-widest">{cb.code}</span>
+                  <span className="font-mono font-bold text-slate-500 group-hover:text-orange-600 transition-colors tracking-widest min-w-0 break-all">{cb.code}</span>
                   <div className="p-1.5 rounded-lg bg-white border border-orange-100 text-orange-300 group-hover:text-white group-hover:bg-orange-500 group-hover:border-orange-500 transition-all">
                     <Plus size={14} />
                   </div>
                 </button>
               ))}
             </div>
-            <div className="p-6 bg-orange-50/50 text-[10px] text-slate-400 flex gap-2 border-t border-orange-100/50">
+            <div className="p-6 bg-orange-50/50 text-[10px] text-slate-400 flex gap-2 border-t border-orange-100/50 min-w-0">
               <Info size={12} className="flex-shrink-0 text-orange-400" />
               <span>Produtos com códigos seriais devem ser adicionados individualmente para controle de garantia.</span>
             </div>

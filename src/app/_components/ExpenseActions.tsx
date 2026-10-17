@@ -26,7 +26,7 @@ export function DeleteExpenseButton({ id }: { id: string }) {
     <button 
       onClick={handleDelete} 
       disabled={deleteMutation.isPending}
-      className="btn btn-ghost btn-xs text-error hover:bg-error/10"
+      className="btn btn-ghost btn-sm min-h-11 min-w-11 text-error hover:bg-error/10"
       title="Excluir"
     >
       {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}

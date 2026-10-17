@@ -55,17 +55,16 @@ export default function SideBar() {
 		<div className="drawer-side z-50">
 			<label htmlFor="my-drawer-2" className="drawer-overlay"></label>
 
-			{/* Ajuste: Troca de min-h-full por h-[100dvh] (ou h-full), limite de largura para mobile (w-[85vw] max-w-72) */}
-			<aside className="w-[65vw] max-w-72 sm:max-w-60 sm:w-60 h-[100dvh] bg-white border-r border-slate-100 flex flex-col shadow-2xl overflow-y-auto custom-scrollbar transition-colors duration-200">
-				<div className="p-4 sm:p-5 flex-1 flex flex-col">
+			<aside id="app-navigation" className="w-72 max-w-[calc(100vw-2rem)] lg:w-60 h-dvh bg-white border-r border-slate-100 flex flex-col shadow-2xl overflow-y-auto overscroll-contain custom-scrollbar transition-colors duration-200">
+				<div className="p-4 sm:p-5 flex-1 flex flex-col min-w-0">
 					{/* --- BRANDING / LOGO HEADER --- */}
-					<div className="flex items-center justify-between mb-6 px-1">
+					<div className="flex items-center justify-between mb-6 px-1 min-w-0">
 						<Link href="/dashboard" className="flex items-center gap-3.5 group">
 							<div className="w-11 h-11 bg-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-600/30 shrink-0 group-hover:scale-105 transition-transform duration-200">
 								<Activity size={24} strokeWidth={2.5} />
 							</div>
-							<div className="flex flex-col">
-								<div className="flex items-center gap-1.5">
+							<div className="flex flex-col min-w-0">
+								<div className="flex items-center gap-1.5 min-w-0">
 									<span className="text-xl font-extrabold tracking-tight text-slate-900">
 										CashFlow
 									</span>
@@ -93,7 +92,7 @@ export default function SideBar() {
 					<nav className="flex-1 space-y-4">
 						{/* SEÇÃO 1: VISÃO GERAL */}
 						<div>
-							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 [overflow-wrap:anywhere]">
 								Visão Geral
 							</p>
 							<div className="space-y-0.5">
@@ -106,7 +105,7 @@ export default function SideBar() {
 
 						{/* SEÇÃO 2: OPERACIONAL */}
 						<div>
-							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 [overflow-wrap:anywhere]">
 								Operacional
 							</p>
 							<div className="space-y-0.5">
@@ -118,7 +117,7 @@ export default function SideBar() {
 								{/* Submenu Inventário */}
 								<details className="group/details" open={isActive("/produtos") || isActive("/categorias") || isActive("/fornecedores")}>
 									<summary className="group flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-colors list-none">
-										<div className="flex items-center gap-3">
+										<div className="flex items-center gap-3 min-w-0">
 											<Package size={19} className="text-slate-400 group-hover:text-orange-600 transition-colors" />
 											<span>Inventário</span>
 										</div>
@@ -145,7 +144,7 @@ export default function SideBar() {
 
 						{/* SEÇÃO 3: FINANCEIRO E HISTÓRICO */}
 						<div>
-							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 [overflow-wrap:anywhere]">
 								Financeiro & Vendas
 							</p>
 							<div className="space-y-0.5">
@@ -163,7 +162,7 @@ export default function SideBar() {
 
 						{/* SEÇÃO 4: ADMINISTRAÇÃO */}
 						<div>
-							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+							<p className="px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 [overflow-wrap:anywhere]">
 								Administração
 							</p>
 							<div className="space-y-0.5">
@@ -182,7 +181,7 @@ export default function SideBar() {
 				</div>
 
 				{/* --- FOOTER DA SIDEBAR --- */}
-				<div className="p-3 m-4 mt-2 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+				<div className="p-3 m-4 mt-2 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 min-w-0">
 					<button
 						onClick={handleSignOut}
 						className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-rose-500 hover:text-rose-600 hover:bg-rose-100 text-sm font-bold transition-all duration-200"

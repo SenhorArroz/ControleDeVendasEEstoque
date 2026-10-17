@@ -1,4 +1,6 @@
 "use client";
+import TableViewport from "../../_components/TableViewport";
+
 
 import { useState, useRef } from "react";
 import { Trash2, Edit, Plus, Tag, ArrowLeft, X, Loader2 } from "lucide-react";
@@ -92,23 +94,23 @@ export default function CategoryManager() {
         <div className="space-y-4 sm:space-y-5 2xl:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-700 font-sans max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             
             {/* HEADER */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 min-w-0">
                 <Link
                     href="/dashboard"
                     className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-xl bg-white shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-slate-50 hover:text-orange-600 transition-colors"
                 >
                     <ArrowLeft size={16} /> Voltar ao Dashboard
                 </Link>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2 min-w-0">
                     <div className="space-y-1.5">
-                        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3 [overflow-wrap:anywhere]">
                             <Tag className="text-orange-600" size={32} /> Categorias
                         </h1>
-                        <p className="text-slate-500 font-medium text-xs sm:text-sm">Organize seus produtos por coleções e etiquetas visuais no seu sistema.</p>
+                        <p className="text-slate-500 font-medium text-xs sm:text-sm [overflow-wrap:anywhere]">Organize seus produtos por coleções e etiquetas visuais no seu sistema.</p>
                     </div>
                     <button
                         onClick={() => openModal()}
-                        className="flex items-center justify-center gap-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 sm:px-8 h-10 sm:h-12 2xl:h-14 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-[0_8px_25px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none w-full md:w-auto transition-all"
+                        className="flex items-center justify-center gap-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white px-6 sm:px-8 h-11 sm:h-12 2xl:h-14 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-[0_8px_25px_rgba(234,88,12,0.3)] hover:shadow-[0_8px_30px_rgba(234,88,12,0.4)] hover:-translate-y-0.5 border-none w-full md:w-auto transition-all"
                     >
                         <Plus size={20} strokeWidth={2.5} /> Nova Categoria
                     </button>
@@ -117,14 +119,14 @@ export default function CategoryManager() {
 
             {/* TABELA DE CATEGORIAS */}
             <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0 max-w-full">
-                <div className="w-full overflow-x-auto custom-scrollbar">
+                <TableViewport className="w-full overflow-x-auto custom-scrollbar">
                     <table className="w-full min-w-[500px] text-left">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/50">
-                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest w-24">Etiqueta</th>
-                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">Nome da Categoria</th>
-                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">Itens Vinculados</th>
-                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ações</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest w-24 whitespace-nowrap">Etiqueta</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Nome da Categoria</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Itens Vinculados</th>
+                                <th className="px-5 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest text-right whitespace-nowrap">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -152,16 +154,16 @@ export default function CategoryManager() {
                                             </span>
                                         </td>
                                         <td className="px-5 sm:px-6 py-4 text-right">
-                                            <div className="flex justify-end gap-1 sm:gap-2">
+                                            <div className="flex justify-end gap-1 sm:gap-2 min-w-0">
                                                 <button
                                                     onClick={() => openModal(cat)}
-                                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-600 hover:bg-orange-50 transition-colors shrink-0"
+                                                    className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-600 hover:bg-orange-50 transition-colors"
                                                 >
                                                     <Edit size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(cat.id)}
-                                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0"
+                                                    className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>
@@ -172,7 +174,7 @@ export default function CategoryManager() {
                             )}
                         </tbody>
                     </table>
-                </div>
+                </TableViewport>
             </div>
 
             {/* MODAL (Premium Design) */}
@@ -181,14 +183,14 @@ export default function CategoryManager() {
                 className="modal bg-slate-900/40 backdrop-blur-sm z-[100]" 
                 onClick={(e) => { if (e.target === modalRef.current) closeModal(); }}
             >
-                <div className="modal-box w-11/12 max-w-md p-4 sm:p-5 2xl:p-8 lg:p-6 2xl:p-10 rounded-[2rem] shadow-2xl border border-white bg-white cursor-default">
+                <div className="modal-box overflow-y-auto max-h-[90dvh] w-11/12 max-w-md p-4 sm:p-5 lg:p-6 2xl:p-8 rounded-[2rem] shadow-2xl border border-white bg-white cursor-default">
                     
-                    <div className="flex justify-between items-center pb-5 sm:pb-6 mb-5 sm:mb-6 border-b border-slate-100">
-                        <h3 className="font-black text-lg sm:text-xl 2xl:text-2xl text-slate-800 tracking-tight flex items-center gap-3">
+                    <div className="flex justify-between items-center pb-5 sm:pb-6 mb-5 sm:mb-6 border-b border-slate-100 min-w-0">
+                        <h3 className="font-black text-lg sm:text-xl 2xl:text-2xl text-slate-800 tracking-tight flex items-center gap-3 [overflow-wrap:anywhere]">
                             <div className="p-2 sm:p-2.5 bg-orange-50 rounded-xl text-orange-600"><Tag size={20} strokeWidth={2.5}/></div>
                             {editingCat ? "Editar Categoria" : "Nova Categoria"}
                         </h3>
-                        <button type="button" onClick={closeModal} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-colors">
+                        <button type="button" onClick={closeModal} className="w-11 h-11 shrink-0 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-colors">
                             <X size={18} />
                         </button>
                     </div>
@@ -199,7 +201,7 @@ export default function CategoryManager() {
                         ref={formRef}
                         className="space-y-5 sm:space-y-6"
                     >
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1.5 min-w-0">
                             <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">
                                 Nome da Categoria <span className="text-orange-600">*</span>
                             </label>
@@ -207,17 +209,17 @@ export default function CategoryManager() {
                                 name="name"
                                 type="text"
                                 required
-                                className="w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-800 h-10 sm:h-12 2xl:h-14 px-4 sm:px-5 transition-all text-sm sm:text-base placeholder:text-slate-300"
+                                className="min-w-0 max-w-full w-full rounded-2xl bg-slate-50 border border-slate-100 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 font-bold text-slate-800 h-10 sm:h-12 2xl:h-14 px-4 sm:px-5 transition-all text-base sm:text-sm sm:text-base placeholder:text-slate-300"
                                 defaultValue={editingCat?.name}
                                 placeholder="Ex: Bebidas, Limpeza, Vestuário..."
                             />
                         </div>
 
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1.5 min-w-0">
                             <label className="uppercase text-[9px] sm:text-[10px] font-black text-slate-400 tracking-widest pl-1">
                                 Cor da Etiqueta
                             </label>
-                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100">
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 min-w-0">
                                 <input
                                     name="color"
                                     type="color"
@@ -230,18 +232,18 @@ export default function CategoryManager() {
                             </div>
                         </div>
 
-                        <div className="pt-4 sm:pt-6 flex gap-3">
+                        <div className="pt-4 sm:pt-6 flex gap-3 min-w-0">
                             <button
                                 type="button"
                                 onClick={closeModal}
-                                className="flex-1 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-slate-500 bg-slate-50 hover:bg-slate-100 h-10 sm:h-12 2xl:h-14 transition-colors uppercase border border-slate-200"
+                                className="flex-1 rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-slate-500 bg-slate-50 hover:bg-slate-100 h-11 sm:h-12 2xl:h-14 transition-colors uppercase border border-slate-200"
                                 disabled={isLoading}
                             >
                                 Cancelar
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 flex items-center justify-center rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(234,88,12,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(234,88,12,0.4)] h-10 sm:h-12 2xl:h-14 transition-all uppercase"
+                                className="flex-1 flex items-center justify-center rounded-2xl font-black text-[10px] sm:text-xs tracking-widest text-white bg-gradient-to-br from-orange-500 to-orange-600 shadow-[0_8px_20px_rgba(234,88,12,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(234,88,12,0.4)] h-11 sm:h-12 2xl:h-14 transition-all uppercase"
                                 disabled={isLoading}
                             >
                                 {isLoading ? (

@@ -1,3 +1,6 @@
+
+import MobileNav from "../_components/MobileNav";
+import TableViewport from "../_components/TableViewport";
 import { 
     DollarSign, TrendingUp, TrendingDown, PieChart, 
     Calendar, ShoppingBag, ChevronLeft, ChevronRight, 
@@ -170,24 +173,19 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
         <div className="drawer lg:drawer-open bg-[#F8FAFC] font-sans min-h-screen">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
             
-            <div className="drawer-content flex flex-col">
+            <div className="drawer-content min-w-0 flex flex-col">
                 {/* Mobile Navbar */}
-                <div className="w-full navbar bg-white lg:hidden border-b border-slate-100 px-6">
-                    <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button lg:hidden">
-                        <Menu className="w-6 h-6 text-primary" />
-                    </label>
-                    <div className="flex-1 font-black text-xl tracking-tighter">CASHFLOW</div>
-                </div>
+                <MobileNav />
 
-                <main className="flex-1 p-6 md:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                <main className="min-w-0 [overflow-wrap:anywhere] max-w-screen-2xl mx-auto w-full flex-1 px-3 py-4 sm:p-6 lg:p-8 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
                     
                     {/* Header Section */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                    <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 min-w-0">
                         <div className="space-y-1">
-                            <h1 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3 [overflow-wrap:anywhere]">
                                 <DollarSign className="text-primary" size={36}/> Financeiro
                             </h1>
-                            <p className="text-slate-500 font-medium italic">Visão consolidada de entradas, saídas e rentabilidade.</p>
+                            <p className="text-slate-500 font-medium italic [overflow-wrap:anywhere]">Visão consolidada de entradas, saídas e rentabilidade.</p>
                         </div>
 
                         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -201,13 +199,13 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                     </div>
 
                     {/* KPIs Section */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div className="grid [&>*]:min-w-0 grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-6">
                         {/* Faturamento */}
-                        <div className="bg-white rounded-[2rem] p-7 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
-                            <div className="flex justify-between items-start">
+                        <div className="bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
+                            <div className="flex flex-wrap gap-3 justify-between items-start min-w-0">
                                 <div className="space-y-2">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Faturamento</p>
-                                    <h3 className="text-2xl font-black text-blue-600">{formatMoney(data.stats.faturamento)}</h3>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] [overflow-wrap:anywhere]">Faturamento</p>
+                                    <h3 className="text-2xl font-black text-blue-600 [overflow-wrap:anywhere]">{formatMoney(data.stats.faturamento)}</h3>
                                 </div>
                                 <div className="bg-blue-50 text-blue-600 p-4 rounded-2xl group-hover:scale-110 transition-transform">
                                     <DollarSign size={24} />
@@ -216,11 +214,11 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                         </div>
 
                         {/* Custos Totais */}
-                        <div className="bg-white rounded-[2rem] p-7 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
-                            <div className="flex justify-between items-start">
+                        <div className="bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
+                            <div className="flex flex-wrap gap-3 justify-between items-start min-w-0">
                                 <div className="space-y-2">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Custos Totais</p>
-                                    <h3 className="text-2xl font-black text-rose-600">{formatMoney(data.stats.custo)}</h3>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] [overflow-wrap:anywhere]">Custos Totais</p>
+                                    <h3 className="text-2xl font-black text-rose-600 [overflow-wrap:anywhere]">{formatMoney(data.stats.custo)}</h3>
                                 </div>
                                 <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl group-hover:scale-110 transition-transform">
                                     <TrendingDown size={24} />
@@ -232,12 +230,12 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                         </div>
 
                         {/* Lucro Líquido */}
-                        <div className="bg-white rounded-[2rem] p-7 shadow-sm border border-slate-50 hover:shadow-xl transition-all group relative overflow-hidden">
+                        <div className="bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-slate-50 hover:shadow-xl transition-all group relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
-                            <div className="flex justify-between items-start pl-2">
+                            <div className="flex flex-wrap gap-3 justify-between items-start pl-2 min-w-0">
                                 <div className="space-y-2">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Lucro Líquido</p>
-                                    <h3 className="text-2xl font-black text-emerald-600">{formatMoney(data.stats.lucro)}</h3>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] [overflow-wrap:anywhere]">Lucro Líquido</p>
+                                    <h3 className="text-2xl font-black text-emerald-600 [overflow-wrap:anywhere]">{formatMoney(data.stats.lucro)}</h3>
                                 </div>
                                 <div className="bg-emerald-50 text-emerald-600 p-4 rounded-2xl group-hover:scale-110 transition-transform">
                                     <TrendingUp size={24} />
@@ -249,11 +247,11 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                         </div>
 
                         {/* Vendas (Quantidade) */}
-                        <div className="bg-white rounded-[2rem] p-7 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
-                            <div className="flex justify-between items-start">
+                        <div className="bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-slate-50 hover:shadow-xl transition-all group">
+                            <div className="flex flex-wrap gap-3 justify-between items-start min-w-0">
                                 <div className="space-y-2">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vendas Realizadas</p>
-                                    <h3 className="text-2xl font-black text-purple-600">{data.stats.totalVendas}</h3>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] [overflow-wrap:anywhere]">Vendas Realizadas</p>
+                                    <h3 className="text-2xl font-black text-purple-600 [overflow-wrap:anywhere]">{data.stats.totalVendas}</h3>
                                 </div>
                                 <div className="bg-purple-50 text-purple-600 p-4 rounded-2xl group-hover:scale-110 transition-transform">
                                     <PieChart size={24} />
@@ -263,10 +261,10 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                     </div>
 
                     {/* Gráfico Section */}
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-50">
-                        <div className="flex justify-between items-center mb-10">
-                            <h2 className="font-black text-slate-800 text-lg uppercase tracking-widest">Análise de Fluxo de Caixa</h2>
-                            <div className="flex gap-4">
+                    <div className="bg-white rounded-[2.5rem] p-4 sm:p-6 shadow-sm border border-slate-50">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-6 min-w-0">
+                            <h2 className="font-black text-slate-800 text-lg uppercase tracking-widest [overflow-wrap:anywhere]">Análise de Fluxo de Caixa</h2>
+                            <div className="flex flex-wrap gap-4 min-w-0">
                                 <span className="flex items-center gap-2 text-[10px] font-bold text-emerald-500"><div className="w-2 h-2 bg-emerald-500 rounded-full"/> FATURAMENTO</span>
                                 <span className="flex items-center gap-2 text-[10px] font-bold text-rose-500"><div className="w-2 h-2 bg-rose-500 rounded-full"/> CUSTOS + DESPESAS</span>
                             </div>
@@ -275,26 +273,26 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                     </div>
 
                     {/* --- GRID DE TABELAS LADO A LADO --- */}
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div className="grid [&>*]:min-w-0 grid-cols-1 xl:grid-cols-2 gap-8">
                         
                         {/* TABELA DE VENDAS */}
                         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 flex flex-col h-full overflow-hidden">
-                            <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-                                <h2 className="font-black text-slate-800 text-sm uppercase tracking-widest flex items-center gap-3">
+                            <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-wrap gap-3 justify-between items-center bg-slate-50/30 min-w-0">
+                                <h2 className="font-black text-slate-800 text-sm uppercase tracking-widest flex items-center gap-3 [overflow-wrap:anywhere]">
                                     <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl"><ShoppingBag size={16} /></div>
                                     Entradas (Vendas)
                                 </h2>
                                 <span className="px-3 py-1 bg-slate-200 text-slate-600 rounded-lg text-[10px] font-black">{data.sales.total} Reg</span>
                             </div>
                             
-                            <div className="overflow-x-auto flex-1 px-4 pb-2">
+                            <TableViewport className="overflow-x-auto flex-1 px-4 pb-2">
                                 <table className="table w-full border-separate border-spacing-y-2">
                                     <thead>
                                         <tr className="text-slate-400 text-[10px] font-black uppercase tracking-widest border-none">
-                                            <th className="pl-4">Data</th>
+                                            <th className="pl-4 whitespace-nowrap">Data</th>
                                             <th>Cliente</th>
-                                            <th className="text-right">Total</th>
-                                            <th className="text-right pr-4">Lucro</th>
+                                            <th className="text-right whitespace-nowrap">Total</th>
+                                            <th className="text-right pr-4 whitespace-nowrap">Lucro</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -309,7 +307,7 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                                                     <tr key={purchase.id} className="hover:bg-slate-50 transition-colors">
                                                         <td className="font-mono text-[10px] font-bold text-slate-400 bg-slate-50/50 rounded-l-xl pl-4 py-4">{purchase.date.toLocaleDateString()}</td>
                                                         <td className="font-bold text-xs text-slate-700 truncate max-w-[120px]">{purchase.client.name}</td>
-                                                        <td className="text-right font-black text-slate-900 text-xs">{formatMoney(total)}</td>
+                                                        <td className="text-right font-black text-slate-900 text-xs whitespace-nowrap">{formatMoney(total)}</td>
                                                         <td className={`text-right font-black text-xs pr-4 rounded-r-xl ${profit >= 0 ? 'text-emerald-600 bg-emerald-50/30' : 'text-rose-500 bg-rose-50/30'}`}>{formatMoney(profit)}</td>
                                                     </tr>
                                                 );
@@ -317,12 +315,12 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                                         )}
                                     </tbody>
                                 </table>
-                            </div>
+                            </TableViewport>
 
                             {/* Paginação Vendas */}
-                            <div className="p-6 border-t border-slate-50 flex justify-between items-center bg-white">
+                            <div className="p-4 sm:p-6 border-t border-slate-50 flex justify-between items-center bg-white min-w-0">
                                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pág {currentSalesPage} de {data.sales.totalPages || 1}</div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 min-w-0">
                                     <Link href={`?salesPage=${currentSalesPage - 1 > 0 ? currentSalesPage - 1 : 1}&expensesPage=${currentExpensesPage}`} className={`p-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors ${currentSalesPage <= 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                                         <ChevronLeft size={16} />
                                     </Link>
@@ -335,22 +333,22 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
 
                         {/* TABELA DE DESPESAS */}
                         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 flex flex-col h-full overflow-hidden">
-                            <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-                                <h2 className="font-black text-slate-800 text-sm uppercase tracking-widest flex items-center gap-3">
+                            <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-wrap gap-3 justify-between items-center bg-slate-50/30 min-w-0">
+                                <h2 className="font-black text-slate-800 text-sm uppercase tracking-widest flex items-center gap-3 [overflow-wrap:anywhere]">
                                     <div className="p-2 bg-rose-100 text-rose-600 rounded-xl"><FileText size={16} /></div>
                                     Saídas (Despesas)
                                 </h2>
                                 <span className="px-3 py-1 bg-slate-200 text-slate-600 rounded-lg text-[10px] font-black">{data.expenses.total} Reg</span>
                             </div>
 
-                            <div className="overflow-x-auto flex-1 px-4 pb-2">
+                            <TableViewport className="overflow-x-auto flex-1 px-4 pb-2">
                                 <table className="table w-full border-separate border-spacing-y-2">
                                     <thead>
                                         <tr className="text-slate-400 text-[10px] font-black uppercase tracking-widest border-none">
-                                            <th className="pl-4">Data</th>
+                                            <th className="pl-4 whitespace-nowrap">Data</th>
                                             <th>Descrição</th>
-                                            <th className="text-right">Valor</th>
-                                            <th className="w-8 pr-4"></th>
+                                            <th className="text-right whitespace-nowrap">Valor</th>
+                                            <th className="w-8 pr-4 whitespace-nowrap"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -364,7 +362,7 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                                                         <div className="font-bold text-xs text-slate-700">{expense.name}</div>
                                                         <div className="text-[10px] font-medium text-slate-400 truncate max-w-[150px]">{expense.description || "Sem descrição"}</div>
                                                     </td>
-                                                    <td className="text-right font-black text-rose-600 bg-rose-50/30 text-xs">- {formatMoney(expense.value)}</td>
+                                                    <td className="text-right font-black text-rose-600 bg-rose-50/30 text-xs whitespace-nowrap">- {formatMoney(expense.value)}</td>
                                                     <td className="text-right px-2 rounded-r-xl bg-rose-50/30">
                                                         <DeleteExpenseButton id={expense.id} />
                                                     </td>
@@ -373,12 +371,12 @@ export default async function FinancialPage({ searchParams }: { searchParams: { 
                                         )}
                                     </tbody>
                                 </table>
-                            </div>
+                            </TableViewport>
 
                             {/* Paginação Despesas */}
-                            <div className="p-6 border-t border-slate-50 flex justify-between items-center bg-white">
+                            <div className="p-4 sm:p-6 border-t border-slate-50 flex justify-between items-center bg-white min-w-0">
                                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pág {currentExpensesPage} de {data.expenses.totalPages || 1}</div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 min-w-0">
                                     <Link href={`?salesPage=${currentSalesPage}&expensesPage=${currentExpensesPage - 1 > 0 ? currentExpensesPage - 1 : 1}`} className={`p-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors ${currentExpensesPage <= 1 ? 'opacity-50 pointer-events-none' : ''}`}>
                                         <ChevronLeft size={16} />
                                     </Link>

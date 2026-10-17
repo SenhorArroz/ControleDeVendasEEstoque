@@ -1,3 +1,6 @@
+
+import MobileNav from "../_components/MobileNav";
+import TableViewport from "../_components/TableViewport";
 import {
   TrendingUp,
   TrendingDown,
@@ -142,20 +145,15 @@ export default async function DashboardPage() {
       <div className="drawer-content flex flex-col min-h-screen min-w-0">
         
         {/* Navbar Mobile Premium */}
-        <div className="w-full navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 lg:hidden border-b border-slate-200/50 px-4">
-          <label htmlFor="my-drawer-2" className="btn btn-ghost btn-circle drawer-button lg:hidden">
-            <Activity className="w-6 h-6 text-orange-600" strokeWidth={2.5} />
-          </label>
-          <div className="flex-1 font-black text-xl tracking-tighter text-slate-900 ml-2">CASHFLOW</div>
-        </div>
+        <MobileNav />
 
-        <main className="flex-1 px-4 py-4 sm:p-4 2xl:p-6 lg:p-5 2xl:p-8 space-y-4 sm:space-y-6 lg:space-y-4 2xl:space-y-6 max-w-full overflow-x-hidden min-w-0 w-full">
+        <main className="min-w-0 [overflow-wrap:anywhere] flex-1 px-3 py-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-4 2xl:space-y-6 max-w-screen-2xl mx-auto w-full">
           
           {/* Header Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 min-w-0">
             <div className="space-y-1">
-              <h1 className="text-lg sm:text-xl 2xl:text-2xl 2xl:text-3xl font-black tracking-tight text-slate-900">Visão Geral</h1>
-              <p className="text-slate-500 font-medium text-xs sm:text-sm">
+              <h1 className="text-xl sm:text-2xl 2xl:text-3xl font-black tracking-tight text-slate-900 [overflow-wrap:anywhere]">Visão Geral</h1>
+              <p className="text-slate-500 font-medium text-xs sm:text-sm [overflow-wrap:anywhere]">
                 Bem-vindo de volta, <span className="text-orange-600 font-bold">{session.user.name?.split(" ")[0]}</span>. Aqui está o resumo da sua semana.
               </p>
             </div>
@@ -164,7 +162,7 @@ export default async function DashboardPage() {
               <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center">
                 <CalendarDays className="w-4 h-4 text-orange-600" />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col min-w-0">
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Período atual</span>
                 <span className="text-xs sm:text-sm font-black text-slate-700">Últimos 7 dias</span>
               </div>
@@ -172,7 +170,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Cards de KPIs Ultra Premium - Compactos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4 min-w-0">
+          <div className="grid [&>*]:min-w-0 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4 min-w-0">
             {[
               { label: "Receita", val: data.receitaTotal, icon: TrendingUp, accent: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-100" },
               { label: "Custos", val: data.custoTotal, icon: TrendingDown, accent: "text-rose-500", bg: "bg-rose-500/10", border: "border-rose-100" },
@@ -189,8 +187,8 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="flex flex-col relative z-10 min-w-0">
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{kpi.label}</p>
-                  <h3 className="text-lg lg:text-xl font-black text-slate-800 tracking-tight truncate">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 [overflow-wrap:anywhere]">{kpi.label}</p>
+                  <h3 className="text-lg lg:text-xl font-black text-slate-800 tracking-tight truncate [overflow-wrap:anywhere]">
                     {kpi.isMoney === false ? kpi.val : formatMoney(kpi.val as number)}
                   </h3>
                 </div>
@@ -199,17 +197,17 @@ export default async function DashboardPage() {
           </div>
 
           {/* Main Grid: Charts, Tables & Side Widget */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 min-w-0">
+          <div className="grid [&>*]:min-w-0 grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 min-w-0">
             
             {/* Left Area (Col Span 2) */}
             <div className="lg:col-span-2 space-y-4 lg:space-y-4 2xl:space-y-6 min-w-0">
               
               {/* Chart Card */}
               <div className="bg-white rounded-[1.5rem] p-5 lg:p-6 shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 lg:mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 lg:mb-6 min-w-0">
                   <div className="space-y-1 w-full sm:w-auto">
-                    <h2 className="font-black text-slate-800 text-sm sm:text-base uppercase tracking-widest break-words">Desempenho Financeiro</h2>
-                    <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Comparativo de 7 dias</p>
+                    <h2 className="font-black text-slate-800 text-sm sm:text-base uppercase tracking-widest break-words [overflow-wrap:anywhere]">Desempenho Financeiro</h2>
+                    <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest [overflow-wrap:anywhere]">Comparativo de 7 dias</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100 w-full sm:w-auto">
                     <span className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 uppercase tracking-widest"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_6px_rgba(16,185,129,0.5)]"/> Entradas</span>
@@ -225,21 +223,21 @@ export default async function DashboardPage() {
 
               {/* Transactions Table */}
               <div className="bg-white rounded-[1.5rem] overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 min-w-0 max-w-full">
-                <div className="px-5 lg:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 flex-wrap gap-4">
-                  <h2 className="font-black text-slate-800 uppercase tracking-widest text-xs sm:text-sm break-words">Transações Recentes</h2>
-                  <Link href="/historico" className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-400 hover:text-orange-600 hover:shadow-sm transition-all border border-slate-100 shrink-0">
+                <div className="px-5 lg:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 flex-wrap gap-4 min-w-0">
+                  <h2 className="font-black text-slate-800 uppercase tracking-widest text-xs sm:text-sm break-words [overflow-wrap:anywhere]">Transações Recentes</h2>
+                  <Link href="/historico" className="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-slate-400 hover:text-orange-600 hover:shadow-sm transition-all border border-slate-100">
                     <ArrowRight size={14} />
                   </Link>
                 </div>
                 
-                <div className="w-full overflow-x-auto custom-scrollbar">
+                <TableViewport className="w-full overflow-x-auto custom-scrollbar">
                   <table className="w-full min-w-[500px] text-left">
                     <thead>
                       <tr className="border-b border-slate-100">
-                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">ID</th>
-                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Data / Hora</th>
-                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
-                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Valor</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">ID</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Data / Hora</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center whitespace-nowrap">Status</th>
+                        <th className="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right whitespace-nowrap">Valor</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
@@ -256,7 +254,7 @@ export default async function DashboardPage() {
                               <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded group-hover:bg-white group-hover:shadow-sm transition-all">#{t.id.slice(-6).toUpperCase()}</span>
                             </td>
                             <td className="px-5 py-3">
-                              <div className="flex flex-col">
+                              <div className="flex flex-col min-w-0">
                                 <span className="text-xs font-bold text-slate-700 whitespace-nowrap">{t.date.toLocaleDateString()}</span>
                                 <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">{t.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                               </div>
@@ -280,7 +278,7 @@ export default async function DashboardPage() {
                       )}
                     </tbody>
                   </table>
-                </div>
+                </TableViewport>
               </div>
             </div>
 
@@ -291,7 +289,7 @@ export default async function DashboardPage() {
               <div className="bg-white rounded-[1.5rem] p-5 lg:p-6 text-center shadow-[0_2px_15px_rgb(0,0,0,0.03)] border border-slate-100 flex flex-col items-center relative overflow-hidden group w-full max-w-full">
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
                 
-                <h3 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-5">Escore de Retenção</h3>
+                <h3 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-5 [overflow-wrap:anywhere]">Escore de Retenção</h3>
                 
                 {/* The radial progress */}
                 <div className="relative">
@@ -307,13 +305,13 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="mt-6 p-4 bg-slate-50 w-full rounded-xl border border-slate-100/50">
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Itens Vendidos</p>
-                  <p className="text-2xl font-black text-slate-800 tracking-tight">{data.totalItemsSold}</p>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 [overflow-wrap:anywhere]">Itens Vendidos</p>
+                  <p className="text-2xl font-black text-slate-800 tracking-tight [overflow-wrap:anywhere]">{data.totalItemsSold}</p>
                 </div>
               </div>
 
               {/* Quick Actions Grid */}
-              <div className="grid grid-cols-2 gap-3 lg:gap-4">
+              <div className="grid [&>*]:min-w-0 grid-cols-2 gap-3 lg:gap-4">
                 {[
                   { label: "Nova Venda", icon: PlusCircle, color: "bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-md shadow-orange-600/30 hover:shadow-orange-600/50", border: "border-orange-500", href: "/registrarCompra" },
                   { label: "Estoque", icon: FileText, color: "bg-white text-slate-700 hover:bg-slate-50", border: "border-slate-200", href: "/produtos" },

@@ -54,14 +54,14 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans p-4">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans px-3 py-6 sm:px-4">
             
             {/* Ambient Background Glow */}
             <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] pointer-events-none animate-pulse" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
 
             {/* Back Button */}
-            <div className="absolute top-8 left-8 z-20">
+            <div className="relative mb-6 self-start sm:ml-4 z-20">
                 <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
                     <ArrowLeft size={16} />
                     Voltar
@@ -71,25 +71,25 @@ export default function LoginPage() {
             <div className="w-full max-w-md mx-auto relative z-10">
                 
                 {/* Branding / Logo */}
-                <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 min-w-0">
                     <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/30 mb-4">
                         <Activity size={32} strokeWidth={2.5} />
                     </div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">CashFlow</h1>
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight [overflow-wrap:anywhere]">CashFlow</h1>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+                <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-4 sm:p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
                     
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-black text-slate-800 tracking-tight">Bem-vindo de volta!</h2>
-                        <p className="text-sm font-medium text-slate-500 mt-2">
+                        <h2 className="text-2xl font-black text-slate-800 tracking-tight [overflow-wrap:anywhere]">Bem-vindo de volta!</h2>
+                        <p className="text-sm font-medium text-slate-500 mt-2 [overflow-wrap:anywhere]">
                             Acesse sua conta para continuar.
                         </p>
                     </div>
 
                     {error && (
-                        <div className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-2xl text-xs font-bold flex items-center gap-3 mb-6 animate-in fade-in zoom-in duration-300">
+                        <div className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-2xl text-xs font-bold flex items-center gap-3 mb-6 animate-in fade-in zoom-in duration-300 min-w-0">
                             <AlertCircle className="w-4 h-4 shrink-0" />
                             <span>{error}</span>
                         </div>
@@ -108,14 +108,14 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="seu@email.com"
-                                    className="w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-800 outline-none placeholder:text-slate-300"
+                                    className="min-w-0 max-w-full w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-800 outline-none placeholder:text-slate-300 text-base"
                                 />
                             </div>
                         </div>
 
                         {/* Password Input */}
                         <div className="space-y-2">
-                            <div className="flex justify-between items-center px-1">
+                            <div className="flex justify-between items-center px-1 min-w-0">
                                 <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Sua Senha</label>
                                 <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/70 transition-colors">
                                     Esqueceu?
@@ -129,7 +129,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
-                                    className="w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold"
+                                    className="min-w-0 max-w-full w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold text-base"
                                 />
                             </div>
                         </div>
@@ -152,10 +152,10 @@ export default function LoginPage() {
                     </form>
 
                     {/* Divisor */}
-                    <div className="flex items-center gap-4 my-8">
-                        <div className="flex-1 h-px bg-slate-100"></div>
+                    <div className="flex items-center gap-4 my-8 min-w-0">
+                        <div className="flex-1 h-px bg-slate-100 min-w-0"></div>
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Ou continue com</span>
-                        <div className="flex-1 h-px bg-slate-100"></div>
+                        <div className="flex-1 h-px bg-slate-100 min-w-0"></div>
                     </div>
 
                     {/* Google Login Button */}

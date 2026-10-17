@@ -6,7 +6,7 @@ export default function DashboardCharts({ data }: { data: any[] }) {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full min-w-0 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
           <defs>

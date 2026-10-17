@@ -88,7 +88,7 @@ export function ExportButton({ purchases, expenses, stats }: ExportProps) {
   };
 
   return (
-    <button onClick={handleExport} className="btn btn-sm btn-primary gap-2 text-white shadow-lg hover:scale-105 transition-transform">
+    <button onClick={handleExport} className="btn btn-sm min-h-11 btn-primary gap-2 text-white shadow-lg hover:scale-105 transition-transform">
       <TableProperties className="w-4 h-4" /> Exportar Excel (.csv)
     </button>
   );
@@ -127,18 +127,18 @@ export function AddExpenseButton() {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="btn btn-sm btn-outline gap-2 bg-base-100">
+      <button onClick={() => setIsOpen(true)} className="btn btn-sm min-h-11 btn-outline gap-2 bg-base-100">
         <Plus className="w-4 h-4" /> Nova Despesa
       </button>
 
       {isOpen && (
         <dialog className="modal modal-open backdrop-blur-sm bg-black/40 z-50">
-          <div className="modal-box rounded-2xl shadow-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg flex items-center gap-2">
+          <div className="modal-box overflow-y-auto max-h-[90dvh] rounded-2xl shadow-2xl">
+            <div className="flex justify-between items-center mb-4 min-w-0">
+              <h3 className="font-bold text-lg flex items-center gap-2 [overflow-wrap:anywhere]">
                 <FileText className="w-5 h-5 text-error" /> Registrar Despesa
               </h3>
-              <button onClick={() => setIsOpen(false)} className="btn btn-sm btn-circle btn-ghost">
+              <button onClick={() => setIsOpen(false)} className="btn btn-sm min-h-11 btn-circle btn-ghost">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -148,7 +148,7 @@ export function AddExpenseButton() {
                 <label className="label text-xs font-bold uppercase opacity-60">Título</label>
                 <input 
                   required 
-                  className="input input-bordered w-full" 
+                  className="min-w-0 max-w-full input input-bordered w-full text-base"
                   placeholder="Ex: Aluguel, Internet..." 
                   value={form.name}
                   onChange={e => setForm({...form, name: e.target.value})}
@@ -160,7 +160,7 @@ export function AddExpenseButton() {
                 <input 
                   type="text" 
                   required 
-                  className="input input-bordered w-full font-mono text-error font-bold" 
+                  className="min-w-0 max-w-full input input-bordered w-full font-mono text-error font-bold text-base"
                   placeholder="0,00" 
                   value={form.value}
                   onChange={e => setForm({...form, value: e.target.value})}
@@ -170,14 +170,14 @@ export function AddExpenseButton() {
               <div className="form-control">
                 <label className="label text-xs font-bold uppercase opacity-60">Descrição</label>
                 <textarea 
-                  className="textarea textarea-bordered h-20" 
+                  className="min-w-0 max-w-full textarea textarea-bordered w-full h-20 text-base"
                   placeholder="Detalhes..."
                   value={form.description}
                   onChange={e => setForm({...form, description: e.target.value})}
                 />
               </div>
 
-              <div className="modal-action border-t border-base-200 pt-4">
+              <div className="modal-action flex-col sm:flex-row border-t border-base-200 pt-4 min-w-0">
                 <button type="button" onClick={() => setIsOpen(false)} className="btn btn-ghost">Cancelar</button>
                 <button type="submit" className="btn btn-error text-white" disabled={isSubmitting}>
                   {isSubmitting ? <Loader2 className="animate-spin" /> : <><Save className="w-4 h-4 mr-2" /> Salvar</>}

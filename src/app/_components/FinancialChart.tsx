@@ -25,11 +25,11 @@ export default function FinancialChart({ data }: { data: FinancialData[] }) {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value);
 
   return (
-    <div className="h-[400px] w-full bg-base-100 p-4 rounded-xl">
+    <div className="h-72 sm:h-96 min-w-0 w-full bg-base-100 p-0 sm:p-2 rounded-xl">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={data}
-          margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          margin={{ top: 20, right: 0, bottom: 20, left: 0 }}
         >
           <CartesianGrid stroke="#f5f5f5" strokeDasharray="3 3" vertical={false} />
           <XAxis 

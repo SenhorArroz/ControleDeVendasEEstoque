@@ -82,19 +82,19 @@ export default function HistoryView({ events }: { events: HistoryEvent[] }) {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-6 bg-base-200 min-h-screen font-sans">
+    <div className="min-w-0 [overflow-wrap:anywhere] max-w-screen-2xl mx-auto w-full p-4 md:p-8 space-y-6 bg-base-200 min-h-screen font-sans">
       
       {/* HEADER (Igual ao anterior) */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 min-w-0">
         <div>
-          <h1 className="text-3xl font-extrabold text-base-content">Histórico Global</h1>
-          <p className="text-sm opacity-60">Registro unificado de transações, estoque e cadastros.</p>
+          <h1 className="text-3xl font-extrabold text-base-content [overflow-wrap:anywhere]">Histórico Global</h1>
+          <p className="text-sm opacity-60 [overflow-wrap:anywhere]">Registro unificado de transações, estoque e cadastros.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
           <div className="join shadow-sm w-full sm:w-auto">
             <input 
-              className="join-item input input-bordered w-full sm:w-64 focus:input-primary" 
+              className="min-w-0 max-w-full join-item input input-bordered w-full sm:w-64 focus:input-primary text-base"
               placeholder="Buscar..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -126,14 +126,14 @@ export default function HistoryView({ events }: { events: HistoryEvent[] }) {
 
             return (
               <div key={`${ev.type}-${ev.id}`} className="card bg-base-100 shadow-sm border border-base-200 hover:border-base-300 transition-colors">
-                <div className="card-body p-4 flex-row items-center gap-4">
+                <div className="card-body p-4 flex-row flex-wrap items-start gap-3 sm:items-center sm:gap-4 min-w-0">
                   
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${style.bg}`}>
                     <Icon className={`w-6 h-6 ${style.text}`} />
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                  <div className="flex-1 min-w-0 basis-3/4 sm:basis-auto">
+                    <div className="flex flex-wrap items-center gap-2 mb-0.5 min-w-0">
                       <span className={`badge badge-xs font-bold border-none py-2 px-2 ${style.bg} ${style.text}`}>
                         {style.label}
                       </span>
@@ -143,11 +143,11 @@ export default function HistoryView({ events }: { events: HistoryEvent[] }) {
                       </span>
                     </div>
                     
-                    <h3 className="font-bold text-base truncate">{ev.title}</h3>
-                    <p className="text-sm opacity-60 truncate">{ev.subtitle}</p>
+                    <h3 className="font-bold text-base break-words [overflow-wrap:anywhere]">{ev.title}</h3>
+                    <p className="text-sm opacity-60 break-all [overflow-wrap:anywhere]">{ev.subtitle}</p>
                     
                     {ev.type === "SALE" && (
-                      <div className="mt-1 flex gap-2 text-xs opacity-70">
+                      <div className="mt-1 flex flex-wrap gap-2 text-xs opacity-70 min-w-0">
                         <span className="flex items-center gap-1 bg-base-200 px-2 py-0.5 rounded">
                           <PaymentIcon method={ev.paymentMethod} /> {ev.paymentMethod}
                         </span>
@@ -157,7 +157,7 @@ export default function HistoryView({ events }: { events: HistoryEvent[] }) {
                   </div>
 
                   {ev.amount !== undefined && (
-                    <div className="text-right shrink-0">
+                    <div className="text-left sm:text-right min-w-0">
                       <div className={`font-mono font-bold text-lg ${ev.type === 'SALE' ? 'text-emerald-600' : 'text-red-500'}`}>
                         {ev.type === 'SALE' ? '+' : '-'} {formatMoney(ev.amount)}
                       </div>
@@ -165,7 +165,7 @@ export default function HistoryView({ events }: { events: HistoryEvent[] }) {
                     </div>
                   )}
                   
-                  <button className="btn btn-square btn-ghost btn-sm">
+                  <button className="btn btn-square btn-ghost btn-sm min-h-11">
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
                 </div>

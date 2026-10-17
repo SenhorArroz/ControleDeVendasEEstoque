@@ -1,4 +1,6 @@
 "use client";
+import TableViewport from "../_components/TableViewport";
+
 
 import React, { useState } from 'react';
 import { ArrowLeft, UserPlus, Users, Phone, User, Loader2, Mail, ShieldCheck, X } from 'lucide-react';
@@ -46,10 +48,10 @@ export default function FuncionariosPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 pb-20">
       
-      <main className="p-6 md:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-6xl mx-auto w-full">
+      <main className="min-w-0 [overflow-wrap:anywhere] px-3 py-4 sm:p-6 lg:p-8 space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-6xl mx-auto w-full">
         
         {/* ================= HEADER ================= */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 min-w-0">
           <button 
             onClick={() => router.push('/dashboard')}
             className="inline-flex items-center gap-2 w-fit px-4 py-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors"
@@ -57,12 +59,12 @@ export default function FuncionariosPage() {
             <ArrowLeft size={16} /> Dashboard
           </button>
           
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2 min-w-0">
             <div className="space-y-1">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 flex items-center gap-3 [overflow-wrap:anywhere]">
                 <ShieldCheck className="text-primary" size={36}/> Equipe
               </h1>
-              <p className="text-slate-500 font-medium italic">Gerencie acessos e colaboradores do sistema.</p>
+              <p className="text-slate-500 font-medium italic [overflow-wrap:anywhere]">Gerencie acessos e colaboradores do sistema.</p>
             </div>
             
             <button 
@@ -78,8 +80,8 @@ export default function FuncionariosPage() {
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-50 overflow-hidden transition-all hover:shadow-md">
           
           {/* Header da Tabela */}
-          <div className="p-6 md:p-8 border-b border-slate-50 bg-slate-50/30 flex justify-between items-center">
-            <h3 className="font-black text-slate-800 text-lg uppercase tracking-widest flex items-center gap-3">
+          <div className="p-4 sm:p-6 md:p-8 border-b border-slate-50 bg-slate-50/30 flex flex-wrap gap-3 justify-between items-center min-w-0">
+            <h3 className="font-black text-slate-800 text-sm sm:text-lg uppercase tracking-widest flex items-center gap-3 [overflow-wrap:anywhere]">
               <Users className="text-primary w-5 h-5"/> Colaboradores Ativos
             </h3>
             <span className="px-3 py-1 bg-slate-200 text-slate-600 rounded-lg text-[10px] font-black">
@@ -87,14 +89,14 @@ export default function FuncionariosPage() {
             </span>
           </div>
 
-          <div className="overflow-x-auto p-4 md:p-6">
+          <TableViewport className="overflow-x-auto p-4 md:p-6">
             <table className="table w-full border-separate border-spacing-y-2">
               <thead>
                 <tr className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-none">
-                  <th className="pl-6 py-4">Colaborador</th>
+                  <th className="pl-6 py-4 whitespace-nowrap">Colaborador</th>
                   <th>Acesso / Contato</th>
                   <th>Senha Inicial</th>
-                  <th className="text-right pr-6">Status</th>
+                  <th className="text-right pr-6 whitespace-nowrap">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,7 +111,7 @@ export default function FuncionariosPage() {
                     <tr key={funcionario.id} className="hover:bg-slate-50 transition-colors group">
                       
                       <td className="pl-6 py-4 rounded-l-2xl">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 min-w-0">
                           <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shadow-inner shrink-0 border border-slate-200">
                             <span className="text-lg font-black">{(funcionario.name ?? "?").charAt(0).toUpperCase()}</span>
                           </div>
@@ -122,10 +124,10 @@ export default function FuncionariosPage() {
 
                       <td>
                         <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
+                          <div className="flex items-center gap-2 text-xs font-bold text-slate-600 min-w-0">
                             <Mail className="w-3.5 h-3.5 text-slate-400" /> {funcionario.email}
                           </div>
-                          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+                          <div className="flex items-center gap-2 text-xs font-bold text-slate-500 min-w-0">
                             <Phone className="w-3.5 h-3.5 text-slate-400" /> {funcionario.phone || "Não informado"}
                           </div>
                         </div>
@@ -151,28 +153,28 @@ export default function FuncionariosPage() {
                       <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
                         <Users size={32} className="text-slate-300" />
                       </div>
-                      <p className="font-black text-lg text-slate-500 mb-1">Nenhum funcionário</p>
-                      <p className="text-xs font-medium italic">Adicione seu primeiro colaborador clicando no botão acima.</p>
+                      <p className="font-black text-lg text-slate-500 mb-1 [overflow-wrap:anywhere]">Nenhum funcionário</p>
+                      <p className="text-xs font-medium italic [overflow-wrap:anywhere]">Adicione seu primeiro colaborador clicando no botão acima.</p>
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
-          </div>
+          </TableViewport>
         </div>
       </main>
 
       {/* ================= MODAL DE CADASTRO ================= */}
       {isModalOpen && (
         <dialog className="modal modal-open bg-slate-900/60 backdrop-blur-md z-[100] animate-in fade-in duration-300">
-          <div className="modal-box w-11/12 max-w-lg p-10 rounded-[3rem] shadow-2xl border border-white bg-white">
+          <div className="modal-box overflow-y-auto max-h-[90dvh] w-11/12 max-w-lg p-4 sm:p-8 rounded-[3rem] shadow-2xl border border-white bg-white">
             
-            <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-8">
-              <h3 className="font-black text-2xl tracking-tighter flex items-center gap-3 text-slate-900">
+            <div className="flex flex-wrap gap-3 justify-between items-center border-b border-slate-100 pb-6 mb-8 min-w-0">
+              <h3 className="font-black text-lg sm:text-2xl tracking-tight flex items-center gap-3 text-slate-900 [overflow-wrap:anywhere]">
                 <div className="p-2 bg-primary/10 rounded-xl text-primary"><UserPlus size={24}/></div>
                 Novo Colaborador
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="btn btn-ghost btn-circle btn-sm bg-slate-50 hover:bg-slate-200">
+              <button onClick={() => setIsModalOpen(false)} className="btn btn-ghost btn-circle btn-sm min-h-11 bg-slate-50 hover:bg-slate-200">
                 <X size={20} className="text-slate-500"/>
               </button>
             </div>
@@ -190,7 +192,7 @@ export default function FuncionariosPage() {
                     value={formData.name} 
                     onChange={handleInputChange} 
                     placeholder="Ex: Carlos Silva" 
-                    className="input input-bordered w-full pl-12 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14" 
+                    className="min-w-0 max-w-full input input-bordered w-full pl-12 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 text-base"
                   />
                 </div>
               </div>
@@ -206,19 +208,19 @@ export default function FuncionariosPage() {
                     value={formData.phone} 
                     onChange={handleInputChange} 
                     placeholder="(00) 00000-0000" 
-                    className="input input-bordered w-full pl-12 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14" 
+                    className="min-w-0 max-w-full input input-bordered w-full pl-12 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-primary/20 font-bold text-slate-800 h-14 text-base"
                   />
                 </div>
               </div>
 
-              <div className="bg-blue-50 text-blue-600 p-4 rounded-2xl flex items-start gap-3 border border-blue-100">
+              <div className="bg-blue-50 text-blue-600 p-4 rounded-2xl flex items-start gap-3 border border-blue-100 min-w-0">
                 <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5" />
-                <p className="text-[11px] font-bold leading-relaxed">
+                <p className="text-[11px] font-bold leading-relaxed [overflow-wrap:anywhere]">
                   O sistema gerará um e-mail de acesso automático baseado no nome. A senha inicial será apenas os números do telefone.
                 </p>
               </div>
 
-              <div className="pt-6 flex gap-3 border-t border-slate-100">
+              <div className="pt-6 flex flex-col sm:flex-row gap-3 border-t border-slate-100 min-w-0">
                 <button 
                   type="button" 
                   onClick={() => setIsModalOpen(false)}

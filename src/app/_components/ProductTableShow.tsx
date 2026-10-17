@@ -32,7 +32,7 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
     >
       {/* Produto (Imagem + Nome + SKU) */}
       <td className="pl-5 sm:pl-6 py-4">
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[0.8rem] bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden shadow-sm shrink-0 group-hover:border-orange-500/20 transition-colors">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
@@ -41,8 +41,8 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
             )}
           </div>
           <div>
-            <div className="font-black text-xs sm:text-sm text-slate-800 leading-tight tracking-tight">{product.name}</div>
-            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 flex items-center gap-2">
+          <div className="max-w-sm break-words font-black text-xs sm:text-sm text-slate-800 leading-tight tracking-tight">{product.name}</div>
+            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 flex items-center gap-2 min-w-0">
               SKU: {product.sku || "N/A"}
               {product.codeBarras?.length > 0 && (
                 <span className="flex items-center gap-1 bg-slate-100 px-1.5 py-0.5 rounded-md text-slate-500" title={`${product.codeBarras.length} códigos`}>
@@ -70,7 +70,7 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
           {product.categories?.map((cat: any) => (
             <span
               key={cat.id}
-              className="px-2 py-1 rounded-md text-[8px] sm:text-[9px] font-black uppercase tracking-wider whitespace-nowrap"
+              className="max-w-full break-words px-2 py-1 rounded-md text-[8px] sm:text-[9px] font-black uppercase tracking-wider whitespace-normal"
               style={{ backgroundColor: cat.color + "20", color: cat.color }}
             >
               {cat.name}
@@ -84,10 +84,10 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 
       {/* Preço de Venda */}
       <td className="px-3 py-4">
-        <div className="font-black text-xs sm:text-sm text-emerald-600">
+        <div className="font-black text-xs sm:text-sm text-emerald-600 whitespace-nowrap">
           {formatMoney(Number(product.precoVenda))}
         </div>
-        <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+        <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5 whitespace-nowrap">
           Custo: {formatMoney(Number(product.precoCompra))}
         </div>
       </td>
@@ -107,24 +107,24 @@ export default function ProductTableShow({ product, onEdit, onDelete }: Props) {
 
       {/* Ações (Botões Inline) */}
       <td className="text-right pr-5 sm:pr-6 py-4 no-row-click" onClick={e => e.stopPropagation()}>
-        <div className="flex justify-end gap-1 sm:gap-1.5">
+        <div className="flex justify-end gap-1 sm:gap-1.5 min-w-0">
           <button 
             onClick={() => router.push(`/produtos/${product.id}`)} 
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors shrink-0"
+            className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
             title="Ver Detalhes"
           >
             <Eye size={16} />
           </button>
           <button 
             onClick={() => onEdit(product)} 
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-600 hover:bg-orange-50 transition-colors shrink-0"
+            className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-600 hover:bg-orange-50 transition-colors"
             title="Editar"
           >
             <Pencil size={14} />
           </button>
           <button 
             onClick={() => onDelete(product.id)} 
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors shrink-0"
+            className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
             title="Excluir"
           >
             <Trash2 size={14} />

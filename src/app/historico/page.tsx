@@ -3,6 +3,7 @@ import { db } from "~/server/db";
 import { redirect } from "next/navigation";
 import HistoryView, { type HistoryEvent } from "./history-view";
 import SideBar from "../_components/SideBar";
+import MobileNav from "../_components/MobileNav";
 
 export default async function HistoryPage() {
   const session = await auth();
@@ -140,7 +141,8 @@ export default async function HistoryPage() {
   return (
     <div className="drawer lg:drawer-open font-sans bg-base-200 min-h-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col">
+      <div className="drawer-content min-w-0 flex flex-col">
+        <MobileNav />
         <HistoryView events={events} />
       </div>
       <SideBar />

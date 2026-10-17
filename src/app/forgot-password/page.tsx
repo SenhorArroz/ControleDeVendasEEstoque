@@ -19,14 +19,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans p-4">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans px-3 py-6 sm:px-4">
       
       {/* Ambient Background Glow */}
       <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
 
       {/* Back Button */}
-      <div className="absolute top-8 left-8 z-20">
+      <div className="relative mb-6 self-start sm:ml-4 z-20">
           <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white shadow-sm border border-slate-100 text-slate-500 font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
               <ArrowLeft size={16} />
               Voltar ao Login
@@ -36,21 +36,21 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md mx-auto relative z-10">
         
         {/* Branding / Logo */}
-        <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 min-w-0">
             <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/30 mb-4">
                 <Activity size={32} strokeWidth={2.5} />
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">CashFlow</h1>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight [overflow-wrap:anywhere]">CashFlow</h1>
         </div>
 
         {/* Recovery Card */}
-        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-4 sm:p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
           
           {!isSubmitted ? (
             <>
               <div className="text-center mb-8">
-                  <h2 className="text-2xl font-black text-slate-800 tracking-tight">Recuperar Conta</h2>
-                  <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
+                  <h2 className="text-2xl font-black text-slate-800 tracking-tight [overflow-wrap:anywhere]">Recuperar Conta</h2>
+                  <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed [overflow-wrap:anywhere]">
                       Digite o endereço de e-mail associado à sua conta para receber um link de redefinição de senha.
                   </p>
               </div>
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="seu@email.com"
-                            className="w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-800 outline-none placeholder:text-slate-300"
+                            className="min-w-0 max-w-full w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-800 outline-none placeholder:text-slate-300 text-base"
                         />
                     </div>
                 </div>
@@ -94,8 +94,8 @@ export default function ForgotPasswordPage() {
               <div className="w-24 h-24 bg-emerald-50 text-emerald-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner border border-emerald-100">
                 <CheckCircle2 size={48} strokeWidth={2.5} />
               </div>
-              <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">Email Enviado!</h3>
-              <p className="text-slate-500 font-medium text-sm mb-8 leading-relaxed px-4">
+              <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3 [overflow-wrap:anywhere]">Email Enviado!</h3>
+              <p className="text-slate-500 font-medium text-sm mb-8 leading-relaxed px-4 [overflow-wrap:anywhere]">
                 Se um cadastro existir com o endereço <span className="font-bold text-slate-700">{email}</span>, você receberá as instruções em instantes.
               </p>
               <button

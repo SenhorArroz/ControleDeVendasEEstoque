@@ -2,6 +2,7 @@ import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { notFound, redirect } from "next/navigation";
 import SideBar from "../../_components/SideBar";
+import MobileNav from "../../_components/MobileNav";
 import ProductDetailClient from "./_components/ProductDetailClient";
 
 // 1. Definição da tipagem correta para Next.js 15
@@ -37,7 +38,8 @@ export default async function ProductDetailsPage({ params }: PageProps) {
   return (
     <div className="drawer lg:drawer-open font-sans bg-slate-50">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col min-h-screen">
+      <div className="drawer-content min-w-0 flex flex-col min-h-screen">
+        <MobileNav />
         <ProductDetailClient product={JSON.parse(JSON.stringify(product))} />
       </div>
       <SideBar />

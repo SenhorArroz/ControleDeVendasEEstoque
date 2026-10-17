@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans p-4">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center relative overflow-hidden font-sans px-3 py-6 sm:px-4">
       
       {/* Ambient Background Glow */}
       <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/10 blur-[120px] pointer-events-none animate-pulse" />
@@ -51,25 +51,25 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md mx-auto relative z-10">
         
         {/* Branding / Logo */}
-        <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 min-w-0">
             <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/30 mb-4">
                 <Activity size={32} strokeWidth={2.5} />
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">CashFlow</h1>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight [overflow-wrap:anywhere]">CashFlow</h1>
         </div>
 
         {/* Reset Password Card */}
-        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+        <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-4 sm:p-8 md:p-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
             
             <div className="text-center mb-8">
-                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Nova Senha</h2>
-                <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed">
+                <h2 className="text-2xl font-black text-slate-800 tracking-tight [overflow-wrap:anywhere]">Nova Senha</h2>
+                <p className="text-sm font-medium text-slate-500 mt-2 leading-relaxed [overflow-wrap:anywhere]">
                     Crie uma senha forte e segura para proteger o seu acesso ao sistema.
                 </p>
             </div>
 
             {error && (
-                <div className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-2xl text-xs font-bold flex items-center gap-3 mb-6 animate-in fade-in zoom-in duration-300">
+                <div className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-2xl text-xs font-bold flex items-center gap-3 mb-6 animate-in fade-in zoom-in duration-300 min-w-0">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{error}</span>
                 </div>
@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold"
+                          className="min-w-0 max-w-full w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold text-base"
                       />
                   </div>
               </div>
@@ -105,7 +105,7 @@ export default function ResetPasswordPage() {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold"
+                          className="min-w-0 max-w-full w-full h-14 pl-12 pr-4 rounded-2xl bg-slate-50 border-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-slate-800 tracking-widest outline-none placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-bold text-base"
                       />
                   </div>
               </div>
